@@ -13,6 +13,7 @@ def quiz(request):
     else:
         return HttpResponseRedirect('/')
 
+
 def quiz2(request):
     if request.user.is_authenticated:
         template = loader.get_template('main.html')
@@ -22,6 +23,7 @@ def quiz2(request):
         return HttpResponse(template.render(context,request))
     else:
         return HttpResponseRedirect('/')
+
 
 def getQuestion(request,qno):
     ques = Questions.objects.filter(q_no=qno)
