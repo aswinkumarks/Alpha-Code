@@ -30,6 +30,12 @@ class Network:
             return_msg_str = pickle.dumps(return_msg) 
             conn.send(return_msg_str)
 
+        elif msg['type'] == 'check active':
+            msg['info'] = 'active'
+            return_msg_str = pickle.dumps(msg) 
+            conn.send(return_msg_str)
+
+
         self.connections.remove((conn,addr))
         conn.close()
 

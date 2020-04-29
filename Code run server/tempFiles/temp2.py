@@ -1,2 +1,2 @@
-for i in range(10):
-    print('hai')
+while True:
+    pass

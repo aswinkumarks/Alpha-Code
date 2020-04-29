@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.conf.urls import url
+from AlphaCodeTasks.backgroundTask import start_background_tasks
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +25,4 @@ urlpatterns = [
     url(r'^',include('contest.urls')),
     path('task/',include('AlphaCodeTasks.urls'))
 ]
+start_background_tasks()
