@@ -7,3 +7,4 @@ class Participant(models.Model):
     p2class = models.CharField(max_length=10)
     monitor_num = models.CharField(primary_key=True, max_length=10)
     score = models.IntegerField(default=0)
+    start_time = models.TimeField(auto_now_add=True)
