@@ -1,25 +1,36 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.template import loader
-# from .models import Questions
+from .models import ContestQuestions, CodingQuestions, Contest, MCQ_Questions
 import json
+
 # Create your views here.
-def quiz(request):
-    if request.user.is_authenticated:
-        template = loader.get_template('quizpage.html')
-        ques = Questions.objects.filter(q_no=1)
-        context = {"question":ques}
-        return HttpResponse(template.render(context,request))
-    else:
-        return HttpResponseRedirect('/')
+# def quiz(request):
+#     if request.user.is_authenticated:
+#         template = loader.get_template('quizpage.html')
+#         ques = Questions.objects.filter(q_no=1)
+#         context = {"question":ques}
+#         return HttpResponse(template.render(context,request))
+#     else:
+#         return HttpResponseRedirect('/')
 
 
-def quiz2(request):
+def disp_contest_pg(request, cname):
     if request.user.is_authenticated:
         template = loader.get_template('main.html')
-        ques = Questions.objects.filter(q_no=1)
-        qlen = len(Questions.objects.all())
-        context = {"question":ques, "num_of_q":list(range(1,qlen+1))}
+        contest = Contest.objects.filter(cname=cname)
+        qobj = ContestQuestions.objects.filter(qno=1, cId=contest)
+        code_ques = CodingQuestions.objects.filter(cqId=qobj)
+        mcq = MCQ_Questions.objects.filter(cqId=qobj)
+
+        if len(code_ques) < 1:
+            question = mcq
+        else:
+            question = code_ques
+
+        qlen = len(ContestQuestions.objects.all())
+        context = {"question":question, "num_of_q":list(range(1,qlen+1))}
+        # context = {"":""}
         return HttpResponse(template.render(context,request))
     else:
         return HttpResponseRedirect('/')

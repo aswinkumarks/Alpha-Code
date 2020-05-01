@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('contest/<cname>',views.disp_contest_pg),
     # path('round1',views.quiz),
     # path('round2',views.quiz2),
     # path('getQuestion/<int:qno>',views.getQuestion),

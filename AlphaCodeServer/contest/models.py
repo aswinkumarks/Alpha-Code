@@ -11,6 +11,16 @@ class Contest(models.Model):
     # contest_type = models.CharField(max_length=50,choices=(('MCQ','Multiple Choice Question'),
     #                         ('Coding','Coding Question')))  #mcq, prog
 
+
+class Participant(models.Model):
+    userId = models.ForeignKey(get_user_model(),to_field='id',on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+    start_time = models.TimeField(auto_now_add=True)
+    cId = models.ForeignKey(Contest, on_delete=models.CASCADE)
+    rank = models.IntegerField(default=9999999)
+    submition_time = models.TimeField()
+
+
 class ContestQuestions(models.Model):
     cId = models.ForeignKey(Contest, on_delete=models.CASCADE)
     qno = models.IntegerField()
@@ -43,12 +53,13 @@ class MCQ_Questions(models.Model):
 
 
 class Option(models.Model):
-	q_id = models.ForeignKey(MCQ_Questions, on_delete=models.CASCADE)
-	option = models.CharField(max_length=250)
+    q_id = models.ForeignKey(MCQ_Questions, on_delete=models.CASCADE)
+    option = models.CharField(max_length=250)
+    correct_option = models.BooleanField(default=False)
 
-# class MCQ_Answers(models.Model):
-#     cId = models.ForeignKey(Contest, on_delete=models.CASCADE)
-#     userId = models.ForeignKey(get_user_model(),to_field='id',on_delete=models.CASCADE)
-#     q_no = models.IntegerField()
-#     user_answer = models.CharField(max_length=4)
+class User_Response(models.Model):
+    cId = models.ForeignKey(Contest, on_delete=models.CASCADE)
+    userId = models.ForeignKey(get_user_model(),to_field='id',on_delete=models.CASCADE)
+    q_no = models.IntegerField()
+    user_answer = models.TextField()
 
