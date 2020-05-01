@@ -24,9 +24,9 @@ def disp_contest_pg(request, cname):
         mcq = McqQuestion.objects.filter(cqId=qobj)
 
         if code_ques:
-            question = mcq
-        else:
             question = code_ques
+        else:
+            question = mcq
 
         qlen = len(ContestQuestion.objects.filter(cId=contest))
         context = {"question":question, "num_of_q":list(range(1,qlen+1))}
