@@ -14,7 +14,6 @@ import json
 #     else:
 #         return HttpResponseRedirect('/')
 
-
 def disp_contest_pg(request, cname):
     if request.user.is_authenticated:
         template = loader.get_template('main.html')
@@ -22,31 +21,44 @@ def disp_contest_pg(request, cname):
         qobj = ContestQuestion.objects.get(qno=1,cId=contest)
         code_ques = CodingQuestion.objects.filter(cqId=qobj)
         mcq = McqQuestion.objects.filter(cqId=qobj)
-
+        
         if code_ques:
             question = code_ques
         else:
             question = mcq
 
         qlen = len(ContestQuestion.objects.filter(cId=contest))
-        context = {"question":question, "num_of_q":list(range(1,qlen+1))}
+        context = {"qno":qobj.qno, "question":question, "num_of_q":list(range(1,qlen+1))}
         # context = {"":""}
         return HttpResponse(template.render(context,request))
     else:
         return HttpResponseRedirect('/')
 
 
-def getQuestion(request,qno):
-    ques = Questions.objects.filter(q_no=qno)
-    qlen = len(Questions.objects.all())
-    question,desc,pgmInput,expOutput = '','','',''
-    for q in ques:
-        question = q.question
-        desc = q.description
-        pgmInput = q.pgmInput
-        expOutput = q.expOutput
-    info = {"ques": question, "desc":desc, "input":pgmInput, "expOutput":expOutput, "num_of_q":list(range(1,qlen+1))}
-    return HttpResponse(json.dumps(info))
+def getQuestion(request, cname, qno):   
+    # question,desc,pgmInput,expOutput = '','','',''
+
+    contest = Contest.objects.get(cname=cname)
+    qobj = ContestQuestion.objects.get(qno=qno,cId=contest)
+    code_ques = CodingQuestion.objects.filter(cqId=qobj)
+    mcq = McqQuestion.objects.filter(cqId=qobj)
+    qlen = len(ContestQuestion.objects.filter(cId=contest))
+    
+    if code_ques:
+        info = {"qno":qobj.qno, "question":code_ques.question, "desc":code_ques.description, "num_of_q":list(range(1,qlen+1))}
+    elif mcq:
+        info = {"qno":qobj.qno, "question":mcq.question, "desc":"", "num_of_q":list(range(1,qlen+1))}
+    else:
+        return HttpResponse("DataBase Error")
+    
+    # for q in ques:
+    #     question = q.question
+    #     desc = q.description
+    #     pgmInput = q.pgmInput
+    #     expOutput = q.expOutput
+    # info = {"ques": question, "desc":desc, "input":pgmInput, "expOutput":expOutput, "num_of_q":list(range(1,qlen+1))}
+    # return HttpResponse(json.dumps(info))
+    return HttpResponse(info)
 
 # def saveResponse(request,qno):
 #     res = request.body

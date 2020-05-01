@@ -45,7 +45,7 @@
                     <li>
                         {% for q in question %} 
                     <div id='question'>
-                        {{q.q_no}}. {{q.question}}<br><br>
+                        {{qno}}. {{q.question}}<br><br>
                     </div>
                     <div id="desc">   
                         {{q.description}}<br><br>
@@ -258,17 +258,19 @@
         function getQuestion(qno) {
             document.getElementById("output").innerHTML = "";
             var xhttp = new XMLHttpRequest();
-            var url = "getQuestion/"+qno;
+            var url = window.location.href+"/getQuestion/"+qno;
             xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                data = JSON.parse(this.responseText);
-                document.getElementById("question").innerHTML = qno+". "+data["ques"];
+                // data = JSON.parse(this.responseText);
+                data = this.responseText;
+                console.log("data : "+data)
+                document.getElementById("question").innerHTML = data["question"];
                 document.getElementById("desc").innerHTML = data["desc"];
-                document.getElementById("input").innerHTML = data["input"];
-                document.getElementById("expoutput").innerHTML = data["expOutput"];
+                // document.getElementById("input").innerHTML = data["input"];
+                // document.getElementById("expoutput").innerHTML = data["expOutput"];
                 document.getElementById("ques_no").value = qno;
                 //console.log(data);
-                getPrevCode()
+                // getPrevCode()
             }
             };
             xhttp.open("GET", url, true);
