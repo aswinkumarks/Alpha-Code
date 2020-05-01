@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.template import loader
-from .models import ContestQuestions, CodingQuestions, Contest, MCQ_Questions
+from .models import ContestQuestion, CodingQuestion, Contest, McqQuestion
 import json
 
 # Create your views here.
@@ -18,17 +18,17 @@ import json
 def disp_contest_pg(request, cname):
     if request.user.is_authenticated:
         template = loader.get_template('main.html')
-        contest = Contest.objects.filter(cname=cname)
-        qobj = ContestQuestions.objects.filter(qno=1, cId=contest)
-        code_ques = CodingQuestions.objects.filter(cqId=qobj)
-        mcq = MCQ_Questions.objects.filter(cqId=qobj)
+        contest = Contest.objects.get(cname=cname)
+        qobj = ContestQuestion.objects.get(qno=1,cId=contest)
+        code_ques = CodingQuestion.objects.filter(cqId=qobj)
+        mcq = McqQuestion.objects.filter(cqId=qobj)
 
-        if len(code_ques) < 1:
+        if code_ques:
             question = mcq
         else:
             question = code_ques
 
-        qlen = len(ContestQuestions.objects.all())
+        qlen = len(ContestQuestion.objects.filter(cId=contest))
         context = {"question":question, "num_of_q":list(range(1,qlen+1))}
         # context = {"":""}
         return HttpResponse(template.render(context,request))

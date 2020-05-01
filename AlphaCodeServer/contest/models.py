@@ -10,7 +10,8 @@ class Contest(models.Model):
     endTime = models.DateTimeField()
     # contest_type = models.CharField(max_length=50,choices=(('MCQ','Multiple Choice Question'),
     #                         ('Coding','Coding Question')))  #mcq, prog
-
+    def __str__(self):
+        return self.cname
 
 class Participant(models.Model):
     userId = models.ForeignKey(get_user_model(),to_field='id',on_delete=models.CASCADE)
@@ -21,7 +22,7 @@ class Participant(models.Model):
     submition_time = models.TimeField()
 
 
-class ContestQuestions(models.Model):
+class ContestQuestion(models.Model):
     cId = models.ForeignKey(Contest, on_delete=models.CASCADE)
     qno = models.IntegerField()
 
@@ -31,14 +32,17 @@ class ContestQuestions(models.Model):
         ]
 
 
-class CodingQuestions(models.Model):
-    cqId = models.ForeignKey(ContestQuestions, on_delete=models.CASCADE)
+class CodingQuestion(models.Model):
+    cqId = models.ForeignKey(ContestQuestion, on_delete=models.CASCADE)
     question = models.TextField()
     description = models.TextField()
 
+    def __str__(self):
+        return self.question[:30]
 
-class TestCases(models.Model):
-	q_id = models.ForeignKey(CodingQuestions,on_delete=models.CASCADE)
+
+class TestCase(models.Model):
+	q_id = models.ForeignKey(CodingQuestion,on_delete=models.CASCADE)
 	testCaseType = models.CharField(max_length=30,choices=(('Hidden','Output and Input will be hidden from user'),
     									('Visiable','Output and Input will be shown to user')))
 	pgmInput = models.TextField(default = "")
@@ -47,13 +51,16 @@ class TestCases(models.Model):
 	pgmOutputOrEvalCode = models.TextField()
 
 
-class MCQ_Questions(models.Model):
-    cqId = models.ForeignKey(ContestQuestions, on_delete=models.CASCADE)
+class McqQuestion(models.Model):
+    cqId = models.ForeignKey(ContestQuestion, on_delete=models.CASCADE)
     question = models.TextField()
+
+    def __str__(self):
+        return self.question[:30]
 
 
 class Option(models.Model):
-    q_id = models.ForeignKey(MCQ_Questions, on_delete=models.CASCADE)
+    q_id = models.ForeignKey(McqQuestion, on_delete=models.CASCADE)
     option = models.CharField(max_length=250)
     correct_option = models.BooleanField(default=False)
 
