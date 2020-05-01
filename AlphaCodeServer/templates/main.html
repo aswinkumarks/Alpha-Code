@@ -43,18 +43,17 @@
                 <p>The first, second and third row will automatically stack on top of each other when the screen is less than 576px wide.</p>
                 <ul>
                     <li>
-                        {% for q in question %} 
-                    <div id='question'>
-                        {{qno}}. {{q.question}}<br><br>
-                    </div>
-                    <div id="desc">   
-                        {{q.description}}<br><br>
-                    </div>
+                 
+                        <div id='question'>
+                        {{qno}}. {{question}}<br><br>
+                        </div>
+                        <div id="desc">   
+                            {{desc}}<br><br>
+                        </div>
                     
                     <!-- <input type="text" id="answer" name="answer" placeholder="Type your response" value=""> -->
                      
                     </li>
-                    {% endfor %}
                 </ul>
             </div>
             
@@ -94,14 +93,14 @@
                 </script>
                 
                 <input type="button" class="btn" value="Run Code" onclick='getOutput()'><br>
-                {% for q in question %} 
+                 
                 <br>
                 <h6><b>Sample Input</b></h6>
-                <pre id='input'>{{q.pgmInput}}</pre>
+                <pre id='input'>{{pgmInput}}</pre>
                 <br>
                 <h6><b>Expected Output</b></h6>
-                <pre id='expoutput'>{{q.expOutput}}</pre>
-                {% endfor %}
+                <pre id='expoutput'>{{expOutput}}</pre>
+                
                 <br>
                 <h6><b>Output</b></h6>
                 
@@ -261,10 +260,10 @@
             var url = window.location.href+"/getQuestion/"+qno;
             xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                // data = JSON.parse(this.responseText);
-                data = this.responseText;
+                data = JSON.parse(this.responseText);
+                // data = this.responseText;
                 console.log("data : "+data)
-                document.getElementById("question").innerHTML = data["question"];
+                document.getElementById("question").innerHTML = qno+". "+data["question"];
                 document.getElementById("desc").innerHTML = data["desc"];
                 // document.getElementById("input").innerHTML = data["input"];
                 // document.getElementById("expoutput").innerHTML = data["expOutput"];

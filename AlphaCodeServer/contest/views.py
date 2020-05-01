@@ -23,10 +23,10 @@ def disp_contest_pg(request, cname):
         mcq = McqQuestion.objects.filter(cqId=qobj)
         
         if code_ques:
-            question = code_ques
+            question = code_ques[0]
         else:
-            question = mcq
-
+            question = mcq[0]
+        
         qlen = len(ContestQuestion.objects.filter(cId=contest))
         context = {"qno":qobj.qno, "question":question, "num_of_q":list(range(1,qlen+1))}
         # context = {"":""}
@@ -45,9 +45,9 @@ def getQuestion(request, cname, qno):
     qlen = len(ContestQuestion.objects.filter(cId=contest))
     
     if code_ques:
-        info = {"qno":qobj.qno, "question":code_ques.question, "desc":code_ques.description, "num_of_q":list(range(1,qlen+1))}
+        info = {"qno":qobj.qno, "question":code_ques[0].question, "desc":code_ques[0].description, "num_of_q":list(range(1,qlen+1))}
     elif mcq:
-        info = {"qno":qobj.qno, "question":mcq.question, "desc":"", "num_of_q":list(range(1,qlen+1))}
+        info = {"qno":qobj.qno, "question":mcq[0].question, "desc":"", "num_of_q":list(range(1,qlen+1))}
     else:
         return HttpResponse("DataBase Error")
     
@@ -57,8 +57,8 @@ def getQuestion(request, cname, qno):
     #     pgmInput = q.pgmInput
     #     expOutput = q.expOutput
     # info = {"ques": question, "desc":desc, "input":pgmInput, "expOutput":expOutput, "num_of_q":list(range(1,qlen+1))}
-    # return HttpResponse(json.dumps(info))
-    return HttpResponse(info)
+    return HttpResponse(json.dumps(info))
+    # return HttpResponse(info)
 
 # def saveResponse(request,qno):
 #     res = request.body
