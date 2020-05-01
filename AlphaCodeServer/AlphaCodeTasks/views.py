@@ -40,8 +40,6 @@ def run(request,lang,Q_no=0):
 
 			try:
 				data = conn.recv_data()
-				server.no_alloted_tasks -= 1
-				server.save()
 				task_executed = True
 				output = data['response']
 				break
@@ -49,6 +47,8 @@ def run(request,lang,Q_no=0):
 			except:
 				output = 'No response from server'
 
+			server.no_alloted_tasks -= 1
+			server.save()
 
 		except:
 			output = 'Cannot connect to server'
