@@ -11,6 +11,7 @@ class Contest(models.Model):
 
 
 class Questions(models.Model):
+    cId = models.ForeignKey(Contest, on_delete=models.CASCADE)
     q_no = models.IntegerField(primary_key=True)
     question = models.TextField()
     description = models.TextField()
@@ -21,6 +22,7 @@ class Questions(models.Model):
     # user_answer = models.CharField(max_length=100, default = "")
 
 class Code_Answers(models.Model):
+    cId = models.ForeignKey(Contest, on_delete=models.CASCADE)
     userId = models.ForeignKey(get_user_model(),to_field='id',on_delete=models.CASCADE)
     q_no = models.IntegerField()
     code = models.TextField()
@@ -28,12 +30,14 @@ class Code_Answers(models.Model):
     # submission_time = models.TimeField(auto_now_add=True)
 
 class MCQ_Questions(models.Model):
+    cId = models.ForeignKey(Contest, on_delete=models.CASCADE)
     q_no = models.IntegerField(primary_key=True)
     question = models.TextField()
     description = models.TextField()
     answer = models.CharField(max_length=4) #option a or acd etc
 
 class MCQ_Answers(models.Model):
+    cId = models.ForeignKey(Contest, on_delete=models.CASCADE)
     userId = models.ForeignKey(get_user_model(),to_field='id',on_delete=models.CASCADE)
     q_no = models.IntegerField()
     user_answer = models.CharField(max_length=4)
