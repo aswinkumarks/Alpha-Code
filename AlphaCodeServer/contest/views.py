@@ -11,10 +11,21 @@ def create_contest(request):
     context = {}
     return HttpResponse(template.render(context,request))
 
-def create_question(request):
-    template = loader.get_template('create_question.html')
-    context = {}
-    return HttpResponse(template.render(context,request))
+def create_question(request, cname):
+    if request.method == 'POST':
+        res = request.body
+        res = res.decode('utf-8')
+        print(res)
+        c = Contest.objects.get(cname=cname)
+        if c:
+            return HttpResponse("error")
+        c.cname = cname
+        # c.startTime = 
+        # c.save()
+
+        template = loader.get_template('create_question.html')
+        context = {}
+        return HttpResponse(template.render(context,request))
 
 def admin_page(request):
     template = loader.get_template('adminpage.html')

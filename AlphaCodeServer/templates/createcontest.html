@@ -45,38 +45,40 @@
                     .quiz-data-box{
                         background: ghostwhite;
                         padding: 20px;
+                        border-radius: 5px;
                     }
-                    button{
-                      margin-right: 15px;
+                    .quiz-data-box input{
+                      margin-top: 30px;
                     }
                 </style>
 
-                <form class="quiz-data-box" action="create_question" method = "POST">
+                <form class="quiz-data-box" action="" method="POST">
+                  {% csrf_token %}
                     <div class="form-row">
                       <div class="form-group col-md-3">
                         <label>Contest Name</label>
-                        <input type="text" class="form-control" id="cname" placeholder="" required>
+                        <input type="text" class="form-control" id="cname" placeholder="" >
                       </div>
                       <div class="form-group col-md-1">
                         <label>Start Time:</label>
-                        <input type="time" class="form-control" id="start-time" name="start-time" required>
+                        <input type="time" class="form-control" id="start-time" name="start-time" >
                       </div>
                       <div class="form-group col-md-1">
                         <label>End Time:</label>
-                        <input type="time" class="form-control" id="end-time" name="end-time" required>
+                        <input type="time" class="form-control" id="end-time" name="end-time" >
                       </div>
                     </div>
+                    <input type="submit" class="btn btn-primary" onclick="saveContest()" value="Procees to Question Creation">
                   </form>
                   
                   <!-- <button type="submit" class="btn btn-primary">Finish</button>   -->
-                  <input type="submit" class="btn btn-primary"  value="Procees to Question Creation">
+                  
                   
             </div>
 
           </div>
           <br>
       
-          <!-- Or let Bootstrap automatically handle the layout -->
           <div class="row" style="background: azure;padding: 20px;">
             <div class="col-md-10">
                 
@@ -91,21 +93,21 @@
 </body>
 
 <script>
-  // function saveContest(){
-  //   var xhttp = new XMLHttpRequest();
-  //   var cname = document.getElementById("cname").value;
-  //   var st = document.getElementById("start-time").value;
-  //   var et = document.getElementById("end-time").value;
-  //   var url = "http://127.0.0.1:8000/saveContest/"+cname+"/"+st+"/"+et;
-  //   //console.log(ans);
-  //   //xhttp.onreadystatechange = function() {
-  //   //if (this.readyState == 4 && this.status == 200) {
-  //       //action to do on return
-  //   //}
-  //   //};
-  //   xhttp.open("POST", url, true);
-  //   xhttp.send();
-  // }
+  function saveContest(){
+    var xhttp = new XMLHttpRequest();
+    var cname = document.getElementById("cname").value;
+    var st = document.getElementById("start-time").value;
+    var et = document.getElementById("end-time").value;
+    var url = "http://127.0.0.1:8000/create_contest/"+cname;
+    //console.log(ans);
+    // xhttp.onreadystatechange = function() {
+    // if (this.readyState == 4 && this.status == 200) {
+    //     // action to do on return
+    // }
+    // };
+    xhttp.open("POST", url, true);
+    xhttp.send();
+  }
 </script>
 
 </html>
