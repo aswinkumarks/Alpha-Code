@@ -17,17 +17,21 @@ import json
 def disp_contest_pg(request, cname):
     if request.user.is_authenticated:
         template = loader.get_template('main.html')
-        contest = Contest.objects.get(cname=cname)
-        qobj = ContestQuestion.objects.get(qno=1,cId=contest)
-        code_ques = CodingQuestion.objects.filter(cqId=qobj)
-        mcq = McqQuestion.objects.filter(cqId=qobj)
-        
-        if code_ques:
-            question = code_ques[0]
+        # contest = Contest.objects.get(cname=cname)
+        qobj = ContestQuestion.objects.get(qno=1,contest__cname=cname)
+        if qobj.qtype == 'MCQ':
+            question = qobj.mcqQues
         else:
-            question = mcq[0]
+            question = codingQues
+        # code_ques = CodingQuestion.objects.filter(cqId=qobj)
+        # mcq = McqQuestion.objects.filter(cqId=qobj)
         
-        qlen = len(ContestQuestion.objects.filter(cId=contest))
+        # if code_ques:
+        #     question = code_ques[0]
+        # else:
+        #     question = mcq[0]
+        
+        qlen = len(ContestQuestion.objects.filter(contest__cname=cname))
         context = {"qno":qobj.qno, "question":question, "num_of_q":list(range(1,qlen+1))}
         # context = {"":""}
         return HttpResponse(template.render(context,request))
@@ -37,17 +41,13 @@ def disp_contest_pg(request, cname):
 
 def getQuestion(request, cname, qno):   
     # question,desc,pgmInput,expOutput = '','','',''
-
-    contest = Contest.objects.get(cname=cname)
-    qobj = ContestQuestion.objects.get(qno=qno,cId=contest)
-    code_ques = CodingQuestion.objects.filter(cqId=qobj)
-    mcq = McqQuestion.objects.filter(cqId=qobj)
-    qlen = len(ContestQuestion.objects.filter(cId=contest))
+    qobj = ContestQuestion.objects.get(qno=qno,contest__cname=cname)
+    qlen = len(ContestQuestion.objects.filter(contest__cname=cname))
     
-    if code_ques:
-        info = {"qno":qobj.qno, "question":code_ques[0].question, "desc":code_ques[0].description, "num_of_q":list(range(1,qlen+1))}
-    elif mcq:
-        info = {"qno":qobj.qno, "question":mcq[0].question, "desc":"", "num_of_q":list(range(1,qlen+1))}
+    if qobj.qtype == 'Coding':
+        info = {"qno":qobj.qno, "question":qobj.codingQues.question, "desc":qobj.codingQues.description, "num_of_q":list(range(1,qlen+1))}
+    elif qobj.qtype == 'MCQ':
+        info = {"qno":qobj.qno, "question":qobj.mcqQues.question, "desc":"", "num_of_q":list(range(1,qlen+1))}
     else:
         return HttpResponse("DataBase Error")
     
