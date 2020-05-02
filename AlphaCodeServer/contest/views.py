@@ -11,6 +11,10 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 @csrf_exempt
 def create_contest(request):
+    if request.method == 'POST':
+        res = request.body
+        res = res.decode('utf-8')
+        print(res)
     template = loader.get_template('createcontest.html')
     context = {}
     return HttpResponse(template.render(context,request))
