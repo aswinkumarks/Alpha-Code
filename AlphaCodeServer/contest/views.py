@@ -14,7 +14,17 @@ def create_contest(request):
     if request.method == 'POST':
         res = request.body
         res = res.decode('utf-8')
-        print(res)
+        cname = request.POST.get("cname")
+        st = request.POST.get("start-time")
+        et = request.POST.get("end-time")
+        # print(cname,st,et)
+        if Contest.objects.filter(cname=cname):
+            return HttpResponse("error : already in database")
+
+        c = Contest(cname=cname, startTime=st, endTime=et)
+        c.save()
+        return HttpResponseRedirect(cname+'/create_question')
+
     template = loader.get_template('createcontest.html')
     context = {}
     return HttpResponse(template.render(context,request))
@@ -22,20 +32,14 @@ def create_contest(request):
 @csrf_exempt
 def create_question(request, cname):
     print("in create question")
-    if request.method == 'POST':
-        res = request.body
-        res = res.decode('utf-8')
-        print(res)
-        # c = Contest.objects.get(cname=res['cname'])
-        # if c:
-            # return HttpResponse("error")
-        # c.cname = cname
-        # c.startTime = 
-        # c.save()
+    # if request.method == 'POST':
+    #     res = request.body
+    #     res = res.decode('utf-8')
+    #     print(res['cname'])
 
-        template = loader.get_template('createquestion.html')
-        context = {}
-        return HttpResponse(template.render(context,request))
+    template = loader.get_template('createquestion.html')
+    context = {}
+    return HttpResponse(template.render(context,request))
 
 def admin_page(request):
     template = loader.get_template('adminpage.html')
