@@ -4,26 +4,32 @@ from django.template import loader
 from .models import ContestQuestion, CodingQuestion, Contest, McqQuestion
 import json
 
-# Create your views here.
+from django.views.decorators.csrf import csrf_exempt
 
+
+
+# Create your views here.
+@csrf_exempt
 def create_contest(request):
     template = loader.get_template('createcontest.html')
     context = {}
     return HttpResponse(template.render(context,request))
 
+@csrf_exempt
 def create_question(request, cname):
+    print("in create question")
     if request.method == 'POST':
         res = request.body
         res = res.decode('utf-8')
         print(res)
-        c = Contest.objects.get(cname=cname)
-        if c:
-            return HttpResponse("error")
-        c.cname = cname
+        # c = Contest.objects.get(cname=res['cname'])
+        # if c:
+            # return HttpResponse("error")
+        # c.cname = cname
         # c.startTime = 
         # c.save()
 
-        template = loader.get_template('create_question.html')
+        template = loader.get_template('createquestion.html')
         context = {}
         return HttpResponse(template.render(context,request))
 

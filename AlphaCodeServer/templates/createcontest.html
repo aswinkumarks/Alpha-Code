@@ -52,7 +52,7 @@
                     }
                 </style>
 
-                <form class="quiz-data-box" action="" method="POST">
+                <form class="quiz-data-box" method="POST">
                   {% csrf_token %}
                     <div class="form-row">
                       <div class="form-group col-md-3">
@@ -68,7 +68,8 @@
                         <input type="time" class="form-control" id="end-time" name="end-time" >
                       </div>
                     </div>
-                    <input type="submit" class="btn btn-primary" onclick="saveContest()" value="Procees to Question Creation">
+                    <input type="submit" class="btn btn-primary" onclick="saveContest()" value="Procees to Question Creation"> 
+                    <!-- <input type="submit" class="btn btn-primary" value="Procees to Question Creation"> -->
                   </form>
                   
                   <!-- <button type="submit" class="btn btn-primary">Finish</button>   -->
@@ -98,7 +99,7 @@
     var cname = document.getElementById("cname").value;
     var st = document.getElementById("start-time").value;
     var et = document.getElementById("end-time").value;
-    var url = "http://127.0.0.1:8000/create_contest/"+cname;
+    var url = "http://127.0.0.1:8000/create_contest/"+cname+"/create_question/";
     //console.log(ans);
     // xhttp.onreadystatechange = function() {
     // if (this.readyState == 4 && this.status == 200) {
