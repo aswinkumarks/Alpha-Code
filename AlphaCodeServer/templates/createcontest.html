@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Code Platform</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %} ">
+</head>
+
+<body style="background:dodgerblue ">
+    
+    <nav>
+        <h1 style="width: fit-content;
+            font-size: 1.75rem;
+            padding: 10px;">
+            CODE PLATFORM XYZ  
+        </h1>
+        <ul id="navelements">
+            <div class="loginsignup">                
+                <li class="username">{{ user.username }}</li>
+                <input id="user_name" type="hidden" value='{{ user.username }}'>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </div>
+        </ul>				
+    </nav>
+    <br><br><br>
+
+    <div class="container-fluid">
+        
+        <div class="container-fluid">
+          
+          <div class="row">
+            <div class="col-md">
+                <h4>Contest Creation Panel</h4>
+                <!-- <p>Resize the browser window to see the effect.</p> -->
+                <br>
+
+                <style>
+                    .quiz-data-box{
+                        background: ghostwhite;
+                        padding: 20px;
+                    }
+                    button{
+                      margin-right: 15px;
+                    }
+                </style>
+
+                <form class="quiz-data-box">
+                    <div class="form-row">
+                      <div class="form-group col-md-3">
+                        <label>Contest Name</label>
+                        <input type="email" class="form-control" id="cname" placeholder="">
+                      </div>
+                      <div class="form-group col-md-1">
+                        <label>Start Time:</label>
+                        <input type="time" class="form-control" id="start-time" name="start-time">
+                      </div>
+                      <div class="form-group col-md-1">
+                        <label>End Time:</label>
+                        <input type="time" class="form-control" id="start-time" name="start-time">
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                          <label>Question Number</label>
+                          <input type="number" class="form-control" id="" placeholder="">
+                        </div>
+                        <div class="form-group col-md-1">
+                          <label>Question Type:</label>
+                            <select  class="form-control" id="" name="">
+                                <option value="volvo">Coding</option>
+                                <option value="saab">MCQ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-md">
+                        <label>Question</label>
+                        <textarea class="form-control" rows="3" id="comment"></textarea>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-md">
+                        <label>Description</label>
+                        <textarea class="form-control" rows="3" id="" placeholder="Leave Blank for MCQ"></textarea>
+                      </div>
+                    </div>
+
+                  </form>
+                  
+                  <button type="submit" class="btn btn-primary">Finish</button>
+                  <button type="submit" class="btn btn-primary">Save and Create Next Question</button>
+                  
+            </div>
+
+          </div>
+          <br>
+      
+          <!-- Or let Bootstrap automatically handle the layout -->
+          <div class="row" style="background: azure;padding: 20px;">
+            <div class="col-md-10">
+                
+
+            </div>
+
+          </div>
+          <br>
+          
+        </div>
+      </div>
+</body>
+
+<script>
+
+</script>
+
+</html>

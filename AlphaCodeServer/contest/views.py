@@ -5,35 +5,28 @@ from .models import ContestQuestion, CodingQuestion, Contest, McqQuestion
 import json
 
 # Create your views here.
-# def quiz(request):
-#     if request.user.is_authenticated:
-#         template = loader.get_template('quizpage.html')
-#         ques = Questions.objects.filter(q_no=1)
-#         context = {"question":ques}
-#         return HttpResponse(template.render(context,request))
-#     else:
-#         return HttpResponseRedirect('/')
+
+def create_contest(request):
+    template = loader.get_template('createcontest.html')
+    context = {}
+    return HttpResponse(template.render(context,request))
+
+def admin_page(request):
+    template = loader.get_template('adminpage.html')
+    context = {}
+    return HttpResponse(template.render(context,request))
 
 def disp_contest_pg(request, cname):
     if request.user.is_authenticated:
         template = loader.get_template('main.html')
-        # contest = Contest.objects.get(cname=cname)
+        qlen = len(ContestQuestion.objects.filter(contest__cname=cname))        
         qobj = ContestQuestion.objects.get(qno=1,contest__cname=cname)
+        
         if qobj.qtype == 'MCQ':
-            question = qobj.mcqQues
+            context = {"qno":qobj.qno, "question":qobj.mcqQues.question, "num_of_q":list(range(1,qlen+1))}
         else:
-            question = codingQues
-        # code_ques = CodingQuestion.objects.filter(cqId=qobj)
-        # mcq = McqQuestion.objects.filter(cqId=qobj)
+            context = {"qno":qobj.qno, "question":qobj.codingQues.question, "desc":qobj.codingQues.description ,"num_of_q":list(range(1,qlen+1))}
         
-        # if code_ques:
-        #     question = code_ques[0]
-        # else:
-        #     question = mcq[0]
-        
-        qlen = len(ContestQuestion.objects.filter(contest__cname=cname))
-        context = {"qno":qobj.qno, "question":question, "num_of_q":list(range(1,qlen+1))}
-        # context = {"":""}
         return HttpResponse(template.render(context,request))
     else:
         return HttpResponseRedirect('/')

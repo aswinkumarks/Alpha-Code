@@ -8,4 +8,6 @@ urlpatterns = [
     # path('round2',views.quiz2),
     path('contest/<cname>/getQuestion/<int:qno>',views.getQuestion),
     # path('saveResponse/<qno>',views.saveResponse)
+    path('create_contest/', views.create_contest),
+    path('admin_page/', views.admin_page)
 ]
