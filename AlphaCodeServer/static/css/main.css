@@ -98,7 +98,7 @@ li {
     list-style-type: none;
 }
 
-input[type=text] {
+/* input[type=text] {
     width: 30%;
     padding: 12px 20px;
     margin-top: 15px;
@@ -107,7 +107,7 @@ input[type=text] {
     border: none;
     background: ghostwhite;   
     border: 2px solid #000000;
-}   
+}    */
 
 #qpallet button:focus{
     background: yellow;
