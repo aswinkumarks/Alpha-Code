@@ -46,19 +46,43 @@
                         background: ghostwhite;
                         padding: 20px;
                     }
-                    button{
+                    .quiz-data-box button{
+                      float: right;
                       margin-right: 15px;
+                      margin-top: 35px;
                     }
+
+                    .addoptionbtn button{
+                      float: none;
+                      margin-right: 0;
+                      margin-top: 0;
+                      margin-bottom: 5px;
+                    }
+
+                    .addoptionbtn, .addtestcasebtn{
+                      display: flex;
+                      margin-bottom: 10px;
+                    }
+
+
+                    .addtestcasebtn button{
+                      float: none;
+                      margin-right: 0;
+                      margin-top: 0;
+                      margin-bottom: 5px;
+                      margin-left: 5px;
+                    }
+
                 </style>
 
-                <form class="quiz-data-box">
+                <form class="quiz-data-box" method="POST" action="">
                     
                     <div class="form-row">
                         <div class="form-group col-md-3">
                           <label>Question Number</label>
-                          <input type="number" class="form-control" id="qno" placeholder="" required>
+                          <input type="number" class="form-control" id="qno" name="qno" placeholder="" required>
                         </div>
-                        <div class="form-group col-md-1">
+                        <div class="form-group col-md">
                           <label>Question Type:</label>
                             <select  class="form-control" id="qtype" name="qtype">
                                 <option value="Coding">Coding</option>
@@ -70,37 +94,69 @@
                     <div class="form-row">
                       <div class="form-group col-md">
                         <label>Question</label>
-                        <textarea class="form-control" rows="3" id="question" required></textarea>
+                        <textarea class="form-control" rows="3" id="question" name="question" required></textarea>
                       </div>
                     </div>
 
                     <div class="form-row">
                       <div class="form-group col-md">
                         <label>Description</label>
-                        <textarea class="form-control" rows="3" id="q_desc" placeholder="Leave Blank for MCQ"></textarea>
+                        <textarea class="form-control" rows="3" id="q_desc" name="q_desc" placeholder="Leave Blank for MCQ"></textarea>
                       </div>
                     </div>
 
-                  </form>
-                  
-                  <button type="submit" class="btn btn-primary">Finish</button>
-                  <button type="submit" class="btn btn-primary"  onclick='saveQuestion()' >Save and Create Next Question</button>
-                  
-            </div>
+                    <div class="form-row">
+                      <div class="options-container form-group col-md">
+                        <label>MCQ Options [leave blank for Coding] </label><br>
+                        <div class = "addoptionbtn">
+                          <input type="text" name="option1" style="width: 25%;" placeholder="Option 1">
+                          <div class="form-group col-md-1">
+                            <select class="form-control" id="ans_correct" name="ans_correct">
+                                <option value="Wrong">Wrong</option>
+                                <option value="Correct">Correct</option>
+                            </select>
+                        </div>  
+                          <button class="add_form_field_mcq">+</button>
+                        </div>
+                      </div>
+                    </div>
 
+                    <div class="form-row">
+                      <div class="testcase-container form-group col-md">
+                        <label>Test Cases for Coding [Leave blank for MCQ]</label><br>
+                        <div class = "addtestcasebtn">                      
+                          <!-- <input  type="text" name="testcase1"> -->
+                          <textarea class="form-control col-md-7" rows="3" name="testcaseip1" placeholder="Program input"></textarea>
+                          <textarea class="form-control" rows="3" name="outputeval1" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea>
+                          <div class="form-group col-md-1">
+                              <select class="form-control" id="testcasetype1" name="testcasetype1">
+                                  <option value="Hidden">Hidden</option>
+                                  <option value="Visible">Visible</option>
+                              </select>
+
+                              <select class="form-control" id="testcasetype" name="outputtype1" style="margin-top: 10px;">
+                                <option value="Hidden">Static o/p</option>
+                                <option value="Visible">Dynamic o/p</option>
+                            </select>
+                          </div>                          
+                          <button class="add_form_field_testcase">+</button>
+                         
+                        </div>
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Finish</button>
+                    <button type="submit" class="btn btn-primary"  onclick='saveQuestion()' >Save and Create Next Question</button>
+                  </form>                
+            </div>
           </div>
           <br>
-      
-          <!-- Or let Bootstrap automatically handle the layout -->
+
           <div class="row" style="background: azure;padding: 20px;">
             <div class="col-md-10">
-                
-
             </div>
-
           </div>
-          <br>
-          
+          <br>        
         </div>
       </div>
 </body>
@@ -121,6 +177,56 @@
     xhttp.open("POST", url, true);
     xhttp.send(ans);
   }
+
+  //add new option field
+  $(document).ready(function() {
+    var max_fields = 5;
+    var wrapper = $(".options-container");
+    var add_button = $(".add_form_field_mcq");
+
+    var x = 1;
+    $(add_button).click(function(e) {
+        e.preventDefault();
+        if (x < max_fields) {
+            x++;
+
+            $(wrapper).append('<div class = "addoptionbtn"><input type="text" name="option'+x+'" style="width: 25%;" placeholder="Option '+x+'"><div class="form-group col-md-1"><select class="form-control" id="ans_correct" name="ans_correct'+x+'"><option value="Wrong">Wrong</option><option value="Correct">Correct</option></select></div><button class="delete add_form_field_mcq" style="margin-left:5px;">&nbsp;-</button></div>');
+        } else {
+            alert('You Reached the limits')
+        }
+    });
+
+    $(wrapper).on("click", ".delete", function(e) {
+        e.preventDefault();
+        $(this).parent('div').remove();
+        x--;
+    })
+  });
+
+  //add new test case
+  $(document).ready(function() {
+    var max_fields = 10;
+    var wrapper = $(".testcase-container");
+    var add_button = $(".add_form_field_testcase");
+
+    var z = 1;
+    $(add_button).click(function(f) {
+        f.preventDefault();
+        if (z < max_fields) {
+            z++;
+            $(wrapper).append('<div class = "addtestcasebtn"><textarea class="form-control col-md-7" rows="3" name="testcaseip'+z+'" placeholder="Program input"></textarea><textarea class="form-control" rows="3" name="outputeval'+z+'" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea><div class="form-group col-md-1"><select class="form-control" id="testcasetype1" name="testcasetype'+z+'"><option value="Hidden">Hidden</option><option value="Visible">Visible</option></select><select class="form-control" id="testcasetype" name="outputtype'+z+'" style="margin-top: 10px;"><option value="Hidden">Static o/p</option><option value="Visible">Dynamic o/p</option></select></div><button class="delete-testcase add_form_field_testcase" style="margin-left:5px;">&nbsp;-</button></div>');
+        } else {
+            alert('You Reached the limits')
+        }
+    });
+
+    $(wrapper).on("click", ".delete-testcase", function(f) {
+        f.preventDefault();
+        $(this).parent('div').remove();
+        z--;
+    })
+  });
+
 </script>
 
 </html>

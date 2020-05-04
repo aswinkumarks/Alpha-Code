@@ -19,7 +19,7 @@ def create_contest(request):
         et = request.POST.get("end-time")
         # print(cname,st,et)
         if Contest.objects.filter(cname=cname):
-            return HttpResponse("error : already in database")
+            return HttpResponse("ERROR : Contest Name already in use. Please choose a different one.")
 
         c = Contest(cname=cname, startTime=st, endTime=et)
         c.save()
@@ -31,11 +31,21 @@ def create_contest(request):
 
 @csrf_exempt
 def create_question(request, cname):
-    print("in create question")
-    # if request.method == 'POST':
-    #     res = request.body
-    #     res = res.decode('utf-8')
-    #     print(res['cname'])
+    
+    if request.method == 'POST':
+        res = request.body
+        res = res.decode('utf-8')
+        qno = request.POST.get("qno")
+        qtype = request.POST.get("qtype")
+        q_desc = request.POST.get("q_desc")
+        question = request.POST.get("question")
+        # print(res)
+        # print(cname)
+        if ContestQuestion.objects.filter(contest__cname=cname, qno=qno):
+            return HttpResponse("ERROR : Question number already in DB. Please choose a different question number.")
+        
+        contest = Contest.objects.get(cname=cname)
+        cq = ContestQuestion(qno=qno, startTime=st, endTime=et)
 
     template = loader.get_template('createquestion.html')
     context = {}
