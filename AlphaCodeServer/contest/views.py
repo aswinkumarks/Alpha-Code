@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.template import loader
-from .models import ContestQuestion, CodingQuestion, Contest, McqQuestion
+from .models import *
 import json
 
 from django.views.decorators.csrf import csrf_exempt
@@ -45,7 +45,37 @@ def create_question(request, cname):
             return HttpResponse("ERROR : Question number already in DB. Please choose a different question number.")
         
         contest = Contest.objects.get(cname=cname)
-        cq = ContestQuestion(qno=qno, startTime=st, endTime=et)
+        cq = ContestQuestion(contest=contest)
+        cq.qno = int(qno)
+        cq.qtype = qtype
+        if qtype == 'MCQ':
+            pass
+        else:
+            codingQues = CodingQuestion(question=question,description=q_desc)
+            cq.codingQues = codingQues
+            codingQues.save()
+            cq.save()
+            no = 1
+            while True:
+                try:
+                    inp = request.POST.get('testcaseip'+str(no))
+                    opt = request.POST.get('outputeval'+str(no))
+                    t_type = request.POST.get('testcasetype'+str(no))
+                    opt_type = request.POST.get('outputtype'+str(no))
+                    tc = TestCase(question=codingQues)
+                    tc.testCaseType = t_type
+                    tc.pgmInput = inp
+                    tc.OutputType = opt_type
+                    tc.pgmOutputOrEvalCode = opt
+                    tc.save()
+                    no += 1
+                except:
+                    print(no,'finished')
+                    break
+
+            # return HttpResponse("Success : Questions added to contest %s"%(cname))
+
+
 
     template = loader.get_template('createquestion.html')
     context = {}
