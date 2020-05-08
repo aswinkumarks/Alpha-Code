@@ -73,6 +73,7 @@
                       margin-left: 5px;
                     }
 
+                    
                 </style>
 
                 <form class="quiz-data-box" method="POST" action="">
@@ -98,20 +99,20 @@
                       </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row" id="q_desc">
                       <div class="form-group col-md">
                         <label>Description</label>
-                        <textarea class="form-control" rows="3" id="q_desc" name="q_desc" placeholder="Leave Blank for MCQ"></textarea>
+                        <textarea class="form-control" rows="3" name="q_desc"></textarea>
                       </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row" id="mcq-option-row">
                       <div class="options-container form-group col-md">
                         <label>MCQ Options [leave blank for Coding] </label><br>
                         <div class = "addoptionbtn">
-                          <input type="text" name="option1" style="width: 25%;" placeholder="Option 1">
+                          <input type="text" name="option1" class="mcq" style="width: 25%;" placeholder="Option 1">
                           <div class="form-group col-md-1">
-                            <select class="form-control" id="ans_correct" name="ans_correct1">
+                            <select class="form-control mcq" id="ans_correct" name="ans_correct1">
                                 <option value="False">Wrong</option>
                                 <option value="True">Correct</option>
                             </select>
@@ -121,7 +122,7 @@
                       </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row"   id="testcase-row">
                       <div class="testcase-container form-group col-md">
                         <label>Test Cases for Coding [Leave blank for MCQ]</label><br>
                         <div class = "addtestcasebtn">                      
@@ -162,6 +163,30 @@
 </body>
 
 <script>
+
+  // field disabler
+  function fieldDisabler(){
+    if (this.value == 'MCQ') 
+      {
+          // document.getElementById("q_desc").disabled = true;
+          document.getElementById("mcq-option-row").style.display = "flex";
+          document.getElementById("q_desc").style.display = "none";
+          document.getElementById("testcase-row").style.display = "none";
+      }
+
+      else 
+      {
+        document.getElementById("mcq-option-row").style.display = "none";
+        document.getElementById("q_desc").style.display = "flex";
+        document.getElementById("testcase-row").style.display = "flex";
+      }
+  }
+
+  document.getElementById('qtype').onload = fieldDisabler();
+  document.getElementById('qtype').onchange = fieldDisabler;
+  
+
+
   function saveQuestion(){
     var xhttp = new XMLHttpRequest();
     var cname = document.getElementById("cname").value;
