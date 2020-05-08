@@ -54,13 +54,15 @@ def create_question(request, cname):
             # pass
             mcq_question = McqQuestion(question=question)
             mcq_question.save()
+            cq.mcqQues = mcq_question
+            cq.save()
 
             while True:
                 try:
                 
                     op_value = request.POST.get('option'+str(no))
                     correct = False
-                    if request.POST.get('ans_correct')=="True":
+                    if request.POST.get('ans_correct'+str(no))=="True":
                         correct = True
                     option = Option(question=mcq_question, option=op_value, correct_option=correct)
                     option.save()
