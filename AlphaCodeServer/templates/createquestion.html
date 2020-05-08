@@ -214,7 +214,7 @@
         f.preventDefault();
         if (z < max_fields) {
             z++;
-            $(wrapper).append('<div class = "addtestcasebtn"><textarea class="form-control col-md-7" rows="3" name="testcaseip'+z+'" placeholder="Program input"></textarea><textarea class="form-control" rows="3" name="outputeval'+z+'" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea><div class="form-group col-md-1"><select class="form-control" id="testcasetype1" name="testcasetype'+z+'"><option value="Hidden">Hidden</option><option value="Visible">Visible</option></select><select class="form-control" id="testcasetype" name="outputtype'+z+'" style="margin-top: 10px;"><option value="Hidden">Static o/p</option><option value="Visible">Dynamic o/p</option></select></div><button class="delete-testcase add_form_field_testcase" style="margin-left:5px;">&nbsp;-</button></div>');
+            $(wrapper).append('<div class = "addtestcasebtn"><textarea class="form-control col-md-7" rows="3" name="testcaseip'+z+'" placeholder="Program input"></textarea><textarea class="form-control" rows="3" name="outputeval'+z+'" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea><div class="form-group col-md-1"><select class="form-control" id="testcasetype1" name="testcasetype'+z+'"><option value="Hidden">Hidden</option><option value="Visible">Visible</option></select><select class="form-control" id="testcasetype" name="outputtype'+z+'" style="margin-top: 10px;"><option value="Static">Static o/p</option><option value="Dynamic">Dynamic o/p</option></select></div><button class="delete-testcase add_form_field_testcase" style="margin-left:5px;">&nbsp;-</button></div>');
         } else {
             alert('You Reached the limits')
         }
