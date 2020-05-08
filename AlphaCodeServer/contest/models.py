@@ -47,7 +47,7 @@ class CodingQuestion(models.Model):
 class TestCase(models.Model):
     question = models.ForeignKey(CodingQuestion,on_delete=models.CASCADE)
     testCaseType = models.CharField(max_length=30,choices=(('Hidden','Output and Input will be hidden from user'),
-                                        ('Visiable','Output and Input will be shown to user')))
+                                        ('Visible','Output and Input will be shown to user')))
     pgmInput = models.TextField(default = "")
     OutputType = models.CharField(max_length=30,choices=(('Static','Program output will be same for the given input'),
                                         ('Dynamic','Program ouput will be different for the given input')))

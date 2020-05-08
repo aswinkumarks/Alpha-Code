@@ -48,14 +48,34 @@ def create_question(request, cname):
         cq = ContestQuestion(contest=contest)
         cq.qno = int(qno)
         cq.qtype = qtype
+        no = 1
+
         if qtype == 'MCQ':
-            pass
+            # pass
+            mcq_question = McqQuestion(question=question)
+            mcq_question.save()
+
+            while True:
+                try:
+                
+                    op_value = request.POST.get('option'+str(no))
+                    correct = False
+                    if request.POST.get('ans_correct')=="True":
+                        correct = True
+                    option = Option(question=mcq_question, option=op_value, correct_option=correct)
+                    option.save()
+                    no+=1
+                    # print(op_value, request.POST.get('ans_correct'))
+                except:
+                    print(no,'finished')
+                    break
+
         else:
             codingQues = CodingQuestion(question=question,description=q_desc)
             cq.codingQues = codingQues
             codingQues.save()
             cq.save()
-            no = 1
+            
             while True:
                 try:
                     inp = request.POST.get('testcaseip'+str(no))
