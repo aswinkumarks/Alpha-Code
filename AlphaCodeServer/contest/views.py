@@ -62,7 +62,8 @@ def create_question(request, cname):
                 
                     op_value = request.POST.get('option'+str(no))
                     correct = False
-                    print('options',request.POST.get('ans_correct'+str(no)))
+                    # print('options',request.POST.get('ans_correct'+str(no)))
+
                     if request.POST.get('ans_correct'+str(no))=="True":
                         correct = True
                     option = Option(question=mcq_question, option=op_value, correct_option=correct)
