@@ -1,0 +1,135 @@
+
+*{
+    word-wrap: break-word;
+}
+
+nav {
+    background-color: black;
+    height: 3.5em;
+    position: fixed;
+    z-index: 100;
+    color: white;
+    width: 100%;
+}
+#navelements {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    display: inline-block;
+}
+
+.username,.loginsignup,.username :hover{
+    display: inline;
+    background-color: transparent;
+}
+
+nav li {
+    /* color: white; */
+    text-decoration: none;
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 17px;
+    display: inline;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#time {
+    font-weight: 700;
+}
+
+table .btn-success {
+    color: #000000;
+    /* margin-top: 20px; */
+    background-color: #00ffbf;
+    border-color: #000000;
+}
+
+.questionpallet{                        
+    /* display: block;
+    margin:auto; */
+    text-align: center;
+}
+
+#editor {                    
+    height: 75vh;
+    /* font-size: 0.7rem; */
+    background: white;
+    padding: 10px;
+    border: 1px solid black;
+}
+#output {
+    min-height: 50px;
+    text-align: left;
+    height: auto;
+    background: white;
+    color: black;
+    border: 2px solid black;
+}    
+
+#lang {
+    border: 1px solid black;
+    font-weight: 600;
+    padding: 2px;
+    box-shadow: black;
+}
+
+#answer {
+    margin-left: -5px;
+}
+
+#save{
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    padding: 20px;
+    position: absolute;
+}
+
+#save .btn{
+    width: 45%;
+}
+
+
+li {
+    display: list-item;
+    /* list-style-position: inside; */
+    list-style-type: none;
+}
+
+/* input[type=text] {
+    width: 30%;
+    padding: 12px 20px;
+    margin-top: 15px;
+    margin-left: 20px;
+    box-sizing: border-box;
+    border: none;
+    background: ghostwhite;   
+    border: 2px solid #000000;
+}    */
+
+#qpallet button:focus{
+    background: yellow;
+}
+
+#qpallet button:active{
+    background: yellow;
+}
+
+.btn {
+    color: #000000;
+    margin-top: 20px;
+    background-color: #00ff55;
+    border-color: #000000;
+    float: right;
+    font-weight: 400;
+    text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 1rem;
+    line-height: 1.5;
+
+}

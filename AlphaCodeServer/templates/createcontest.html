@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Code Platform</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %} ">
+</head>
+
+<body style="background:dodgerblue ">
+    
+    <nav>
+        <h1 style="width: fit-content;
+            font-size: 1.75rem;
+            padding: 10px;">
+            CODE PLATFORM XYZ  
+        </h1>
+        <ul id="navelements">
+            <div class="loginsignup">                
+                <li class="username">{{ user.username }}</li>
+                <input id="user_name" type="hidden" value='{{ user.username }}'>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </div>
+        </ul>				
+    </nav>
+    <br><br><br>
+
+    <div class="container-fluid">
+        
+        <div class="container-fluid">
+          
+          <div class="row">
+            <div class="col-md">
+                <h4>Contest Creation Panel</h4>
+                <!-- <p>Resize the browser window to see the effect.</p> -->
+                <br>
+
+                <style>
+                    .quiz-data-box{
+                        background: ghostwhite;
+                        padding: 20px;
+                        border-radius: 5px;
+                    }
+                    .quiz-data-box input{
+                      margin-top: 30px;
+                    }
+                </style>
+
+            <form class="quiz-data-box" method="POST" action="">
+              {% csrf_token %}
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label>Contest Name</label>
+                    <input type="text" class="form-control" id="cname" name="cname" placeholder="" >
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label>Start Time:</label>
+                    <input type="datetime-local" class="form-control" id="start-time" name="start-time" >
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label>End Time:</label>
+                    <input type="datetime-local" class="form-control" id="end-time" name="end-time" >
+                  </div>
+                </div>
+                <input type="submit" class="btn btn-primary" value="Procees to Question Creation"> 
+                <!-- <input type="submit" class="btn btn-primary" value="Procees to Question Creation"> -->
+              </form>   
+                  
+            </div>
+
+          </div>
+          <br>
+      
+          <div class="row" style="background: azure;padding: 20px;">
+            <div class="col-md-10">
+                
+
+            </div>
+
+          </div>
+          <br>
+          
+        </div>
+      </div>
+</body>
+
+<script>
+  // function saveContest(){
+  //   var xhttp = new XMLHttpRequest();
+  //   var cname = document.getElementById("cname").value;
+  //   var st = document.getElementById("start-time").value;
+  //   var et = document.getElementById("end-time").value;
+  //   var url = "http://127.0.0.1:8000/create_contest/"+cname+"/create_question/";
+  //   //console.log(ans);
+  //   // xhttp.onreadystatechange = function() {
+  //   // if (this.readyState == 4 && this.status == 200) {
+  //   //     // action to do on return
+  //   // }
+  //   // };
+  //   xhttp.open("POST", url, true);
+  //   xhttp.send();
+  // }
+</script>
+
+</html>
