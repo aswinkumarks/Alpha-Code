@@ -1,0 +1,77 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sign up - Indra Cloud</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Custom Theme files -->
+<link href="{%static 'login.css' %}" rel="stylesheet" type="text/css" media="all" />
+<!-- //Custom Theme files -->
+<!-- web font -->
+<link href="//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i" rel="stylesheet">
+<!-- //web font -->
+</head>
+<body>
+	<!-- main -->
+	<div class="main-w3layouts wrapper">
+		<h1>Sign Up</h1>
+		<div class="main-agileinfo">
+			<div class="agileits-top">
+                {% block content %}
+				<form action="" method="post" id="register">
+                    {% csrf_token %}
+                    {% comment %} {{ form.as_p }} {% endcomment %}
+                    {{ form.non_field_errors }}
+					{% if form.errors %}
+					{% for field in form %}
+						{% for error in field.errors %}
+							<div class="alert alert-danger">
+								<strong>{{ error|escape }}</strong>
+							</div>
+						{% endfor %}
+					{% endfor %}
+					{% for error in form.non_field_errors %}
+						<div class="alert alert-danger">
+							<strong>{{ error|escape }}</strong>
+						</div>
+					{% endfor %}
+					{% endif %}
+                    {% comment %} <input class="text" type="text" name="username" placeholder="Username" required="" id="id_username"><br><br>
+					<input class="text" type="password" name="password1" placeholder="Password" required="" id="id_password1">
+					<input class="text w3lpass" type="password" name="password2" placeholder="Confirm Password" required="" id="id_password2"> {% endcomment %}
+					<input class="text" type="text" name="{{form.username.html_name }}" placeholder="Username" required=""><br><br>
+					{{ field.password1.errors}}
+					<input class="text" type="password" name="{{form.password1.html_name }}" placeholder="Password" required="">
+					<input class="text w3lpass" type="password" name="{{form.password2.html_name }}" placeholder="Confirm Password" required="">
+					<div class="wthree-text" style="text-align: center;">
+						<label class="anim">
+							<!-- <input type="checkbox" class="checkbox" required=""> -->
+							<!-- <span>I Agree To The Terms & Conditions</span> -->
+							<span>By clicking Sign up, you Agree To The Terms & Conditions</span>
+						</label>
+						<div class="clear"> </div>
+					</div>
+					<input type="submit" value="SIGNUP">
+                </form>
+                {% endblock %}
+				<p>Already have an account ? <a href="{% url 'login' %}"><br><br> Login</a></p>
+			</div>
+		</div>
+		<!-- <ul class="colorlib-bubbles">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul> -->
+	</div>
+	<!-- //main -->
+</body>
+</html>
