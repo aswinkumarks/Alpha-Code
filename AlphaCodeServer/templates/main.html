@@ -38,14 +38,15 @@
           
           <div class="row">
             <div class="col-md-10">
-                <h4>Basic Grid Structure</h4>
+                <!-- <h4>Basic Grid Structure</h4>
                 <p>Resize the browser window to see the effect.</p>
-                <p>The first, second and third row will automatically stack on top of each other when the screen is less than 576px wide.</p>
-                <ul>
+                <p>The first, second and third row will automatically stack on top of each other when the screen is less than 576px wide.</p> -->
+                <!-- <meta id="qtype" data-qtype="{{qtype}}"> -->
+                <ul id="qbody">
                     <li>
                  
                         <div id='question'>
-                        {{qno}}. {{question}}<br><br>
+                        {{qno}}. {{question}} {{qtype}}<br><br>
                         </div>
                         <div id="desc">   
                             {{desc}}<br><br>
@@ -70,7 +71,31 @@
 
           </div>
           <br>
-      
+
+        <div class="row" id="mcq-options-row">
+            <div class="col-md-10">
+
+                <form action="" method="POST">
+
+                    <div class="form-check">
+                    <label class="form-check-label" for="radio1">
+                        <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" checked>Option 1
+                    </label>
+                    </div>
+
+                    <div class="form-check">
+                    <label class="form-check-label" for="radio2">
+                        <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">Option 2
+                    </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+
+            </div>
+        </div>      
+            <br><br><br>
+
           <!-- Or let Bootstrap automatically handle the layout -->
           <div class="row" style="background: azure;padding: 20px;">
             <div class="col-md-10">
@@ -126,6 +151,22 @@
 	<!-- <script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script> -->
     <!-- <script src="{% static 'jsquiz/main.js' %}"></script> -->
     <script>
+
+
+    // function disp_mcq_options(){
+    //     var qtype = $('#qtype').data("data-qtype");
+    //     console.log(qtype)
+    // }
+    $(document).ready ( function(){
+        alert('loaded');
+        });
+
+    $('question').bind('DOMSubtreeModified', function(){
+        alert('changed');
+        });
+    // window.onload = disp_mcq_options;
+    // window.onchange = disp_mcq_options;
+
 
     function getRemTime(){
         var xhttp = new XMLHttpRequest();
