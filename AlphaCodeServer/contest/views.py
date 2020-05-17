@@ -4,7 +4,8 @@ from django.template import loader
 from .models import *
 import json
 from django.contrib.auth.decorators import login_required
-
+import datetime
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -128,14 +129,14 @@ def disp_contest_pg(request, cname):
         qlen = len(ContestQuestion.objects.filter(contest__cname=cname))        
         qobj = ContestQuestion.objects.get(qno=1,contest__cname=cname)
 
-        print(qobj.qtype)
-        mcq = McqQuestion.objects.filter(cq=qobj)
-        coding = CodingQuestion.objects.filter(cq=qobj)
+        # print(qobj.qtype)
+        # mcq = McqQuestion.objects.filter(cq=qobj)
+        # coding = CodingQuestion.objects.filter(cq=qobj)
 
         if qobj.qtype == 'MCQ':
-            context = {"qno":qobj.qno, "question":mcq.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+            context = {"qno":qobj.qno, "question":qobj.mcqquestion.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
         else:
-            context = {"qno":qobj.qno, "question":coding.question, "desc":coding.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+            context = {"qno":qobj.qno, "question":qobj.codingquestion.question, "desc":qobj.codingquestion.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
         
         return HttpResponse(template.render(context,request))
     else:
@@ -159,14 +160,7 @@ def getQuestion(request, cname, qno):
     else:
         return HttpResponse("DataBase Error")
     
-    # for q in ques:
-    #     question = q.question
-    #     desc = q.description
-    #     pgmInput = q.pgmInput
-    #     expOutput = q.expOutput
-    # info = {"ques": question, "desc":desc, "input":pgmInput, "expOutput":expOutput, "num_of_q":list(range(1,qlen+1))}
     return HttpResponse(json.dumps(info))
-    # return HttpResponse(info)
 
 @login_required(login_url='/accounts/login')
 def show_contests(request):
@@ -181,3 +175,9 @@ def show_contests(request):
 #     m.user_answer = res
 #     m.save()
 #     return HttpResponse("")
+
+def reminingTime(request,cname):
+    contest = Contest.objects.get(cname=cname)
+    rem_time = contest.endTime - timezone.now()
+    # print(rem_time.days,rem_time.seconds)
+    return HttpResponse(str(rem_time.seconds))
