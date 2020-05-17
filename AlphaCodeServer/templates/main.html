@@ -158,10 +158,10 @@
     //     console.log(qtype)
     // }
     $(document).ready ( function(){
-        alert('loaded');
+        alert('loaded');    
         });
 
-    $('question').bind('DOMSubtreeModified', function(){
+    $('body').on('DOMSubtreeModified', 'question', function(){
         alert('changed');
         });
     // window.onload = disp_mcq_options;

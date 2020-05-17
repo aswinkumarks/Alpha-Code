@@ -1,0 +1,46 @@
+body{
+    background:midnightblue;
+}
+
+.login-form{
+    text-align: center;
+    width: 30%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background:navy;
+    padding: 30px;			
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
+.login-form input{
+    padding:10px;
+    border: 2px solid white;
+    border-radius: 5px;
+    width: 50%;
+    margin-top: 10px;
+}
+
+.login-form input[type=submit]{
+    width: 50%;
+    margin-top: 20px;
+    background:lime;
+    font-weight: bold;
+}
+
+.login-form h1, p, a{
+    color: white;
+}
+
+.errorlist, .nonfield{
+    color: red;
+    font-weight: bold;
+    list-style: none;
+    text-align: left;
+}
