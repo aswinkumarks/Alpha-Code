@@ -41,18 +41,20 @@
           
 			<div class="row">
 				<div class="col-md-10">
-					
-					<ul id="contest-list">
+
+					<div class="card-columns" id="contest-list">
 						{% for contest in contests %}
-						<li>
-							<a href="/contest/{{contest.cname}}" title="">{{contest.cname}}
-								<br>
-								<p>{{contest.startTime}} - {{contest.endTime}}</p>
-							</a>
-							
-						</li>
-						{% endfor %}
-					</ul>	
+						<div class="card bg-light">
+							<div class="card-body">
+								<h3 class="card-title">{{contest.cname}}</h3>
+								<hr/>
+								<h6>Contest Availability</h6>
+								  <p class="card-text">{{contest.startTime}} &nbsp;-&nbsp; {{contest.endTime}}</p>
+								  <hr/>
+      							<a href="/contest/{{contest.cname}}"  class="card-link">Start</a>
+							</div>
+						</div>
+						{% endfor %}			
 					
 				</div>
 			</div>

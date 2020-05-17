@@ -144,11 +144,12 @@ li {
     font-size: 15pt;
 }
 
-#contest-list a{
-    color: white;
+#contest-list h6{
+    /* color: white; */
+    font-size: 14pt;
 }
 
 #contest-list p{
-    color: white;
+    /* color: white; */
     font-size: 12pt;
 }

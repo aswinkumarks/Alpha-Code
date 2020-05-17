@@ -127,11 +127,15 @@ def disp_contest_pg(request, cname):
         template = loader.get_template('main.html')
         qlen = len(ContestQuestion.objects.filter(contest__cname=cname))        
         qobj = ContestQuestion.objects.get(qno=1,contest__cname=cname)
+
         print(qobj.qtype)
+        mcq = McqQuestion.objects.filter(cq=qobj)
+        coding = CodingQuestion.objects.filter(cq=qobj)
+
         if qobj.qtype == 'MCQ':
-            context = {"qno":qobj.qno, "question":qobj.mcqQues.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+            context = {"qno":qobj.qno, "question":mcq.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
         else:
-            context = {"qno":qobj.qno, "question":qobj.codingQues.question, "desc":qobj.codingQues.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+            context = {"qno":qobj.qno, "question":coding.question, "desc":coding.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
         
         return HttpResponse(template.render(context,request))
     else:
@@ -145,10 +149,13 @@ def getQuestion(request, cname, qno):
     qlen = len(ContestQuestion.objects.filter(contest__cname=cname))
     
     print(qobj.qtype)
+    mcq = McqQuestion.objects.filter(cq=qobj)
+    coding = CodingQuestion.objects.filter(cq=qobj)
+
     if qobj.qtype == 'MCQ':
-        info = {"qno":qobj.qno, "question":qobj.mcqQues.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+        info = {"qno":qobj.qno, "question":mcq.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
     elif qobj.qtype == "Coding":
-        info = {"qno":qobj.qno, "question":qobj.codingQues.question, "desc":qobj.codingQues.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+        info = {"qno":qobj.qno, "question":coding.question, "desc":coding.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
     else:
         return HttpResponse("DataBase Error")
     
