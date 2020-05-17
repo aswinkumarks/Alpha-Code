@@ -137,3 +137,18 @@ li {
 #qbody{
     padding-left: 0;
 }
+
+#contest-list li{
+    color: white;
+    list-style:decimal;
+    font-size: 15pt;
+}
+
+#contest-list a{
+    color: white;
+}
+
+#contest-list p{
+    color: white;
+    font-size: 12pt;
+}
