@@ -22,8 +22,25 @@ class Participant(models.Model):
     submition_time = models.TimeField()
 
 
+class ContestQuestion(models.Model):
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
+    qno = models.IntegerField()
+    qtype = models.CharField(max_length=50,choices=(('MCQ','Multiple Choice Question'),
+                        ('Coding','Coding Question')))
+    # mcqQues = models.OneToOneField(McqQuestion, null=True, blank=True, on_delete=models.CASCADE)
+    # codingQues = models.OneToOneField(CodingQuestion, null=True, blank=True, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['contest', 'qno'], name='name of constraint')
+        ]
+
+    def __str__(self):
+        return str(self.qno)+'. '+self.qtype
+
 
 class McqQuestion(models.Model):
+    cq = models.OneToOneField(ContestQuestion, on_delete=models.CASCADE)
     question = models.TextField()
 
     def __str__(self):
@@ -37,6 +54,7 @@ class Option(models.Model):
 
 
 class CodingQuestion(models.Model):
+    cq = models.OneToOneField(ContestQuestion, on_delete=models.CASCADE)
     question = models.TextField()
     description = models.TextField()
 
@@ -52,24 +70,6 @@ class TestCase(models.Model):
     OutputType = models.CharField(max_length=30,choices=(('Static','Program output will be same for the given input'),
                                         ('Dynamic','Program ouput will be different for the given input')))
     pgmOutputOrEvalCode = models.TextField()
-
-
-class ContestQuestion(models.Model):
-    contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
-    qno = models.IntegerField()
-    qtype = models.CharField(max_length=50,choices=(('MCQ','Multiple Choice Question'),
-                        ('Coding','Coding Question')))
-    mcqQues = models.OneToOneField(McqQuestion, null=True, blank=True, on_delete=models.CASCADE)
-    codingQues = models.OneToOneField(CodingQuestion, null=True, blank=True, on_delete=models.CASCADE)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['contest', 'qno'], name='name of constraint')
-        ]
-
-    def _str_(self):
-        return str(self.qno)
-
 
 
 class User_Response(models.Model):
