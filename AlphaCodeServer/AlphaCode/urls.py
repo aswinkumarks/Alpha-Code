@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf.urls import url
 from AlphaCodeTasks.backgroundTask import start_background_tasks
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    url(r'^',include('accounts.urls')),
+    path('accounts/',include('accounts.urls')),
+    path('',RedirectView.as_view(url='/contests/')),
+    # url(r'^',include('accounts.urls')),
     url(r'^',include('contest.urls')),
     path('task/',include('AlphaCodeTasks.urls'))
 ]

@@ -38,14 +38,15 @@
           
           <div class="row">
             <div class="col-md-10">
-                <h4>Basic Grid Structure</h4>
+                <!-- <h4>Basic Grid Structure</h4>
                 <p>Resize the browser window to see the effect.</p>
-                <p>The first, second and third row will automatically stack on top of each other when the screen is less than 576px wide.</p>
-                <ul>
+                <p>The first, second and third row will automatically stack on top of each other when the screen is less than 576px wide.</p> -->
+                <!-- <meta id="qtype" data-qtype="{{qtype}}"> -->
+                <ul id="qbody">
                     <li>
                  
                         <div id='question'>
-                        {{qno}}. {{question}}<br><br>
+                        {{qno}}. {{question}} {{qtype}}<br><br>
                         </div>
                         <div id="desc">   
                             {{desc}}<br><br>
@@ -70,7 +71,31 @@
 
           </div>
           <br>
-      
+
+        <div class="row" id="mcq-options-row">
+            <div class="col-md-10">
+
+                <form action="" method="POST">
+
+                    <div class="form-check">
+                    <label class="form-check-label" for="radio1">
+                        <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" checked>Option 1
+                    </label>
+                    </div>
+
+                    <div class="form-check">
+                    <label class="form-check-label" for="radio2">
+                        <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">Option 2
+                    </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+
+            </div>
+        </div>      
+            <br><br><br>
+
           <!-- Or let Bootstrap automatically handle the layout -->
           <div class="row" style="background: azure;padding: 20px;">
             <div class="col-md-10">
@@ -127,30 +152,38 @@
     <!-- <script src="{% static 'jsquiz/main.js' %}"></script> -->
     <script>
 
+
+    // function disp_mcq_options(){
+    //     var qtype = $('#qtype').data("data-qtype");
+    //     console.log(qtype)
+    // }
+    // $(document).ready ( function(){
+    //     alert('loaded');    
+    //     });
+
+    // $('body').on('DOMSubtreeModified', 'question', function(){
+    //     alert('changed');
+    //     });
+    // window.onload = disp_mcq_options;
+    // window.onchange = disp_mcq_options;
+
+
     function getRemTime(){
         var xhttp = new XMLHttpRequest();
-        var url = "http://127.0.0.1:8000/getReminTime/";
-        //url = url+uname;
+        var cname = window.location.href.split("/").slice(-1)[0];
+        var url = "/getReminTime/"+cname;
         xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            data = JSON.parse(this.responseText);
-            hours = data["hour"]*60*60;
-            minutes = data["minute"]*60;
+            seconds = parseInt(this.responseText);
             var display = document.querySelector('#time');
-            startTimer(hours, minutes, display);
-            console.log(data);
+            startTimer(seconds, display);
+            // console.log(data);
         }
         };
         xhttp.open("GET", url, true);
         xhttp.send();
     }
-    function saveReminTime(h,m){
-        var xhttp = new XMLHttpRequest();
-        var url = "http://127.0.0.1:8000/saveReminTime/";
-        url = url+h+"/"+m+"/";
-        xhttp.open("GET", url, true);
-        xhttp.send();
-    }
+
     
     function finalSubmit(){
             // var xhttp = new XMLHttpRequest();
@@ -163,8 +196,9 @@
                 location.href = url;
             }
     }
-    function startTimer(h, m, display) {
-        var timer = h+m+10;
+    function startTimer(seconds, display) {
+        // var timer = h+m+10;
+        var timer = seconds;
         timer--;
         setInterval(function () {
             if(timer > 0){
@@ -174,13 +208,8 @@
                 minutes = minutes < 10 ? "0" + minutes : minutes;
                 seconds = seconds < 10 ? "0" + seconds : seconds;
                 display.textContent = "Time Left : " + hours + ":" +  minutes + ":" + seconds;
-                h--;
+
                 timer--;
-                // if (--timer < 0) {
-                //     timer = duration;
-                // }
-                if(seconds%5 ==0)
-                    saveReminTime(hours,minutes)
                 if (timer < 0){
                     finalSubmit();
                     display.textContent = "TIME EXPIRED";
@@ -191,14 +220,9 @@
     }
 
     window.onload = function () {
-        var hours = 60 * 60 * 1;  // 6060 no.of hrs
-        var minutes = 60 * 30;   // 60 * mins
-        //var display = document.querySelector('#time');
         getRemTime()
-        //hours = data["hour"]*60 * 60;
-        //minutes = data["minute"]*30;
-        //startTimer(hours, minutes, display);
     };
+    
     </script>
     <script>
         //local

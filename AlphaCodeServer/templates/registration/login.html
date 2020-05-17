@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Sign in - Indra Cloud</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+
+		<link href="{%static 'css/login.css' %}" rel="stylesheet" type="text/css" media="all" />
+		<link href="//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i" rel="stylesheet">
+
+	</head>
+
+<body>
+	{% block content %}
+	<div class="login-form">
+		<form action="" method="post">
+			<h1 class="h3 mb-3 font-weight-normal">Participant Login</h1>
+			{% csrf_token %}
+			{{ form.non_field_errors }}
+			{% if form.errors %}
+			{% for field in form %}
+				{% for error in field.errors %}
+					<div class="alert alert-danger">
+						<strong>{{ error|escape }}</strong>
+					</div>
+				{% endfor %}
+			{% endfor %}
+			{% endif %}
+			<input class="text" type="text" name="{{form.username.html_name }}" placeholder="Username" required=""><br><br>
+			<input class="text" type="password" name="{{form.password.html_name }}" placeholder="Password" required="">
+			<input class="btn btn-primary" type="submit" value="LOGIN">
+			<input type="hidden" name="next" value="{{ next }}" />
+		</form>
+		<p>Don't have an Account? <a href="{% url 'signup' %}"><b>Sign Up</b></a></p>
+	</div>
+	{% endblock %}
+</body>
+
+
+
+</html>

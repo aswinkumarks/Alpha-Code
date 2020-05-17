@@ -3,7 +3,9 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.template import loader
 from .models import *
 import json
-
+from django.contrib.auth.decorators import login_required
+import datetime
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -11,6 +13,9 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 @csrf_exempt
 def create_contest(request):
+    if not request.user.is_staff:
+        return HttpResponse("<h1>Access Denied</h1>")
+
     if request.method == 'POST':
         res = request.body
         res = res.decode('utf-8')
@@ -29,9 +34,12 @@ def create_contest(request):
     context = {}
     return HttpResponse(template.render(context,request))
 
+
 @csrf_exempt
 def create_question(request, cname):
-    
+    if not request.user.is_staff:
+        return HttpResponse("<h1>Access Denied</h1>")
+        
     if request.method == 'POST':
         res = request.body
         res = res.decode('utf-8')
@@ -52,10 +60,9 @@ def create_question(request, cname):
 
         if qtype == 'MCQ':
             # pass
-            mcq_question = McqQuestion(question=question)
-            cq.mcqQues = mcq_question
-            mcq_question.save()
+            mcq_question = McqQuestion(cq=cq,question=question)
             cq.save()
+            mcq_question.save()
 
             while True:
                 try:
@@ -75,10 +82,9 @@ def create_question(request, cname):
                     break
 
         else:
-            codingQues = CodingQuestion(question=question,description=q_desc)
-            cq.codingQues = codingQues
-            codingQues.save()
+            codingQues = CodingQuestion(cq=cq,question=question,description=q_desc)
             cq.save()
+            codingQues.save()
             
             while True:
                 try:
@@ -105,47 +111,62 @@ def create_question(request, cname):
     context = {}
     return HttpResponse(template.render(context,request))
 
-def admin_page(request):
-    template = loader.get_template('adminpage.html')
-    context = {}
-    return HttpResponse(template.render(context,request))
 
+@login_required(login_url='/accounts/login')
+def admin_page(request):
+    if request.user.is_staff:
+        template = loader.get_template('adminpage.html')
+        context = {}
+        return HttpResponse(template.render(context,request))
+    else:
+        return HttpResponse("<h1>Access Denied</h1>")
+
+
+@login_required(login_url='/accounts/login')
 def disp_contest_pg(request, cname):
     if request.user.is_authenticated:
         template = loader.get_template('main.html')
         qlen = len(ContestQuestion.objects.filter(contest__cname=cname))        
         qobj = ContestQuestion.objects.get(qno=1,contest__cname=cname)
-        
+
+        # print(qobj.qtype)
+        # mcq = McqQuestion.objects.filter(cq=qobj)
+        # coding = CodingQuestion.objects.filter(cq=qobj)
+
         if qobj.qtype == 'MCQ':
-            context = {"qno":qobj.qno, "question":qobj.mcqQues.question, "num_of_q":list(range(1,qlen+1))}
+            context = {"qno":qobj.qno, "question":qobj.mcqquestion.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
         else:
-            context = {"qno":qobj.qno, "question":qobj.codingQues.question, "desc":qobj.codingQues.description ,"num_of_q":list(range(1,qlen+1))}
+            context = {"qno":qobj.qno, "question":qobj.codingquestion.question, "desc":qobj.codingquestion.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
         
         return HttpResponse(template.render(context,request))
     else:
         return HttpResponseRedirect('/')
 
 
+@login_required(login_url='/accounts/login')
 def getQuestion(request, cname, qno):   
     # question,desc,pgmInput,expOutput = '','','',''
     qobj = ContestQuestion.objects.get(qno=qno,contest__cname=cname)
     qlen = len(ContestQuestion.objects.filter(contest__cname=cname))
     
-    if qobj.qtype == 'Coding':
-        info = {"qno":qobj.qno, "question":qobj.codingQues.question, "desc":qobj.codingQues.description, "num_of_q":list(range(1,qlen+1))}
-    elif qobj.qtype == 'MCQ':
-        info = {"qno":qobj.qno, "question":qobj.mcqQues.question, "desc":"", "num_of_q":list(range(1,qlen+1))}
+    print(qobj.qtype)
+    mcq = McqQuestion.objects.filter(cq=qobj)
+    coding = CodingQuestion.objects.filter(cq=qobj)
+
+    if qobj.qtype == 'MCQ':
+        info = {"qno":qobj.qno, "question":mcq.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+    elif qobj.qtype == "Coding":
+        info = {"qno":qobj.qno, "question":coding.question, "desc":coding.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
     else:
         return HttpResponse("DataBase Error")
     
-    # for q in ques:
-    #     question = q.question
-    #     desc = q.description
-    #     pgmInput = q.pgmInput
-    #     expOutput = q.expOutput
-    # info = {"ques": question, "desc":desc, "input":pgmInput, "expOutput":expOutput, "num_of_q":list(range(1,qlen+1))}
     return HttpResponse(json.dumps(info))
-    # return HttpResponse(info)
+
+@login_required(login_url='/accounts/login')
+def show_contests(request):
+    contests = Contest.objects.all()
+    return render(request,'contests.html',{"contests":contests})
+
 
 # def saveResponse(request,qno):
 #     res = request.body
@@ -154,3 +175,9 @@ def getQuestion(request, cname, qno):
 #     m.user_answer = res
 #     m.save()
 #     return HttpResponse("")
+
+def reminingTime(request,cname):
+    contest = Contest.objects.get(cname=cname)
+    rem_time = contest.endTime - timezone.now()
+    # print(rem_time.days,rem_time.seconds)
+    return HttpResponse(str(rem_time.seconds))
