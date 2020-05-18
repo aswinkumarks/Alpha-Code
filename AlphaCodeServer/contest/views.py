@@ -154,9 +154,9 @@ def getQuestion(request, cname, qno):
     coding = CodingQuestion.objects.filter(cq=qobj)
 
     if qobj.qtype == 'MCQ':
-        info = {"qno":qobj.qno, "question":mcq.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+        info = {"qno":qobj.qno, "question":qobj.mcqquestion.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
     elif qobj.qtype == "Coding":
-        info = {"qno":qobj.qno, "question":coding.question, "desc":coding.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+        info = {"qno":qobj.qno, "question":qobj.codingquestion.question, "desc":qobj.codingquestion.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
     else:
         return HttpResponse("DataBase Error")
     
@@ -176,7 +176,7 @@ def show_contests(request):
 #     m.save()
 #     return HttpResponse("")
 
-def reminingTime(request,cname):
+def remainingTime(request,cname):
     contest = Contest.objects.get(cname=cname)
     rem_time = contest.endTime - timezone.now()
     # print(rem_time.days,rem_time.seconds)
