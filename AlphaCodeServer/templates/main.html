@@ -38,18 +38,23 @@
           
           <div class="row">
             <div class="col-md-10">
-                <!-- <h4>Basic Grid Structure</h4>
-                <p>Resize the browser window to see the effect.</p>
-                <p>The first, second and third row will automatically stack on top of each other when the screen is less than 576px wide.</p> -->
-                <!-- <meta id="qtype" data-qtype="{{qtype}}"> -->
+
                 <ul id="qbody">
                     <li>
-                 
+                        <input id="qtype" type="hidden" value= {{qtype}}>
                         <div id='question'>
-                        {{qno}}. {{question}} {{qtype}}<br><br>
+                        {{qno}}. {{question}}
                         </div>
+
+                        <div style="display: none;">
+                            type : {{qtype}}
+                        </div>
+                        
                         <div id="desc">   
-                            {{desc}}<br><br>
+                            {% if desc %}
+                                {{desc}}
+                            {% endif %}
+                                <br>
                         </div>
                     
                     <!-- <input type="text" id="answer" name="answer" placeholder="Type your response" value=""> -->
@@ -76,27 +81,19 @@
             <div class="col-md-10">
 
                 <form action="" method="POST">
-
+                    {% for option in options %}
                     <div class="form-check">
-                    <label class="form-check-label" for="radio1">
-                        <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" checked>Option 1
-                    </label>
+                        <input type="radio" class="form-check-input" id="{{option}}" name="optradio" value="{{option}}">{{option}}
                     </div>
-
-                    <div class="form-check">
-                    <label class="form-check-label" for="radio2">
-                        <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">Option 2
-                    </label>
-                    </div>
+                    {% endfor %}
                     
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button id="submitmcq" type="submit" class="btn btn-primary">Submit</button>
                 </form>
 
             </div>
         </div>      
-            <br><br><br>
+            <br>
 
-          <!-- Or let Bootstrap automatically handle the layout -->
           <div class="row" style="background: azure;padding: 20px;">
             <div class="col-md-10">
                 <!-- <label for="lang"><b>Coding Window</b></label> -->
@@ -136,7 +133,7 @@
             <div class="col-md-2">
                 <div id="save">
                     <input id="ques_no" type="hidden" value="1"> 
-                    <input type="button" class="btn" value="Submit" style="float:left;" onclick='submitCode()'>
+                    <input id="submitcode" type="button" class="btn" value="Submit" style="float:left;" onclick='submitCode()'>
                     <input type="button" class="btn" value="Final Submit" style="background-color:dodgerblue; " onclick='finalSubmit()'>
                 </div>
             </div>
@@ -147,26 +144,18 @@
         </div>
       </div>
 
-	<!-- <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script> -->
-	<!-- <script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script> -->
-    <!-- <script src="{% static 'jsquiz/main.js' %}"></script> -->
-    <script>
-
-
-    // function disp_mcq_options(){
-    //     var qtype = $('#qtype').data("data-qtype");
-    //     console.log(qtype)
-    // }
-    // $(document).ready ( function(){
-    //     alert('loaded');    
-    //     });
-
-    // $('body').on('DOMSubtreeModified', 'question', function(){
-    //     alert('changed');
-    //     });
-    // window.onload = disp_mcq_options;
-    // window.onchange = disp_mcq_options;
-
+<script>
+    function disp_mcq_options(){
+        var qtype = document.getElementById("qtype").value;
+        if (qtype == "Coding"){
+            document.getElementById("mcq-options-row").style.display = "none";
+            document.getElementById("submitcode").style.display = "block";
+        }
+        else{
+            document.getElementById("submitcode").style.display = "none";
+        }
+    }
+    window.onload = disp_mcq_options();
 
     function getRemTime(){
         var xhttp = new XMLHttpRequest();
@@ -207,21 +196,81 @@
         }, 1000);
     }
 
-    window.onload = function () {
-        getRemTime()
-    };
+    window.onload = getRemTime();
     
-    function finalSubmit(){
-            // var xhttp = new XMLHttpRequest();
-            if (confirm("Are you sure ?\n\nConfirm to end the exam. !") == true) {
-                var url = "http://127.0.0.1:8000/finalSubmit/";
-                var uname = document.getElementById("user_name").value;
-                url = url+uname;
-                // xhttp.open("GET", url, true);
-                // xhttp.send();
-                location.href = url;
-            }
+    //local
+    function changeLang() {
+        var lang = document.getElementById('lang').value;
+        if (lang == "c")
+        {
+            getPrevCode();
+            var code = editor.getValue();
+            if (code=="")
+                editor.setValue("//The return type of main function must be int");
+            editor.session.setMode("ace/mode/c_cpp");
+        }
+        else if (lang == "python2" || lang == "python3")
+        {
+            getPrevCode();
+        }
     }
+
+    function getQuestion(qno) {
+        document.getElementById("output").innerHTML = "";
+        var xhttp = new XMLHttpRequest();
+        var url = window.location.href+"/getQuestion/"+qno;
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            data = JSON.parse(this.responseText);
+            // data = this.responseText;
+            console.log("data : "+data)
+            document.getElementById("question").innerHTML = qno+". "+data["question"];
+            document.getElementById("desc").innerHTML = data["desc"];
+            document.getElementById("qtype").innerHTML = data["qtype"];
+            // document.getElementById("input").innerHTML = data["input"];
+            // document.getElementById("expoutput").innerHTML = data["expOutput"];
+            document.getElementById("ques_no").value = qno;
+            //console.log(data);
+            // getPrevCode()
+
+            //diable or enable options
+            if (data["qtype"] == "MCQ"){
+                document.getElementById("mcq-options-row").style.display = "flex";
+                document.getElementById("submitcode").style.display = "none";
+            }
+            else{
+                document.getElementById("mcq-options-row").style.display = "none";
+                document.getElementById("submitcode").style.display = "block";
+            }
+
+        }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.send();
+    }
+
+    //local
+    function getOutput() {
+        var xhttp = new XMLHttpRequest();
+        //var url = "run/";
+        var input = document.getElementById("input").innerHTML;
+        document.getElementById("output").innerHTML = "";
+        var qno = document.getElementById("ques_no").value;
+        var url = "/task/run/"
+        var lang = document.getElementById('lang').value;
+        var code = editor.getValue();
+        url = url+lang+"/"+qno;
+        //console.log(code);
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("output").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", url, true);
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.send(JSON.stringify({ "code":code, "input":input }));
+    }
+    getPrevCode();
 
     //local
     function getPrevCode(){
@@ -243,22 +292,6 @@
         xhttp.open("GET", url, true);
         xhttp.send();
     }
-    //local
-    function changeLang() {
-        var lang = document.getElementById('lang').value;
-        if (lang == "c")
-        {
-            getPrevCode();
-            var code = editor.getValue();
-            if (code=="")
-                editor.setValue("//The return type of main function must be int");
-            editor.session.setMode("ace/mode/c_cpp");
-        }
-        else if (lang == "python2" || lang == "python3")
-        {
-            getPrevCode();
-        }
-    }
 
     //local
     function saveResponse(){
@@ -274,28 +307,6 @@
         //};
         xhttp.open("POST", url, true);
         xhttp.send(ans);
-    }
-
-    function getQuestion(qno) {
-        document.getElementById("output").innerHTML = "";
-        var xhttp = new XMLHttpRequest();
-        var url = window.location.href+"/getQuestion/"+qno;
-        xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            data = JSON.parse(this.responseText);
-            // data = this.responseText;
-            console.log("data : "+data)
-            document.getElementById("question").innerHTML = qno+". "+data["question"];
-            document.getElementById("desc").innerHTML = data["desc"];
-            // document.getElementById("input").innerHTML = data["input"];
-            // document.getElementById("expoutput").innerHTML = data["expOutput"];
-            document.getElementById("ques_no").value = qno;
-            //console.log(data);
-            // getPrevCode()
-        }
-        };
-        xhttp.open("GET", url, true);
-        xhttp.send();
     }
 
     function submitCode() {
@@ -320,29 +331,18 @@
         xhttp.send(JSON.stringify({ "code":code, "username":uname }));
     }
 
-
-    //local
-    function getOutput() {
-        var xhttp = new XMLHttpRequest();
-        //var url = "run/";
-        var input = document.getElementById("input").innerHTML;
-        document.getElementById("output").innerHTML = "";
-        var qno = document.getElementById("ques_no").value;
-        var url = "/task/run/"
-        var lang = document.getElementById('lang').value;
-        var code = editor.getValue();
-        url = url+lang+"/"+qno;
-        //console.log(code);
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("output").innerHTML = this.responseText;
+    function finalSubmit(){
+            // var xhttp = new XMLHttpRequest();
+            if (confirm("Are you sure ?\n\nConfirm to end the exam. !") == true) {
+                var url = "http://127.0.0.1:8000/finalSubmit/";
+                var uname = document.getElementById("user_name").value;
+                url = url+uname;
+                // xhttp.open("GET", url, true);
+                // xhttp.send();
+                location.href = url;
             }
-        };
-        xhttp.open("POST", url, true);
-        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhttp.send(JSON.stringify({ "code":code, "input":input }));
     }
-    getPrevCode();
+
 </script>
 </body>
 
