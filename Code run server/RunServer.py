@@ -5,7 +5,7 @@ import json
 # Create your views here.
 def runCode(code,lang,inputStr=''):
     MAXTIME = 3
-    if lang=='c':
+    if lang=='C':
         if os.path.isfile('a.out'):
             os.remove('a.out')
         f = open('./tempFiles/temp.c','w')
@@ -26,7 +26,7 @@ def runCode(code,lang,inputStr=''):
         except:
             output = "Un-expected error"
 
-    elif lang=='python3':
+    elif lang=='Python':
         f = open('./tempFiles/temp2.py','w')
         f.write(code)
         f.close()

@@ -5,17 +5,9 @@ from django.views.decorators.csrf import csrf_exempt
 from .network import Network
 import json
 
-@csrf_exempt
-def run(request,lang,Q_no=0):
-	res = request.body
-	res = res.decode('utf-8')
-	res = json.loads(res)
-	# print(res)
-	code = res["code"]
-	# code = res
-	output = "Error"
-	inputStr = res["input"]
-	data = {'language':lang,'code':code,'input':inputStr}
+
+def runTask(data):
+
 	task = Task(task_type='Execute Code',info=json.dumps(data))
 	task.save()
 
@@ -23,7 +15,7 @@ def run(request,lang,Q_no=0):
 	available_server = RunServer.objects.filter(status='Running')
 	if len(available_server) == 0:
 		print('No server available')
-		return HttpResponse('No server available')
+		return 'No server available'
 
 	servers = sorted(available_server,key=lambda x:x.no_alloted_tasks)
 	msg = {'taskId':task.tId,'type':task.task_type,'data':data}
@@ -58,6 +50,20 @@ def run(request,lang,Q_no=0):
 		task.status = 'Completed'
 		task.save()
 
+	return output
+
+
+@csrf_exempt
+def run(request,lang,Q_no=0):
+	res = request.body
+	res = res.decode('utf-8')
+	res = json.loads(res)
+	# print(res)
+	code = res["code"]
+	inputStr = res["input"]
+	data = {'language':lang,'code':code,'input':inputStr}
+
+	output = runTask(data)
 	# print("Output:",output)
 	output = output.replace("<",'&lt')
 	output = output.replace(">",'&gt')

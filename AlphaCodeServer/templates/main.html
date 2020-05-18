@@ -83,16 +83,16 @@
         <div class="row" id="mcq-options-row">
             <div class="col-md-10">
 
-                <form action="" method="POST">
+                <!-- <form action="" method="POST"> -->
 
                     {% for option in options %}
                     <div class="form-check">
                         <input type="radio" class="form-check-input" id="{{option}}" name="optradio" value="{{option}}">{{option}}
                     </div>
                     {% endfor %}
-                    <button id="submitmcq" type="submit" class="btn btn-primary">Submit</button>
+                    <button id="submitmcq" type="submit" class="btn btn-primary" onclick="submitResponse()" >Submit</button>
                   
-                </form>
+                <!-- </form> -->
 
             </div>
         </div>      
@@ -138,7 +138,7 @@
             <div class="col-md-2">
                 <div id="save">
                     <input id="ques_no" type="hidden" value="1"> 
-                    <input id="submitcode" type="button" class="btn" value="Submit" style="float:left;" onclick='submitCode()'>
+                    <input id="submitcode" type="button" class="btn" value="Submit" style="float:left;" onclick='submitResponse()'>
                     <input type="button" class="btn" value="Final Submit" style="background-color:dodgerblue; " onclick='finalSubmit()'>
                 </div>
             </div>
@@ -149,6 +149,7 @@
         </div>
       </div>
 
+</body>
     <script>
 
     function disp_mcq_options(){
@@ -242,7 +243,7 @@
     //local
     function changeLang() {
         var lang = document.getElementById('lang').value;
-        if (lang == "c")
+        if (lang == "C")
         {
             getPrevCode();
             var code = editor.getValue();
@@ -250,7 +251,7 @@
                 editor.setValue("//The return type of main function must be int");
             editor.session.setMode("ace/mode/c_cpp");
         }
-        else if (lang == "python2" || lang == "python3")
+        else if (lang == "Python")
         {
             getPrevCode();
         }
@@ -292,7 +293,7 @@
             console.log("data : "+data)
             document.getElementById("question").innerHTML = qno+". "+data["question"];
             document.getElementById("desc").innerHTML = data["desc"];
-            document.getElementById("qtype").innerHTML = data["qtype"];
+            document.getElementById("qtype").value = data["qtype"];
             // document.getElementById("input").innerHTML = data["input"];
             // document.getElementById("expoutput").innerHTML = data["expOutput"];
             document.getElementById("ques_no").value = qno;
@@ -308,22 +309,35 @@
                 document.getElementById("mcq-options-row").style.display = "none";
                 document.getElementById("submitcode").style.display = "block";
             }
+            getPrevCode();
         }
         };
         xhttp.open("GET", url, true);
         xhttp.send();
     }
 
-    function submitCode() {
+    function submitResponse() {
         var xhttp = new XMLHttpRequest();
         // var input = document.getElementById("input").innerHTML;
         document.getElementById("output").innerHTML = "";
         var qno = document.getElementById("ques_no").value;
-        var url = "http://127.0.0.1:8000/submit/"
         var lang = document.getElementById('lang').value;
-        var code = editor.getValue();
-        var uname = document.getElementById("user_name").value;
-        url = url+lang+"/"+qno;
+        var url = "/submitResponse"
+        var cname = window.location.href.split("/").slice(-1)[0];
+        var qtype = document.getElementById("qtype").value;
+        if (qtype == "MCQ")
+        {
+            var options = document.getElementsByName('optradio');
+            for(i = 0; i < options.length; i++) 
+            { 
+                if(options[i].checked) 
+                    var code =  options[i].value;
+            }
+        }
+        else
+        {
+            var code = editor.getValue();
+        }
         //console.log(code);
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -333,7 +347,8 @@
         xhttp.open("POST", url, true);
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         // xhttp.send(JSON.stringify({ "code":code, "input":input }));
-        xhttp.send(JSON.stringify({ "code":code, "username":uname }));
+        xhttp.send(JSON.stringify({"qno":qno,
+            "code":code, "lang":lang,"cname":cname }));
     }
 
         //local
@@ -359,6 +374,5 @@
         }
         getPrevCode();
     </script>
-</body>
 
 </html>

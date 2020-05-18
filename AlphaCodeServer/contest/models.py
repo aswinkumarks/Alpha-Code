@@ -92,6 +92,9 @@ class Submission(models.Model):
             models.UniqueConstraint(fields=['participant', 'qno'], name='Unique qno for participant')
         ]
 
+    def __str__(self):
+        return self.participant.user.username
+
 
 class TempCodeCache(models.Model):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)

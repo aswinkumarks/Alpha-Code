@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 # import datetime
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-
+from .evaluate import evaluateSubmission
 
 
 # Create your views here.
@@ -172,10 +172,12 @@ def getQuestion(request, cname, qno):
     
     return HttpResponse(json.dumps(info))
 
+
 @login_required(login_url='/accounts/login')
 def show_contests(request):
     contests = Contest.objects.all()
     return render(request,'contests.html',{"contests":contests})
+
 
 @csrf_exempt
 def saveCode(request):
@@ -217,3 +219,28 @@ def remainingTime(request,cname):
     rem_time = contest.endTime - timezone.now()
     # print(rem_time.days,rem_time.seconds)
     return HttpResponse(str(rem_time.seconds))
+
+
+@csrf_exempt
+def submitResponse(request):
+    content = request.body.decode('utf-8')
+    data = json.loads(content)
+    # print(data["code"])
+    try:
+        participant = Participant.objects.get(user = request.user, contest__cname = data["cname"])
+        exist_submission = Submission.objects.filter(participant = participant, qno = int(data["qno"])).exists()
+        if exist_submission:
+            submission = Submission.objects.get(participant = participant, qno = int(data["qno"]))
+        else:
+            submission = Submission(participant = participant, qno = int(data["qno"]))
+        
+        submission.language = data["lang"]
+        submission.user_answer = data["code"]
+        submission.save()
+    except:
+        return HttpResponse("DB error")
+
+    res = evaluateSubmission(request.user.username,data["cname"],int(data["qno"]))
+    return HttpResponse(res)
+
+
