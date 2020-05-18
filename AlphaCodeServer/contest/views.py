@@ -4,10 +4,10 @@ from django.template import loader
 from .models import *
 import json
 from django.contrib.auth.decorators import login_required
-import datetime
+# import datetime
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-
+from .evaluate import evaluateSubmission
 
 
 # Create your views here.
@@ -129,12 +129,11 @@ def disp_contest_pg(request, cname):
         qlen = len(ContestQuestion.objects.filter(contest__cname=cname))        
         qobj = ContestQuestion.objects.get(qno=1,contest__cname=cname)
 
-        # print(qobj.qtype)
-        # mcq = McqQuestion.objects.filter(cq=qobj)
-        # coding = CodingQuestion.objects.filter(cq=qobj)
-
         if qobj.qtype == 'MCQ':
-            context = {"qno":qobj.qno, "question":qobj.mcqquestion.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+            options_set = Option.objects.filter(question=qobj.mcqquestion)
+            options = [op.option for op in options_set]
+            # print(options)
+            context = {"qno":qobj.qno, "question":qobj.mcqquestion.question, "desc":None, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype, "options":options}
         else:
             context = {"qno":qobj.qno, "question":qobj.codingquestion.question, "desc":qobj.codingquestion.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
         
@@ -144,23 +143,35 @@ def disp_contest_pg(request, cname):
 
 
 @login_required(login_url='/accounts/login')
+def startContest(request,cname):
+    exist = Participant.objects.filter(user=request.user,contest__cname=cname).exists()
+    if not exist:
+        contest = Contest.objects.get(cname=cname)
+        participant = Participant(user=request.user,contest=contest)
+        participant.save()
+
+    return HttpResponseRedirect("/contest/"+cname)
+
+
+@login_required(login_url='/accounts/login')
 def getQuestion(request, cname, qno):   
-    # question,desc,pgmInput,expOutput = '','','',''
     qobj = ContestQuestion.objects.get(qno=qno,contest__cname=cname)
     qlen = len(ContestQuestion.objects.filter(contest__cname=cname))
     
     print(qobj.qtype)
-    mcq = McqQuestion.objects.filter(cq=qobj)
-    coding = CodingQuestion.objects.filter(cq=qobj)
 
     if qobj.qtype == 'MCQ':
-        info = {"qno":qobj.qno, "question":mcq.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+        options_set = Option.objects.filter(question=qobj.mcqquestion)
+        options = [op.option for op in options_set]
+        # print(options)
+        info = {"qno":qobj.qno, "question":qobj.mcqquestion.question, "desc":None, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype, "options":options}
     elif qobj.qtype == "Coding":
-        info = {"qno":qobj.qno, "question":coding.question, "desc":coding.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+        info = {"qno":qobj.qno, "question":qobj.codingquestion.question, "desc":qobj.codingquestion.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
     else:
         return HttpResponse("DataBase Error")
     
     return HttpResponse(json.dumps(info))
+
 
 @login_required(login_url='/accounts/login')
 def show_contests(request):
@@ -168,16 +179,68 @@ def show_contests(request):
     return render(request,'contests.html',{"contests":contests})
 
 
-# def saveResponse(request,qno):
-#     res = request.body
-#     res = res.decode('utf-8')
-#     m = Questions.objects.get(q_no=qno)
-#     m.user_answer = res
-#     m.save()
-#     return HttpResponse("")
+@csrf_exempt
+def saveCode(request):
+    content = request.body.decode('utf-8')
+    data = json.loads(content)
+    res = TempCodeCache.objects.filter(participant__user=request.user,qno=int(data["qno"]),language=data["lang"]).exists()
+    if res:
+        tmp_code = TempCodeCache.objects.get(participant__user=request.user,qno=int(data["qno"]),language=data["lang"])
+        tmp_code.answer = data["code"]
+        tmp_code.save()
+    else:
+        try:
+            participant = Participant.objects.get(user=request.user,contest__cname=data["cname"])
+            tmp_code = TempCodeCache(participant=participant,qno=int(data["qno"]))
+            tmp_code.language = data["lang"]
+            tmp_code.answer = data["code"]
+            tmp_code.save()
+        except:
+            return HttpResponse("DB error")
 
-def reminingTime(request,cname):
+    return HttpResponse("Saved Code")
+
+
+@csrf_exempt
+def getCode(request):
+    content = request.body.decode('utf-8')
+    data = json.loads(content)
+    res = TempCodeCache.objects.filter(participant__user=request.user,qno=int(data["qno"]),language=data["lang"]).exists()
+    info = {"code":""}
+    if res:
+        tmp_code = TempCodeCache.objects.get(participant__user=request.user,qno=int(data["qno"]),language=data["lang"])
+        info["code"] = tmp_code.answer
+
+    return HttpResponse(json.dumps(info))
+
+
+def remainingTime(request,cname):
     contest = Contest.objects.get(cname=cname)
     rem_time = contest.endTime - timezone.now()
     # print(rem_time.days,rem_time.seconds)
     return HttpResponse(str(rem_time.seconds))
+
+
+@csrf_exempt
+def submitResponse(request):
+    content = request.body.decode('utf-8')
+    data = json.loads(content)
+    # print(data["code"])
+    try:
+        participant = Participant.objects.get(user = request.user, contest__cname = data["cname"])
+        exist_submission = Submission.objects.filter(participant = participant, qno = int(data["qno"])).exists()
+        if exist_submission:
+            submission = Submission.objects.get(participant = participant, qno = int(data["qno"]))
+        else:
+            submission = Submission(participant = participant, qno = int(data["qno"]))
+        
+        submission.language = data["lang"]
+        submission.user_answer = data["code"]
+        submission.save()
+    except:
+        return HttpResponse("DB error")
+
+    res = evaluateSubmission(request.user.username,data["cname"],int(data["qno"]))
+    return HttpResponse(res)
+
+

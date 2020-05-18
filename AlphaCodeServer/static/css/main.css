@@ -80,8 +80,9 @@ table .btn-success {
 }
 
 #save{
-    bottom: 0;
-    right: 0;
+    /* bottom: 0; */
+    /* right: 0; */
+    top: -40px;
     width: 100%;
     padding: 20px;
     position: absolute;

@@ -6,8 +6,11 @@ urlpatterns = [
     path('contest/<cname>',views.disp_contest_pg),
     path('contests/',views.show_contests),
     path('contest/<cname>/getQuestion/<int:qno>',views.getQuestion),
-    # path('saveResponse/<qno>',views.saveResponse)
-    path('getReminTime/<cname>',views.reminingTime),
+    path('submitResponse',views.submitResponse),
+    path('getRemTime/<cname>',views.remainingTime),
+    path('saveCode',views.saveCode),
+    path('getCode',views.getCode),
+    path('startContest/<cname>',views.startContest),
     path('create_contest/', views.create_contest),
     path('admin_page/', views.admin_page),
     path('create_contest/<cname>/create_question/', views.create_question)

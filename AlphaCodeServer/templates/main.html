@@ -44,12 +44,20 @@
                 <!-- <meta id="qtype" data-qtype="{{qtype}}"> -->
                 <ul id="qbody">
                     <li>
-                 
+                        <input id="qtype" type="hidden" value= {{qtype}}>
                         <div id='question'>
-                        {{qno}}. {{question}} {{qtype}}<br><br>
+                        {{qno}}. {{question}}
                         </div>
+
+                        <div style="display: none;">
+                            type : {{qtype}}
+                        </div>
+                        
                         <div id="desc">   
-                            {{desc}}<br><br>
+                            {% if desc %}
+                                {{desc}}
+                            {% endif %}
+                                <br>
                         </div>
                     
                     <!-- <input type="text" id="answer" name="answer" placeholder="Type your response" value=""> -->
@@ -75,26 +83,20 @@
         <div class="row" id="mcq-options-row">
             <div class="col-md-10">
 
-                <form action="" method="POST">
+                <!-- <form action="" method="POST"> -->
 
+                    {% for option in options %}
                     <div class="form-check">
-                    <label class="form-check-label" for="radio1">
-                        <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" checked>Option 1
-                    </label>
+                        <input type="radio" class="form-check-input" id="{{option}}" name="optradio" value="{{option}}">{{option}}
                     </div>
-
-                    <div class="form-check">
-                    <label class="form-check-label" for="radio2">
-                        <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">Option 2
-                    </label>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                    {% endfor %}
+                    <button id="submitmcq" type="submit" class="btn btn-primary" onclick="submitResponse()" >Submit</button>
+                  
+                <!-- </form> -->
 
             </div>
         </div>      
-            <br><br><br>
+            <br>
 
           <!-- Or let Bootstrap automatically handle the layout -->
           <div class="row" style="background: azure;padding: 20px;">
@@ -103,8 +105,8 @@
                 <!-- <h5>Coding Window</    h5> -->
                 <select class="form-control" name="language" id='lang' onchange='changeLang()' style="width:fit-content;">
                 <!-- <option value="python2">Python 2.7</option> -->
-                <option value="python3">Python 3</option>
-                <option value="c">C / C++</option>                
+                <option value="Python">Python </option>
+                <option value="C">C / C++</option>                
                 </select><br>         
 
                 <pre id="editor"></pre>
@@ -136,7 +138,7 @@
             <div class="col-md-2">
                 <div id="save">
                     <input id="ques_no" type="hidden" value="1"> 
-                    <input type="button" class="btn" value="Submit" style="float:left;" onclick='submitCode()'>
+                    <input id="submitcode" type="button" class="btn" value="Submit" style="float:left;" onclick='submitResponse()'>
                     <input type="button" class="btn" value="Final Submit" style="background-color:dodgerblue; " onclick='finalSubmit()'>
                 </div>
             </div>
@@ -147,31 +149,26 @@
         </div>
       </div>
 
-	<!-- <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script> -->
-	<!-- <script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script> -->
-    <!-- <script src="{% static 'jsquiz/main.js' %}"></script> -->
+</body>
     <script>
 
-
-    // function disp_mcq_options(){
-    //     var qtype = $('#qtype').data("data-qtype");
-    //     console.log(qtype)
-    // }
-    // $(document).ready ( function(){
-    //     alert('loaded');    
-    //     });
-
-    // $('body').on('DOMSubtreeModified', 'question', function(){
-    //     alert('changed');
-    //     });
-    // window.onload = disp_mcq_options;
-    // window.onchange = disp_mcq_options;
+    function disp_mcq_options(){
+        var qtype = document.getElementById("qtype").value;
+        if (qtype == "Coding"){
+            document.getElementById("mcq-options-row").style.display = "none";
+            document.getElementById("submitcode").style.display = "block";
+        }
+        else{
+            document.getElementById("submitcode").style.display = "none";
+        }
+    }
+    window.onload = disp_mcq_options();
 
 
     function getRemTime(){
         var xhttp = new XMLHttpRequest();
         var cname = window.location.href.split("/").slice(-1)[0];
-        var url = "/getReminTime/"+cname;
+        var url = "/getRemTime/"+cname;
         xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             seconds = parseInt(this.responseText);
@@ -219,109 +216,140 @@
         }, 1000);
     }
 
-    window.onload = function () {
-        getRemTime()
-    };
+    window.onload = getRemTime();
     
-    </script>
-    <script>
-        //local
-        function getPrevCode(){
-            var qno =  document.getElementById("ques_no").value;
-            var lang = document.getElementById('lang').value;
-            var url = "http://127.0.0.1:8000/getcode/"+lang+"/"+qno;
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                data = JSON.parse(this.responseText);
-                var code = data["code"];
-                //document.getElementById("answer").value = data["ans"];
-                if (code=="" && lang == "c")
-                    editor.setValue("//The return type of main function must be int");
-                else
-                    editor.setValue(code);
-            }
-            };
-            xhttp.open("GET", url, true);
-            xhttp.send();
+    //local
+    function getPrevCode(){
+        var qno =  document.getElementById("ques_no").value;
+        var lang = document.getElementById('lang').value;
+        var cname = window.location.href.split("/").slice(-1)[0];
+        var url = "/getCode";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            data = JSON.parse(this.responseText);
+            var code = data["code"];
+            //document.getElementById("answer").value = data["ans"];
+            if (code=="" && lang == "c")
+                editor.setValue("//The return type of main function must be int");
+            else
+                editor.setValue(code);
         }
-        //local
-        function changeLang() {
-            var lang = document.getElementById('lang').value;
-            if (lang == "c")
-            {
-                getPrevCode();
-                var code = editor.getValue();
-                if (code=="")
-                    editor.setValue("//The return type of main function must be int");
-                editor.session.setMode("ace/mode/c_cpp");
-            }
-            else if (lang == "python2" || lang == "python3")
-            {
-                getPrevCode();
-            }
-        }
-
-        //local
-        function saveResponse(){
-            var xhttp = new XMLHttpRequest();
-            var qno = document.getElementById("ques_no").value;
-            var ans = document.getElementById("answer").value;
-            var url = "http://127.0.0.1:8000/saveResponse/"+qno;
-            //console.log(ans);
-            //xhttp.onreadystatechange = function() {
-            //if (this.readyState == 4 && this.status == 200) {
-                //action to do on return
-            //}
-            //};
-            xhttp.open("POST", url, true);
-            xhttp.send(ans);
-        }
-
-        function getQuestion(qno) {
-            document.getElementById("output").innerHTML = "";
-            var xhttp = new XMLHttpRequest();
-            var url = window.location.href+"/getQuestion/"+qno;
-            xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                data = JSON.parse(this.responseText);
-                // data = this.responseText;
-                console.log("data : "+data)
-                document.getElementById("question").innerHTML = qno+". "+data["question"];
-                document.getElementById("desc").innerHTML = data["desc"];
-                // document.getElementById("input").innerHTML = data["input"];
-                // document.getElementById("expoutput").innerHTML = data["expOutput"];
-                document.getElementById("ques_no").value = qno;
-                //console.log(data);
-                // getPrevCode()
-            }
-            };
-            xhttp.open("GET", url, true);
-            xhttp.send();
-        }
-
-        function submitCode() {
-            var xhttp = new XMLHttpRequest();
-            // var input = document.getElementById("input").innerHTML;
-            document.getElementById("output").innerHTML = "";
-            var qno = document.getElementById("ques_no").value;
-            var url = "http://127.0.0.1:8000/submit/"
-            var lang = document.getElementById('lang').value;
+        };
+        xhttp.open("POST", url, true);
+        xhttp.send(JSON.stringify({"qno":qno,
+            "lang":lang,"cname":cname }));
+    }
+    //local
+    function changeLang() {
+        var lang = document.getElementById('lang').value;
+        if (lang == "C")
+        {
+            getPrevCode();
             var code = editor.getValue();
-            var uname = document.getElementById("user_name").value;
-            url = url+lang+"/"+qno;
-            //console.log(code);
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("output").innerHTML = this.responseText;
-                }
-            };
-            xhttp.open("POST", url, true);
-            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            // xhttp.send(JSON.stringify({ "code":code, "input":input }));
-            xhttp.send(JSON.stringify({ "code":code, "username":uname }));
+            if (code=="")
+                editor.setValue("//The return type of main function must be int");
+            editor.session.setMode("ace/mode/c_cpp");
         }
+        else if (lang == "Python")
+        {
+            getPrevCode();
+        }
+    }
 
+    //local
+    function saveCode(){
+        var xhttp = new XMLHttpRequest();
+        var qno = document.getElementById("ques_no").value;
+        var code = editor.getValue();
+        var lang = document.getElementById('lang').value;
+        var url = "/saveCode"
+        var cname = window.location.href.split("/").slice(-1)[0];
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+            }
+        };
+        xhttp.open("POST", url, true);
+        xhttp.send(JSON.stringify({"qno":qno,
+            "code":code, "lang":lang,"cname":cname }));
+    }
+
+    var timer;
+    editor.session.on('change', function(delta) {
+        // console.log(delta.start, delta.end, delta.lines, delta.action)
+        clearTimeout(timer);
+        timer = setTimeout(saveCode, 3000);
+    });
+    
+    function getQuestion(qno) {
+        document.getElementById("output").innerHTML = "";
+        var xhttp = new XMLHttpRequest();
+        var url = window.location.href+"/getQuestion/"+qno;
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            data = JSON.parse(this.responseText);
+            // data = this.responseText;
+            console.log("data : "+data)
+            document.getElementById("question").innerHTML = qno+". "+data["question"];
+            document.getElementById("desc").innerHTML = data["desc"];
+            document.getElementById("qtype").value = data["qtype"];
+            // document.getElementById("input").innerHTML = data["input"];
+            // document.getElementById("expoutput").innerHTML = data["expOutput"];
+            document.getElementById("ques_no").value = qno;
+            //console.log(data);
+            // getPrevCode()
+
+            //diable or enable options
+            if (data["qtype"] == "MCQ"){
+                document.getElementById("mcq-options-row").style.display = "flex";
+                document.getElementById("submitcode").style.display = "none";
+            }
+            else{
+                document.getElementById("mcq-options-row").style.display = "none";
+                document.getElementById("submitcode").style.display = "block";
+            }
+            getPrevCode();
+        }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.send();
+    }
+
+    function submitResponse() {
+        var xhttp = new XMLHttpRequest();
+        // var input = document.getElementById("input").innerHTML;
+        document.getElementById("output").innerHTML = "";
+        var qno = document.getElementById("ques_no").value;
+        var lang = document.getElementById('lang').value;
+        var url = "/submitResponse"
+        var cname = window.location.href.split("/").slice(-1)[0];
+        var qtype = document.getElementById("qtype").value;
+        if (qtype == "MCQ")
+        {
+            var options = document.getElementsByName('optradio');
+            for(i = 0; i < options.length; i++) 
+            { 
+                if(options[i].checked) 
+                    var code =  options[i].value;
+            }
+        }
+        else
+        {
+            var code = editor.getValue();
+        }
+        //console.log(code);
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("output").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", url, true);
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        // xhttp.send(JSON.stringify({ "code":code, "input":input }));
+        xhttp.send(JSON.stringify({"qno":qno,
+            "code":code, "lang":lang,"cname":cname }));
+    }
 
         //local
         function getOutput() {
@@ -334,7 +362,7 @@
             var lang = document.getElementById('lang').value;
             var code = editor.getValue();
             url = url+lang+"/"+qno;
-            //console.log(code);
+            // console.log(code);
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById("output").innerHTML = this.responseText;
@@ -346,6 +374,5 @@
         }
         getPrevCode();
     </script>
-</body>
 
 </html>
