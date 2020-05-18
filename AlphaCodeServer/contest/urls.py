@@ -7,7 +7,7 @@ urlpatterns = [
     path('contests/',views.show_contests),
     path('contest/<cname>/getQuestion/<int:qno>',views.getQuestion),
     # path('saveResponse/<qno>',views.saveResponse)
-    path('getReminTime/<cname>',views.reminingTime),
+    path('getRemTime/<cname>',views.remainingTime),
     path('saveCode',views.saveCode),
     path('getCode',views.getCode),
     path('startContest/<cname>',views.startContest),
