@@ -212,7 +212,7 @@ def getCode(request):
     return HttpResponse(json.dumps(info))
 
 
-def reminingTime(request,cname):
+def remainingTime(request,cname):
     contest = Contest.objects.get(cname=cname)
     rem_time = contest.endTime - timezone.now()
     # print(rem_time.days,rem_time.seconds)
