@@ -345,7 +345,7 @@
             var lang = document.getElementById('lang').value;
             var code = editor.getValue();
             url = url+lang+"/"+qno;
-            //console.log(code);
+            // console.log(code);
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById("output").innerHTML = this.responseText;

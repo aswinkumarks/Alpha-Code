@@ -11,6 +11,9 @@ class Task(models.Model):
                             ('Evaluate Result','Task for scoring the result')))
 	info = models.TextField()
 
+	def __str__(self):
+		return self.status
+
 
 class RunServer(models.Model):
 	name = models.CharField(max_length=30)
@@ -20,3 +23,5 @@ class RunServer(models.Model):
 	status = models.CharField(max_length=20, choices=(('Running','Server is Active'),
                             ('Stopped','Server is not running')),default='Stopped')
 
+	def __str__(self):
+		return self.name

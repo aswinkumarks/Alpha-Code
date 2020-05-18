@@ -28,6 +28,7 @@ def run(request,lang,Q_no=0):
 	servers = sorted(available_server,key=lambda x:x.no_alloted_tasks)
 	msg = {'taskId':task.tId,'type':task.task_type,'data':data}
 
+	output = "Un-Known Error"
 	task_executed = False
 	for server in servers:
 		try:
@@ -57,7 +58,7 @@ def run(request,lang,Q_no=0):
 		task.status = 'Completed'
 		task.save()
 
-	print("Output:",output)
+	# print("Output:",output)
 	output = output.replace("<",'&lt')
 	output = output.replace(">",'&gt')
 	# print(output)
