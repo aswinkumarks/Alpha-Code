@@ -103,8 +103,8 @@
                 <!-- <h5>Coding Window</    h5> -->
                 <select class="form-control" name="language" id='lang' onchange='changeLang()' style="width:fit-content;">
                 <!-- <option value="python2">Python 2.7</option> -->
-                <option value="python3">Python 3</option>
-                <option value="c">C / C++</option>                
+                <option value="Python">Python </option>
+                <option value="C">C / C++</option>                
                 </select><br>         
 
                 <pre id="editor"></pre>
@@ -229,7 +229,8 @@
         function getPrevCode(){
             var qno =  document.getElementById("ques_no").value;
             var lang = document.getElementById('lang').value;
-            var url = "http://127.0.0.1:8000/getcode/"+lang+"/"+qno;
+            var cname = window.location.href.split("/").slice(-1)[0];
+            var url = "/getCode";
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -242,8 +243,9 @@
                     editor.setValue(code);
             }
             };
-            xhttp.open("GET", url, true);
-            xhttp.send();
+            xhttp.open("POST", url, true);
+            xhttp.send(JSON.stringify({"qno":qno,
+                "lang":lang,"cname":cname }));
         }
         //local
         function changeLang() {
@@ -263,21 +265,30 @@
         }
 
         //local
-        function saveResponse(){
+        function saveCode(){
             var xhttp = new XMLHttpRequest();
             var qno = document.getElementById("ques_no").value;
-            var ans = document.getElementById("answer").value;
-            var url = "http://127.0.0.1:8000/saveResponse/"+qno;
-            //console.log(ans);
-            //xhttp.onreadystatechange = function() {
-            //if (this.readyState == 4 && this.status == 200) {
-                //action to do on return
-            //}
-            //};
+            var code = editor.getValue();
+            var lang = document.getElementById('lang').value;
+            var url = "/saveCode"
+            var cname = window.location.href.split("/").slice(-1)[0];
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                }
+            };
             xhttp.open("POST", url, true);
-            xhttp.send(ans);
+            xhttp.send(JSON.stringify({"qno":qno,
+                "code":code, "lang":lang,"cname":cname }));
         }
 
+        var timer;
+        editor.session.on('change', function(delta) {
+            // console.log(delta.start, delta.end, delta.lines, delta.action)
+            clearTimeout(timer);
+            timer = setTimeout(saveCode, 3000);
+        });
+      
         function getQuestion(qno) {
             document.getElementById("output").innerHTML = "";
             var xhttp = new XMLHttpRequest();

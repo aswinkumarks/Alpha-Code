@@ -14,12 +14,20 @@ class Contest(models.Model):
 
 
 class Participant(models.Model):
-    userId = models.ForeignKey(get_user_model(),to_field='id',on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
     start_time = models.TimeField(auto_now_add=True)
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     rank = models.IntegerField(default=9999999)
-    submition_time = models.TimeField()
+    submition_time = models.TimeField(null=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'contest'], name='Unique user for contest')
+        ]
+
+    def __str__(self):
+        return self.contest.cname+": "+self.user.username
 
 
 class ContestQuestion(models.Model):
@@ -72,9 +80,29 @@ class TestCase(models.Model):
     pgmOutputOrEvalCode = models.TextField()
 
 
-class User_Response(models.Model):
-    cId = models.ForeignKey(Contest, on_delete=models.CASCADE)
-    userId = models.ForeignKey(get_user_model(),to_field='id',on_delete=models.CASCADE)
-    q_no = models.IntegerField()
+class Submission(models.Model):
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    qno = models.IntegerField()
+    language = models.CharField(max_length=50,choices=(('Python','Python pgm'),('C++','C++ pgm'),
+                                        ('C','C Program')))
     user_answer = models.TextField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['participant', 'qno'], name='Unique qno for participant')
+        ]
+
+
+class TempCodeCache(models.Model):
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    qno = models.IntegerField()
+    language = models.CharField(max_length=50,choices=(('Python','Python pgm'),('C++','C++ pgm'),
+                                        ('C','C Program')))
+    answer = models.TextField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['participant', 'qno', 'language'], name='Unique answer cache for participant')
+        ]
+
 

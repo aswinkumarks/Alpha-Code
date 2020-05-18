@@ -4,7 +4,7 @@ from django.template import loader
 from .models import *
 import json
 from django.contrib.auth.decorators import login_required
-import datetime
+# import datetime
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
@@ -144,6 +144,17 @@ def disp_contest_pg(request, cname):
 
 
 @login_required(login_url='/accounts/login')
+def startContest(request,cname):
+    exist = Participant.objects.filter(user=request.user,contest__cname=cname).exists()
+    if not exist:
+        contest = Contest.objects.get(cname=cname)
+        participant = Participant(user=request.user,contest=contest)
+        participant.save()
+
+    return HttpResponseRedirect("/contest/"+cname)
+
+
+@login_required(login_url='/accounts/login')
 def getQuestion(request, cname, qno):   
     # question,desc,pgmInput,expOutput = '','','',''
     qobj = ContestQuestion.objects.get(qno=qno,contest__cname=cname)
@@ -167,14 +178,40 @@ def show_contests(request):
     contests = Contest.objects.all()
     return render(request,'contests.html',{"contests":contests})
 
+@csrf_exempt
+def saveCode(request):
+    content = request.body.decode('utf-8')
+    data = json.loads(content)
+    res = TempCodeCache.objects.filter(participant__user=request.user,qno=int(data["qno"]),language=data["lang"]).exists()
+    if res:
+        tmp_code = TempCodeCache.objects.get(participant__user=request.user,qno=int(data["qno"]),language=data["lang"])
+        tmp_code.answer = data["code"]
+        tmp_code.save()
+    else:
+        try:
+            participant = Participant.objects.get(user=request.user,contest__cname=data["cname"])
+            tmp_code = TempCodeCache(participant=participant,qno=int(data["qno"]))
+            tmp_code.language = data["lang"]
+            tmp_code.answer = data["code"]
+            tmp_code.save()
+        except:
+            return HttpResponse("DB error")
 
-# def saveResponse(request,qno):
-#     res = request.body
-#     res = res.decode('utf-8')
-#     m = Questions.objects.get(q_no=qno)
-#     m.user_answer = res
-#     m.save()
-#     return HttpResponse("")
+    return HttpResponse("Saved Code")
+
+
+@csrf_exempt
+def getCode(request):
+    content = request.body.decode('utf-8')
+    data = json.loads(content)
+    res = TempCodeCache.objects.filter(participant__user=request.user,qno=int(data["qno"]),language=data["lang"]).exists()
+    info = {"code":""}
+    if res:
+        tmp_code = TempCodeCache.objects.get(participant__user=request.user,qno=int(data["qno"]),language=data["lang"])
+        info["code"] = tmp_code.answer
+
+    return HttpResponse(json.dumps(info))
+
 
 def reminingTime(request,cname):
     contest = Contest.objects.get(cname=cname)
