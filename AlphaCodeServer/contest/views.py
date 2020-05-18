@@ -129,12 +129,11 @@ def disp_contest_pg(request, cname):
         qlen = len(ContestQuestion.objects.filter(contest__cname=cname))        
         qobj = ContestQuestion.objects.get(qno=1,contest__cname=cname)
 
-        # print(qobj.qtype)
-        # mcq = McqQuestion.objects.filter(cq=qobj)
-        # coding = CodingQuestion.objects.filter(cq=qobj)
-
         if qobj.qtype == 'MCQ':
-            context = {"qno":qobj.qno, "question":qobj.mcqquestion.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+            options_set = Option.objects.filter(question=qobj.mcqquestion)
+            options = [op.option for op in options_set]
+            # print(options)
+            context = {"qno":qobj.qno, "question":qobj.mcqquestion.question, "desc":None, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype, "options":options}
         else:
             context = {"qno":qobj.qno, "question":qobj.codingquestion.question, "desc":qobj.codingquestion.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
         
@@ -156,18 +155,18 @@ def startContest(request,cname):
 
 @login_required(login_url='/accounts/login')
 def getQuestion(request, cname, qno):   
-    # question,desc,pgmInput,expOutput = '','','',''
     qobj = ContestQuestion.objects.get(qno=qno,contest__cname=cname)
     qlen = len(ContestQuestion.objects.filter(contest__cname=cname))
     
     print(qobj.qtype)
-    mcq = McqQuestion.objects.filter(cq=qobj)
-    coding = CodingQuestion.objects.filter(cq=qobj)
 
     if qobj.qtype == 'MCQ':
-        info = {"qno":qobj.qno, "question":mcq.question, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+        options_set = Option.objects.filter(question=qobj.mcqquestion)
+        options = [op.option for op in options_set]
+        # print(options)
+        info = {"qno":qobj.qno, "question":qobj.mcqquestion.question, "desc":None, "num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype, "options":options}
     elif qobj.qtype == "Coding":
-        info = {"qno":qobj.qno, "question":coding.question, "desc":coding.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
+        info = {"qno":qobj.qno, "question":qobj.codingquestion.question, "desc":qobj.codingquestion.description ,"num_of_q":list(range(1,qlen+1)), "qtype":qobj.qtype}
     else:
         return HttpResponse("DataBase Error")
     
@@ -213,7 +212,7 @@ def getCode(request):
     return HttpResponse(json.dumps(info))
 
 
-def reminingTime(request,cname):
+def remainingTime(request,cname):
     contest = Contest.objects.get(cname=cname)
     rem_time = contest.endTime - timezone.now()
     # print(rem_time.days,rem_time.seconds)
