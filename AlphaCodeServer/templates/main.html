@@ -336,30 +336,29 @@
         xhttp.send(JSON.stringify({ "code":code, "username":uname }));
     }
 
-
-    //local
-    function getOutput() {
-        var xhttp = new XMLHttpRequest();
-        //var url = "run/";
-        var input = document.getElementById("input").innerHTML;
-        document.getElementById("output").innerHTML = "";
-        var qno = document.getElementById("ques_no").value;
-        var url = "/task/run/"
-        var lang = document.getElementById('lang').value;
-        var code = editor.getValue();
-        url = url+lang+"/"+qno;
-        //console.log(code);
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("output").innerHTML = this.responseText;
-            }
-        };
-        xhttp.open("POST", url, true);
-        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhttp.send(JSON.stringify({ "code":code, "input":input }));
-    }
-    getPrevCode();
-</script>
+        //local
+        function getOutput() {
+            var xhttp = new XMLHttpRequest();
+            //var url = "run/";
+            var input = document.getElementById("input").innerHTML;
+            document.getElementById("output").innerHTML = "";
+            var qno = document.getElementById("ques_no").value;
+            var url = "/task/run/"
+            var lang = document.getElementById('lang').value;
+            var code = editor.getValue();
+            url = url+lang+"/"+qno;
+            // console.log(code);
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("output").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("POST", url, true);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.send(JSON.stringify({ "code":code, "input":input }));
+        }
+        getPrevCode();
+    </script>
 </body>
 
 </html>
