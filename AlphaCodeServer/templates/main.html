@@ -99,7 +99,7 @@
             <br>
 
           <!-- Or let Bootstrap automatically handle the layout -->
-          <div class="row" style="background: azure;padding: 20px;">
+          <div id="coding-window-container" class="row" style="background: azure;padding: 20px;">
             <div class="col-md-10">
                 <!-- <label for="lang"><b>Coding Window</b></label> -->
                 <!-- <h5>Coding Window</    h5> -->
@@ -111,13 +111,6 @@
 
                 <pre id="editor"></pre>
                 
-                <script src="{% static 'ace/src-noconflict/ace.js' %}" type="text/javascript" charset="utf-8"></script>
-                <script>
-                    var editor = ace.edit("editor");
-                    editor.setTheme("ace/theme/dawn");
-                    editor.session.setMode("ace/mode/python");
-                    document.getElementById('editor').style.fontSize='15px';
-                </script>
                 
                 <input type="button" class="btn" value="Run Code" onclick='getOutput()'><br>
                  
@@ -150,16 +143,30 @@
       </div>
 
 </body>
+    <script src="{% static 'ace/src-min/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'ace/src-min/ext-language_tools.js' %}"></script>
     <script>
+
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/dawn");
+    editor.session.setMode("ace/mode/python");
+    document.getElementById('editor').style.fontSize='15px';
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+    });
 
     function disp_mcq_options(){
         var qtype = document.getElementById("qtype").value;
         if (qtype == "Coding"){
             document.getElementById("mcq-options-row").style.display = "none";
             document.getElementById("submitcode").style.display = "block";
+            document.getElementById("coding-window-container").style.display = "block";
         }
         else{
             document.getElementById("submitcode").style.display = "none";
+            document.getElementById("coding-window-container").style.display = "none";
         }
     }
     window.onload = disp_mcq_options();
@@ -254,6 +261,7 @@
         else if (lang == "Python")
         {
             getPrevCode();
+            editor.session.setMode("ace/mode/python");
         }
     }
 
@@ -304,10 +312,12 @@
             if (data["qtype"] == "MCQ"){
                 document.getElementById("mcq-options-row").style.display = "flex";
                 document.getElementById("submitcode").style.display = "none";
+                document.getElementById("coding-window-container").style.display = "none";
             }
             else{
                 document.getElementById("mcq-options-row").style.display = "none";
                 document.getElementById("submitcode").style.display = "block";
+                document.getElementById("coding-window-container").style.display = "block";
             }
             getPrevCode();
         }
