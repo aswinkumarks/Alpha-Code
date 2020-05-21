@@ -235,7 +235,7 @@ def submitResponse(request):
             submission = Submission(participant = participant, qno = int(data["qno"]))
         
         submission.language = data["lang"]
-        submission.user_answer = data["code"]
+        submission.user_answer = data["code"].strip()
         submission.save()
     except:
         return HttpResponse("DB error")

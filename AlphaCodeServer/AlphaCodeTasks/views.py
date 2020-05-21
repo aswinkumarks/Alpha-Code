@@ -15,12 +15,12 @@ def runTask(data):
 	available_server = RunServer.objects.filter(status='Running')
 	if len(available_server) == 0:
 		print('No server available')
-		return 'No server available'
+		return 'Run Server Error: No server available'
 
 	servers = sorted(available_server,key=lambda x:x.no_alloted_tasks)
 	msg = {'taskId':task.tId,'type':task.task_type,'data':data}
 
-	output = "Un-Known Error"
+	output = "Run Server Error: Un-Known Error"
 	task_executed = False
 	for server in servers:
 		try:
@@ -38,13 +38,13 @@ def runTask(data):
 				break
 
 			except:
-				output = 'No response from server'
+				output = 'Run Server Error: No response from server'
 
 			server.no_alloted_tasks -= 1
 			server.save()
 
 		except:
-			output = 'Cannot connect to server'
+			output = 'Run Server Error: Cannot connect to server'
 
 	if task_executed:
 		task.status = 'Completed'
