@@ -23,7 +23,6 @@
         </h1>
         <ul id="navelements">
             <div class="loginsignup">
-                <!-- <li id="time">Time Remaining : -- : -- : --</li> -->
                 <li class="username">{{ user.username }}</li>
                 <input id="user_name" type="hidden" value='{{ user.username }}'>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -32,15 +31,34 @@
     </nav>
     <br><br><br>
 
-    <div style="text-align: center; 
-          position: absolute;
-          top: 50%;
-          left: 50%; 
-          transform: translateX(-50%) translateY(-50%);">
-        <h4>Final Submition Complete.</h4>
-        <p>Please leave your feedbacks at email@email.com</p>
-        <p>[ Logout before leaving ]</p>
-    </div>
+    <div class="container-fluid">
+  
+                <div id="result-box">
+                        <h5>Contest {{participant.contest}} Results</h5>
+                        <hr/>
+                        <h6>Name : {{participant.user.username}}</h6>
+                        <h6>Score : {{participant.score}}</h6>
+                        <h6>Rank : {{participant.rank}}</h6>
+                        <hr/>
+                        <p style="margin-bottom: 0;">Starting Time : {{participant.start_time}}
+                            <br>
+                        Time of Submition : {{participant.submition_time}}</p>
+                        <!-- <hr/> -->
+                        <a id="finish-btn" type="submit" class="btn" onclick="finishContest()" >Finish</a>
+                </div>
+            </div>
+            
+
 </body>
+
+<script>
+
+function finishContest(){
+    var url = "/";
+    url = url+"thankyou";
+    location.href = url;
+}
+
+</script>
 
 </html>

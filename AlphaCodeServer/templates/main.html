@@ -114,12 +114,15 @@
                 
                 <input type="button" class="btn" value="Run Code" onclick='getOutput()'><br>
                  
-                <br>
-                <h6><b>Sample Input</b></h6>
-                <pre id='input'>{{pgmInput}}</pre>
-                <br>
-                <h6><b>Expected Output</b></h6>
-                <pre id='expoutput'>{{expOutput}}</pre>
+                <div id="coding-eg-ip-op">
+                    <br>
+                    <h6><b>Sample Input</b></h6>
+                    <pre id='input'>{{pgmInput}}</pre>
+                    <br>
+                    <h6><b>Expected Output</b></h6>
+                    <pre id='expoutput'>{{expOutput}}</pre>
+                </div>
+                
                 
                 <br>
                 <h6><b>Output</b></h6>
@@ -162,11 +165,11 @@
         if (qtype == "Coding"){
             document.getElementById("mcq-options-row").style.display = "none";
             document.getElementById("submitcode").style.display = "block";
-            document.getElementById("coding-window-container").style.display = "block";
+            document.getElementById("coding-eg-ip-op").style.display = "block";
         }
         else{
             document.getElementById("submitcode").style.display = "none";
-            document.getElementById("coding-window-container").style.display = "none";
+            document.getElementById("coding-eg-ip-op").style.display = "none";
         }
     }
     window.onload = disp_mcq_options();
@@ -312,12 +315,12 @@
             if (data["qtype"] == "MCQ"){
                 document.getElementById("mcq-options-row").style.display = "flex";
                 document.getElementById("submitcode").style.display = "none";
-                document.getElementById("coding-window-container").style.display = "none";
+                document.getElementById("coding-eg-ip-op").style.display = "none";
             }
             else{
                 document.getElementById("mcq-options-row").style.display = "none";
                 document.getElementById("submitcode").style.display = "block";
-                document.getElementById("coding-window-container").style.display = "block";
+                document.getElementById("coding-eg-ip-op").style.display = "block";
             }
             getPrevCode();
         }
