@@ -25,14 +25,15 @@ class Network:
         msg_str = conn.recv(1024)
         msg = pickle.loads(msg_str)
         if msg['type'] == 'Execute Code':
-            output = runCode(msg['data']['code'],msg['data']['language'],msg['data']['input'])
+            output = runCode(msg['data']['code'],msg['data']['language'],msg['da\
+            ta']['input'])
             return_msg = {'taskId':msg['taskId'],'response':output}
-            return_msg_str = pickle.dumps(return_msg) 
+            return_msg_str = pickle.dumps(return_msg)
             conn.send(return_msg_str)
 
         elif msg['type'] == 'check active':
             msg['info'] = 'active'
-            return_msg_str = pickle.dumps(msg) 
+            return_msg_str = pickle.dumps(msg)
             conn.send(return_msg_str)
 
 
@@ -49,7 +50,7 @@ class Network:
             t1 = Thread(target=self.recv_msg,args=(conn ,addr))
             t1.start()
 
-                
+
     def stop(self):
         self.server_flag = False
 
@@ -57,5 +58,3 @@ class Network:
     def send_data(self,data,dest):
         data_string = pickle.dumps(data)
         self.connection.sendto(data_string,dest)
-
-    
