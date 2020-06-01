@@ -25,8 +25,7 @@ class Network:
         msg_str = conn.recv(1024)
         msg = pickle.loads(msg_str)
         if msg['type'] == 'Execute Code':
-            output = runCode(msg['data']['code'],msg['data']['language'],msg['da\
-            ta']['input'])
+            output = runCode(msg['data']['code'],msg['data']['language'],msg['data']['input'])
             return_msg = {'taskId':msg['taskId'],'response':output}
             return_msg_str = pickle.dumps(return_msg)
             conn.send(return_msg_str)
