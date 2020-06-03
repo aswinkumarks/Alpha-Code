@@ -1,13 +1,28 @@
 import docker
 import os
+import copy
+# from threading import Thread
+import concurrent.futures
 
-
-class dockerContainer:
+class DockerContainer:
 	def __init__(self):
 		self.client = docker.from_env()
 		self.containers = []
+		self.available_containers = []
 
 	def create_containers(self,no_containers):
+		try:
+			image = self.client.images.get('run-code-container')
+		except docker.errors.ImageNotFound:
+			try:
+				image = self.client.images.build(path = "./")
+			except:
+				print("Docker build error")
+				exit(0)
+		except:
+			print("Docker Service not found")
+			exit(0)
+
 
 		mount_path= {os.getcwd():{'bind': '/tmp', 'mode': 'ro'}}
 
@@ -26,37 +41,83 @@ class dockerContainer:
 				print("Container %s is already created"%(c_name))
 			self.containers.append(container)
 
+		self.available_containers = copy.copy(self.containers)
 
-	def start(self):
+
+	def start_all(self):
 		for index,container in enumerate(self.containers):
 			print("Starting Container %d"%(index+1))
 			container.start()
 			print("Container %d started"%(index+1))
 
 
-	def stop(self):
+	def stop_all(self):
 		for index,container in enumerate(self.containers):
 			print("Stoping Container %d"%(index+1))
 			container.stop(timeout=2)
 			# container.remove(force=True)
-			print("Container %d stoped"%(index+1))
+			print("Container %d stopped"%(index+1))
 
 
-container = dockerContainer()
-coderunnernet = container.client.networks.create("coderunnernet", driver="bridge")
+	def run_file(self,container,fname):
+		command = 'python3 /tmp/RunServer.py %s'%(fname)
+		res = container.exec_run(cmd=command,workdir="/root")
+		return res.output.decode()
 
-container.create_containers(5)
-container.start()
+	def allocate_container(self,fname):
+		TIMEOUT = 5
+		container = self.available_containers.pop(0)
+		with concurrent.futures.ThreadPoolExecutor() as executor:
+			future = executor.submit(self.run_file,container,fname)
+			try:
+				output = future.result(timeout=TIMEOUT)
+			except:
+				output = "Time limit Exceeded"
+				container.stop(timeout=2)
+				container.start()
 
-for i in container.containers:
-	print("connecting: %s",i)
-	coderunnernet.connect(i)
+		self.available_containers.append(container)
+		return output
 
-res = input("Stop containers [y/n] :")
-if res == 'y':
-	container.stop()
 
-container.client.networks.prune()
+	def execute_task(self,fname):
+		TIMEOUT = 5
+
+		if len(self.available_containers) == 0:
+			return "No container is available"
+
+		output = "Docker: Un-known Error"
+		with concurrent.futures.ThreadPoolExecutor() as executor:
+			future = executor.submit(self.allocate_container,fname)
+			try:
+				output = future.result(timeout=TIMEOUT)
+			except:
+				output = "Time limit Exceeded"
+
+		return output
+
+		
+
+if __name__ == "__main__":
+	container = DockerContainer()
+	# coderunnernet = container.client.networks.create("coderunnernet", driver="bridge")
+
+	container.create_containers(5)
+	container.start_all()
+
+	# for i in container.containers:
+	# 	print("connecting: %s",i)
+	# 	coderunnernet.connect(i)
+	for cont in container.containers:
+		res = cont.exec_run(cmd="echo hello;",workdir="/root")
+		print(res)
+		print(res.output)
+
+	res = input("Stop containers [y/n] :")
+	if res == 'y':
+		container.stop_all()
+
+	# container.client.networks.prune()
 #Alphine reuirements
 #gcc
 #libc-dev
