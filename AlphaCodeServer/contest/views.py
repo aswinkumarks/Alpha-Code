@@ -235,7 +235,7 @@ def submitResponse(request):
             submission = Submission(participant = participant, qno = int(data["qno"]))
         
         submission.language = data["lang"]
-        submission.user_answer = data["code"]
+        submission.user_answer = data["code"].strip()
         submission.save()
     except:
         return HttpResponse("DB error")
@@ -243,4 +243,19 @@ def submitResponse(request):
     res = evaluateSubmission(request.user.username,data["cname"],int(data["qno"]))
     return HttpResponse(res)
 
+@login_required(login_url='/accounts/login')
+def result_pg(request, username):
+    if request.user.username == username:
+        participant = Participant.objects.get(user__username = username)
+        print(participant.user.username)
+        template = loader.get_template('results.html')
+        context = {"participant":participant}
+        # context = {}
+        return HttpResponse(template.render(context,request))
+    else:
+        return HttpResponse("Invalid User ID  ¯\_(ツ)_/¯ ")
 
+def thankyou_pg(request):
+    template = loader.get_template('thankyou.html')
+    context = {}
+    return HttpResponse(template.render(context,request))

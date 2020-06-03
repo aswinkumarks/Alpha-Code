@@ -154,3 +154,33 @@ li {
     /* color: white; */
     font-size: 12pt;
 }
+
+#result-box{
+
+    width: 30%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background: ghostwhite;
+    padding: 20px;			
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
+#finish-btn{
+    width: 100%;
+    background-color: royalblue;
+    color: white;
+    font-weight: 600;
+    border: white;;
+}
+
+
+  .custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+    background-color:black;
+  }

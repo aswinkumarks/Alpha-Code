@@ -25,10 +25,28 @@ def evaluateSubmission(uname,cname,qno):
 					'code':submitted_ans.user_answer,
 					'input':testcase.pgmInput}
 			output = runTask(data)
-			output = output.rstrip()
+			output = output.strip()
+			if output.split(':')[0] == "Run Server Error":
+				return output
+				
 			# print(output,testcase.pgmOutputOrEvalCode)
-			if output == testcase.pgmOutputOrEvalCode:
-				correct_answers += 1
+			if testcase.OutputType == "Static":
+				if output == testcase.pgmOutputOrEvalCode:
+					correct_answers += 1
+
+			else:
+				data = {'language':"Python",
+					'code':testcase.pgmOutputOrEvalCode,
+					'input':testcase.pgmInput+'\n'+output}
+
+				res = runTask(data)
+				res = res.strip()
+				if res.split(':')[0] == "Run Server Error":
+					return res
+
+				print("res",res)
+				if res == "True":
+					correct_answers += 1
 
 			no_testcases += 1
 

@@ -1,2 +1,2 @@
-inp = input()
-print(inp[::-1])
+# inp = input()
+print("hai")
