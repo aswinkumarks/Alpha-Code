@@ -9,7 +9,7 @@ import os
 class Network:
     def __init__(self,container):
         self.server = socket.socket()
-        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        #self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         # self.connection.settimeout(0.2)
         self.serverIP = ''
         self.serverPort = 6000
@@ -54,7 +54,7 @@ class Network:
                 os.remove(inpfilepath)
             except:
                 print("Cannot remove temp files")
-                
+
             return_msg = {'taskId':msg['taskId'],'response':output}
             return_msg_str = pickle.dumps(return_msg)
             conn.send(return_msg_str)

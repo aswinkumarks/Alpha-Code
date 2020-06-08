@@ -60,9 +60,14 @@ class DockerContainer:
 
 
 	def run_file(self,container,fname):
-		command = 'python3 /tmp/RunServer.py %s'%(fname)
-		res = container.exec_run(cmd=command,workdir="/root")
-		return res.output.decode()
+		name, ext = fname.split('.')
+		if(ext == 'py'):
+			command = 'cat %s.inp | timeout 3 python3 %s'%(name, fname)
+		else if(ext == 'c'):
+			command	= 'gcc %s && (cat %s.inp | ./a.out)'%(fname,name)
+		res = container.exec_run(cmd=command,workdir="/tmp/tempFiles/",stream=True)
+		#return res.output.decode()
+		return res
 
 	def allocate_container(self,fname):
 		TIMEOUT = 5
@@ -96,7 +101,7 @@ class DockerContainer:
 
 		return output
 
-		
+
 
 if __name__ == "__main__":
 	container = DockerContainer()
@@ -112,6 +117,10 @@ if __name__ == "__main__":
 		res = cont.exec_run(cmd="echo hello;",workdir="/root")
 		print(res)
 		print(res.output)
+
+	output = container.execute_task("temp2.py")
+
+	print(output)
 
 	res = input("Stop containers [y/n] :")
 	if res == 'y':

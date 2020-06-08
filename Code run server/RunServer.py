@@ -9,7 +9,8 @@ import json
 # Create your views here.
 
 def runCode(code,lang,inputStr=''):
-    MAXTIME = 3
+    MAXTIME = 6
+    TIME_LIMIT = 3
     if lang=='C':
         if os.path.isfile('a.out'):
             os.remove('a.out')
@@ -86,10 +87,10 @@ def runCodeInContainer(fname):
         try:
             command = 'python3 /tmp/tempFiles/%s'%(fname)
             output = subprocess.check_output(command,input=inputStr, stderr=subprocess.STDOUT,shell=True,universal_newlines=True,timeout=MAXTIME)
-        
+
         except subprocess.TimeoutExpired:
             output = "Execution Time out"
-        
+
         except subprocess.CalledProcessError as e:
             output = e.output
 
@@ -109,5 +110,3 @@ if __name__ == "__main__":
 
     else:
         print("Error")
-
-
