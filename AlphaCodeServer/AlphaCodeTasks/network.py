@@ -15,7 +15,7 @@ class Network:
         self.connection.send(data_string)
 
     def recv_data(self):
-        data_str = self.connection.recv(1024)
+        data_str = self.connection.recv(4096)
         data = pickle.loads(data_str)
         return data
 

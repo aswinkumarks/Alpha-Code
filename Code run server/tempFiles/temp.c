@@ -1,7 +1,5 @@
-#include<stdio.h>
-int main()
-{
-printf("hewhdsjfbds");
-return 0;
-}
-                                                                                                                                                                                                                                        
+                                                                                                                                                                                        #include<stdio.h>                                                                                                                                                                                                      int main()
+                                                                                                                                                                                                                                            {
+                                                                                                                                                                                                                                            printf("hewhdsjfbds");
+                                                                                                                                                                                                                                            return 0;
+                                                                                                                                                                                                                                            }

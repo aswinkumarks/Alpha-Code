@@ -48,13 +48,14 @@ class Network:
             # output = runCode(msg['data']['code'],msg['data']['language'],msg['data']['input'])
 
             output = self.docker_container.execute_task(fname)
+            print("output",output)
 
             try:
                 os.remove(codefilepath)
                 os.remove(inpfilepath)
             except:
                 print("Cannot remove temp files")
-                
+
             return_msg = {'taskId':msg['taskId'],'response':output}
             return_msg_str = pickle.dumps(return_msg)
             conn.send(return_msg_str)
