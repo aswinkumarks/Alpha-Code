@@ -67,30 +67,32 @@ class DockerContainer:
 
 	def run_file(self,container,fname):
 		name, ext = fname.split('.')
-		if(ext == 'py'):
-			command = ['sh', '-c', 'cat %s.inp | timeout 3 python3 %s'%(name, fname)]
-			print(command)
-		elif(ext == 'c'):
+		if ext == 'py':
+			command = ['sh', '-c', 'timeout 3 python3 %s < %s.inp'%(fname,name)]
+		elif ext == 'c':
 			command	= ['sh', '-c', 'gcc %s && (cat %s.inp | timeout 3 ./a.out)'%(fname,name)]
-			print(command)
+
 		resgen = container.exec_run(cmd=command,workdir="/tmp/tempFiles/",stream=True)
 		#return res.output.decode()
 		res = ''
-		for i in resgen.output:
-			res = res + i.decode() + '\n'
 
-		return res
+		for i in resgen.output:
+			res += i.decode() 
+
+		return res[:4000]
 
 	def allocate_container(self,fname):
-		TIMEOUT = 10
+		TIMEOUT = 5
 		container = self.available_containers.pop(0)
 		with concurrent.futures.ThreadPoolExecutor() as executor:
 			future = executor.submit(self.run_file,container,fname)
 			try:
 				output = future.result(timeout=TIMEOUT)
 			except:
+				print("No reponse from container %s.\nKilling..."%(container.name))
 				output = "Time limit Exceeded"
 				container.stop(timeout=0)
+				print("Starting container %s"%(container.name))
 				container.start()
 
 		self.available_containers.append(container)

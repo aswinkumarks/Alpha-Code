@@ -9,7 +9,7 @@ import os
 class Network:
     def __init__(self,container):
         self.server = socket.socket()
-        #self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         # self.connection.settimeout(0.2)
         self.serverIP = ''
         self.serverPort = 6000
@@ -48,6 +48,7 @@ class Network:
             # output = runCode(msg['data']['code'],msg['data']['language'],msg['data']['input'])
 
             output = self.docker_container.execute_task(fname)
+            print("output",output)
 
             try:
                 os.remove(codefilepath)
