@@ -24,7 +24,7 @@ def register(request):
             # p.save()
             user = authenticate(username=name1.lower(),password="password")
             login(request, user)
-        return HttpResponseRedirect("contest/")
+        return HttpResponseRedirect("contests/")
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})

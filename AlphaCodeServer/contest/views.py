@@ -127,9 +127,9 @@ def disp_contest_pg(request, cname):
     if request.user.is_authenticated:
         contest = Contest.objects.get(cname=cname)
         if contest.endTime < timezone.now():
-            return HttpResponse("Contest Over")
+            return HttpResponseRedirect("/contests/ContestOver")
             
-        template = loader.get_template('main.html')
+        template = loader.get_template('contest.html')
         qlen = len(ContestQuestion.objects.filter(contest__cname=cname))        
         qobj = ContestQuestion.objects.get(qno=1,contest__cname=cname)
 
@@ -157,7 +157,7 @@ def startContest(request,cname):
     if contest.endTime > timezone.now():
         return HttpResponseRedirect("/contest/"+cname)
     else:
-        return HttpResponse("Contest Over")
+        return HttpResponseRedirect("/contests/ContestOver")
 
 
 @login_required(login_url='/accounts/login')
@@ -181,9 +181,9 @@ def getQuestion(request, cname, qno):
 
 
 @login_required(login_url='/accounts/login')
-def show_contests(request):
+def show_contests(request, msg = ""):
     contests = Contest.objects.all()
-    return render(request,'contests.html',{"contests":contests})
+    return render(request,'main.html',{"contests":contests, "server_msg":msg})
 
 
 @csrf_exempt
