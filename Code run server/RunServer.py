@@ -8,19 +8,26 @@ import json
 
 # Create your views here.
 
-def runCode(code,lang,inputStr=''):
+def runCode(fname,inputStr=''):
     MAXTIME = 6
     TIME_LIMIT = 3
+
+    ext = fname.split('.')[-1]
+
+    if ext == "py":
+            lang = "Python"
+    elif ext == "c":
+        lang = "C"
+    else:
+        return "Unkown language"
+
     if lang=='C':
         if os.path.isfile('a.out'):
             os.remove('a.out')
-        f = open('./tempFiles/temp.c','w')
-        f.write(code)
-        f.close()
         try:
-            command = 'gcc ./tempFiles/temp.c;exit 0'
+            command = 'gcc ./tempFiles/%s;exit 0'%(fname)
             output = subprocess.check_output(command, stderr=subprocess.STDOUT,shell=True,universal_newlines=True)
-            print("complier output",output)
+            # print("complier output",output)
             if os.path.isfile('a.out'):
                 command = "./a.out"
                 try:
@@ -33,11 +40,8 @@ def runCode(code,lang,inputStr=''):
             output = "Un-expected error"
 
     elif lang=='Python':
-        f = open('./tempFiles/temp2.py','w')
-        f.write(code)
-        f.close()
         try:
-            command = 'python ./tempFiles/temp2.py'
+            command = 'python ./tempFiles/%s'%(fname)
             output = subprocess.check_output(command,input=inputStr, stderr=subprocess.STDOUT,shell=True,universal_newlines=True,timeout=MAXTIME)
         except subprocess.TimeoutExpired:
             output = "Execution Time out"

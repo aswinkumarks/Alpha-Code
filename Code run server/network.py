@@ -7,9 +7,9 @@ from uuid import uuid4
 import os
 
 class Network:
-    def __init__(self,container):
+    def __init__(self,container=None,execution_mode="containerd"):
         self.server = socket.socket()
-        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         # self.connection.settimeout(0.2)
         self.serverIP = ''
         self.serverPort = 6000
@@ -17,7 +17,7 @@ class Network:
         self.server.listen(5)
         self.connections = []
         self.server_flag = True
-
+        self.execution_mode = execution_mode
         self.docker_container = container
 
 
@@ -46,8 +46,10 @@ class Network:
                 file.write(msg['data']['input'])
 
             # output = runCode(msg['data']['code'],msg['data']['language'],msg['data']['input'])
-
-            output = self.docker_container.execute_task(fname)
+            if self.execution_mode == "containerd":
+                output = self.docker_container.execute_task(fname)
+            else:
+                output = runCode(fname,msg['data']['input'])
             print("output",output)
 
             try:

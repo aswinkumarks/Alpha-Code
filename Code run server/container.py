@@ -6,7 +6,11 @@ import concurrent.futures
 
 class DockerContainer:
 	def __init__(self):
-		self.client = docker.from_env()
+		try:
+			self.client = docker.from_env()
+		except:
+			print("Docker Service not running")
+			exit(0)
 		self.containers = []
 		self.available_containers = []
 
@@ -139,9 +143,3 @@ if __name__ == "__main__":
 	res = input("Stop containers [y/n] :")
 	if res == 'y':
 		container.stop_all()
-
-	# container.client.networks.prune()
-#Alphine reuirements
-#gcc
-#libc-dev
-#python3
