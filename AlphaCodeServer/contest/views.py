@@ -125,6 +125,10 @@ def admin_page(request):
 @login_required(login_url='/accounts/login')
 def disp_contest_pg(request, cname):
     if request.user.is_authenticated:
+        contest = Contest.objects.get(cname=cname)
+        if contest.endTime < timezone.now():
+            return HttpResponse("Contest Over")
+            
         template = loader.get_template('main.html')
         qlen = len(ContestQuestion.objects.filter(contest__cname=cname))        
         qobj = ContestQuestion.objects.get(qno=1,contest__cname=cname)
@@ -144,13 +148,16 @@ def disp_contest_pg(request, cname):
 
 @login_required(login_url='/accounts/login')
 def startContest(request,cname):
+    contest = Contest.objects.get(cname=cname)
     exist = Participant.objects.filter(user=request.user,contest__cname=cname).exists()
     if not exist:
-        contest = Contest.objects.get(cname=cname)
         participant = Participant(user=request.user,contest=contest)
         participant.save()
 
-    return HttpResponseRedirect("/contest/"+cname)
+    if contest.endTime > timezone.now():
+        return HttpResponseRedirect("/contest/"+cname)
+    else:
+        return HttpResponse("Contest Over")
 
 
 @login_required(login_url='/accounts/login')
