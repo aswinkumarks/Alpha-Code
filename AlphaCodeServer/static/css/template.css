@@ -13,3 +13,4 @@
 .login-btn {
     @apply block bg-blue-700 rounded-xl shadow-lg mt-5 m-3 p-2 px-4 text-center font-semibold text-white font-medium tracking-wide text-lg;
 }
+

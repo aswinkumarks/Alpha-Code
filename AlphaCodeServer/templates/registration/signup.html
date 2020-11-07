@@ -2,59 +2,60 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Sign up - Indra Cloud</title>
+		<title>Alpha Code - Sign up</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-
-		<link href="{%static 'css/login.css' %}" rel="stylesheet" type="text/css" media="all" />
-		<link href="//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i" rel="stylesheet">
+		<script type="application/x-javascript">
+			addEventListener("load", function() { 
+				setTimeout(hideURLbar, 0); }, false);
+				function hideURLbar(){ 
+					window.scrollTo(0,1); 
+					} 
+		</script>
+		<link href="{%static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
 	</head>
-
-<body>
-
+	
+<body class="body">
 	{% block content %}
-	<div class="login-form">
-		<form action="" method="post" id="register">
-			<h1 class="h3 mb-3 font-weight-normal">Participant Registration</h1>
+	<div class="flex-shrink flex-col m-4 p-4 sm:w-1/2 sm:h-1/3 lg:w-1/3 lg:h-1/2 xl:w-1/4 bg-white rounded-2xl shadow-2xl">
+		<form class="flex-1" action="" method="post" id="register">
+			<h1 class="text-center text-2xl font-bold text-blue-800 tracking-wide p-3 mt-3">Participant Registration</h1>
+			<!-- Alert message -->
+			<div class="text-center px-3 font-semibold text-red-700 w-full tracking-wide">
 			{% csrf_token %}
-			{% comment %} {{ form.as_p }} {% endcomment %}
 			{{ form.non_field_errors }}
 			{% if form.errors %}
-			{% for field in form %}
-				{% for error in field.errors %}
-					<div class="alert alert-danger" style="color: red;">
-						<strong>{{ error|escape }}</strong>
-					</div>
+				{% for field in form %}
+					{% for error in field.errors %}
+						<span>{{ error|escape }}</span>
+					{% endfor %}
 				{% endfor %}
-			{% endfor %}
-			{% for error in form.non_field_errors %}
-				<div class="alert alert-danger">
-					<strong>{{ error|escape }}</strong>
-				</div>
-			{% endfor %}
+				{% for error in form.non_field_errors %}
+					<span>{{ error|escape }}</span>
+				{% endfor %}
 			{% endif %}
-			
-			{% comment %} <input class="text" type="text" name="username" placeholder="Username" required="" id="id_username"><br><br>
-			<input class="text" type="password" name="password1" placeholder="Password" required="" id="id_password1">
-			<input class="text w3lpass" type="password" name="password2" placeholder="Confirm Password" required="" id="id_password2"> {% endcomment %}
-
-			<input class="text" type="text" name="{{form.username.html_name }}" placeholder="Username" required=""><br><br>
-			{{ field.password1.errors}}
-			<input class="text" type="password" name="{{form.password1.html_name }}" placeholder="Password" required="">
-			<input class="text w3lpass" type="password" name="{{form.password2.html_name }}" placeholder="Confirm Password" required="">
-			
-			<div style="margin-top: 15px; color: white; text-align: center;">
-				<label class="anim">
-					<span>By clicking Sign up, you Agree To The Terms & Conditions</span>
-				</label>
 			</div>
-
-			<input type="submit" value="SIGN UP">
+			<!-- Credential input fields -->
+			<div class="px-5">
+				<input class="login-input placeholder-blue-900 focus:border-blue-700" type="text" name="{{form.username.html_name }}" placeholder="Username" required="">
+				<span>{{ field.password1.errors }}</span>
+				<input class="login-input placeholder-blue-900 focus:border-blue-700" type="password" name="{{form.password1.html_name }}" placeholder="Password" required="">
+				<input class="login-input placeholder-blue-900 focus:border-blue-700" type="password" name="{{form.password2.html_name }}" placeholder="Confirm Password" required="">
+			</div>
+			<!-- Sign up link -->
+			<div class="flex justify-center m-3">
+				<button class="login-btn hover:bg-blue-500" type="submit">Sign Up</button>
+			</div>
 		</form>
-		<p>Don't have an Account? <a href="{% url 'login' %}"><b>Login</b></a></p>
+		<div class="text-center">
+			<span class="inline-block py-3 text-blue-700">Already have an Account? </span>
+				<a href="{% url 'login' %}">
+					<span class="inline-block p-2 text-lg font-semibold text-blue-800 underline hover:text-blue-500">
+						Sign In
+					</span>
+				</a>
+		</div>
 	</div>
 	{% endblock %}
-
 </body>
 </html>
