@@ -1,0 +1,22 @@
+{
+  "name": "alpha-code",
+  "version": "1.0.0",
+  "description": "Alpha-Code: A Programming Contest Management System ===================================================",
+  "main": "index.js",
+  "scripts": {
+    "build-css": "tailwindcss build AlphaCodeServer/static/css/template.css -o AlphaCodeServer/static/css/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abijithpradeep/Alpha-Code.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abijithpradeep/Alpha-Code/issues"
+  },
+  "homepage": "https://github.com/abijithpradeep/Alpha-Code#readme",
+  "dependencies": {
+    "tailwindcss": "^1.9.6"
+  }
+}
