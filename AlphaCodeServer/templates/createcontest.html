@@ -52,35 +52,37 @@
                     }
                 </style>
 
-            <form class="quiz-data-box" method="POST" action="">
+            <form class="quiz-data-box" method="POST" onsubmit="return validateForm()" action="" name="ContestForm"> 
               {% csrf_token %}
                 <div class="form-row">
                   <div class="form-group col-md-3">
                     <label>Contest Name</label>
-                    <input type="text" class="form-control" id="cname" name="cname" placeholder="" >
+                    <input type="text" class="form-control" id="cname" name="cname" placeholder="" required>
                   </div>
-                  <div class="form-group col-md-2">
-                    <label>Start Time:</label>
-                    <input type="datetime-local" class="form-control" id="start-time" name="start-time" >
+                  <div class="form-group col-md-3">
+                    <label>Start Date:</label>
+                    <input type="date" class="form-control" id="start-date" name="start-date" required>
+                    <label>Time:</label>
+                    <input type="time" class="form-control" id="start-time" name="start-time" required>
                   </div>
-                  <div class="form-group col-md-2">
-                    <label>End Time:</label>
-                    <input type="datetime-local" class="form-control" id="end-time" name="end-time" >
+                  <div class="form-group col-md-3">
+                    <label>End Date:</label>
+                    <input type="date" class="form-control" id="end-date" name="end-date" required>
+                    <label>Time:</label>
+                    <input type="time" class="form-control" id="end-time" name="end-time" required>
                   </div>
                 </div>
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label>Description</label>
+                    <input type="text" class="form-control" id="cdst" name="contest_desc" placeholder="" >
+                  </div>
+                </div>
+                <input type="hidden" name="time_zone_offset" id="time_zone_offset">
                 <input type="submit" class="btn btn-primary" value="Procees to Question Creation"> 
                 <!-- <input type="submit" class="btn btn-primary" value="Procees to Question Creation"> -->
               </form>   
                   
-            </div>
-
-          </div>
-          <br>
-      
-          <div class="row" style="background: azure;padding: 20px;">
-            <div class="col-md-10">
-                
-
             </div>
 
           </div>
@@ -91,6 +93,60 @@
 </body>
 
 <script>
+
+  function checkTime(i) {
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+  }
+
+  // validation check
+  function validateForm() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; 
+    var yyyy = today.getFullYear();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    // add a zero in front of numbers<10
+    m = checkTime(m);
+    dd = checkTime(dd);
+    var today_time = h + ":" + m;
+    today = yyyy+'-'+mm+'-'+dd;
+    var sd = document.forms["ContestForm"]["start-date"].value;
+    var ed = document.forms["ContestForm"]["end-date"].value;
+    var st = document.forms["ContestForm"]["start-time"].value;
+    var et = document.forms["ContestForm"]["end-time"].value;
+
+    // var today = Date.parse(today);
+    // var sd = Date.parse(sd);
+    // var ed = Date.parse(ed);
+
+    if (ed < today){
+      alert("Contest End Date cannot be before Today!");
+      console.log("Contest End Date cannot be before Today!");
+      return false;
+    }
+
+    else if (sd == today || ed == today){
+      if (st < today_time){
+        alert("Contest Start Time cannot be before Current Time!");
+        console.log("Contest Start Time cannot be before Current Time!");
+        return false;
+      }
+
+      if (et <= today_time){
+        alert("Contest End Time cannot be before/equal to Current Time!");
+        console.log("Contest End Time cannot be before/equal to Current Time!");
+        return false;
+      }
+    }
+
+    // return true;
+    
+  } 
+
   // function saveContest(){
   //   var xhttp = new XMLHttpRequest();
   //   var cname = document.getElementById("cname").value;
@@ -106,6 +162,13 @@
   //   xhttp.open("POST", url, true);
   //   xhttp.send();
   // }
+
+  function setTimezoneOffset(){
+    offset = new Date().getTimezoneOffset();
+    document.getElementById("time_zone_offset").value = offset;
+  }
+  setTimezoneOffset();
+console.log(offset);
 </script>
 
 </html>

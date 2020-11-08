@@ -4,7 +4,9 @@ from django.template import loader
 from .models import *
 import json
 from django.contrib.auth.decorators import login_required
-# import datetime
+from datetime import datetime
+import datetime as dt
+from datetime import timedelta
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from .evaluate import evaluateSubmission
@@ -20,13 +22,21 @@ def create_contest(request):
         res = request.body
         res = res.decode('utf-8')
         cname = request.POST.get("cname")
-        st = request.POST.get("start-time")
-        et = request.POST.get("end-time")
-        # print(cname,st,et)
+        timezone_offset = int(request.POST.get("time_zone_offset"))
+        timezone_offset = timedelta(minutes=timezone_offset)
+        start_date = datetime.strptime(request.POST.get("start-date"), '%Y-%m-%d')
+        start_time = datetime.strptime(request.POST.get("start-time"), '%H:%M').time()
+        start_date_time = start_date.combine(start_date, start_time) + timezone_offset
+        start_date_time = start_date_time.replace(tzinfo=dt.timezone.utc)
+        end_date = datetime.strptime(request.POST.get("end-date"), '%Y-%m-%d')
+        end_time = datetime.strptime(request.POST.get("end-time"), '%H:%M').time()
+        end_date_time = end_date.combine(end_date,end_time) + timezone_offset
+        end_date_time = end_date_time.replace(tzinfo=dt.timezone.utc)
+        contest_description = request.POST.get("contest_desc")
         if Contest.objects.filter(cname=cname):
             return HttpResponse("ERROR : Contest Name already in use. Please choose a different one.")
 
-        c = Contest(cname=cname, startTime=st, endTime=et)
+        c = Contest(cname=cname,desc=contest_description, startTime=start_date_time, endTime=end_date_time)
         c.save()
         return HttpResponseRedirect(cname+'/create_question')
 
@@ -126,8 +136,8 @@ def admin_page(request):
 def disp_contest_pg(request, cname):
     if request.user.is_authenticated:
         contest = Contest.objects.get(cname=cname)
-        if contest.endTime < timezone.now():
-            return HttpResponseRedirect("/contests/ContestOver")
+        if contest.endTime < datetime.now(dt.timezone.utc):
+            return HttpResponse("Contest Over")
             
         template = loader.get_template('contest.html')
         qlen = len(ContestQuestion.objects.filter(contest__cname=cname))        
@@ -154,7 +164,7 @@ def startContest(request,cname):
         participant = Participant(user=request.user,contest=contest)
         participant.save()
 
-    if contest.endTime > timezone.now():
+    if contest.endTime > datetime.now(dt.timezone.utc):
         return HttpResponseRedirect("/contest/"+cname)
     else:
         return HttpResponseRedirect("/contests/ContestOver")
@@ -223,7 +233,7 @@ def getCode(request):
 
 def remainingTime(request,cname):
     contest = Contest.objects.get(cname=cname)
-    rem_time = contest.endTime - timezone.now()
+    rem_time = contest.endTime - datetime.now(dt.timezone.utc)
     # print(rem_time.days,rem_time.seconds)
     return HttpResponse(str(rem_time.seconds))
 
@@ -264,5 +274,10 @@ def result_pg(request, username):
 
 def thankyou_pg(request):
     template = loader.get_template('thankyou.html')
+    context = {}
+    return HttpResponse(template.render(context,request))
+
+def testing_pg(request):
+    template = loader.get_template('404.html')
     context = {}
     return HttpResponse(template.render(context,request))
