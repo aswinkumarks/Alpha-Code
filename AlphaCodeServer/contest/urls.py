@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path('contest/<cname>',views.disp_contest_pg),
     path('contests/',views.show_contests),
+    path('contests/<msg>',views.show_contests),
     path('contest/<cname>/getQuestion/<int:qno>',views.getQuestion),
     path('submitResponse',views.submitResponse),
     path('getRemTime/<cname>',views.remainingTime),
