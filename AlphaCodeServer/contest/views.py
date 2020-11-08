@@ -10,7 +10,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from .evaluate import evaluateSubmission
-
+from .evaluate import getParticipantScore
 
 # Create your views here.
 @csrf_exempt
@@ -53,18 +53,23 @@ def create_question(request, cname):
     if request.method == 'POST':
         res = request.body
         res = res.decode('utf-8')
-        qno = request.POST.get("qno")
+        # qno = request.POST.get("qno")
         qtype = request.POST.get("qtype")
         q_desc = request.POST.get("q_desc")
         question = request.POST.get("question")
+        contest_questions = ContestQuestion.objects.filter(contest__cname=cname).order_by('-qno')
+        if len(contest_questions) == 0:
+            qno = 1
+        else:
+            qno = contest_questions.first().qno + 1
         # print(res)
         # print(cname)
-        if ContestQuestion.objects.filter(contest__cname=cname, qno=qno):
-            return HttpResponse("ERROR : Question number already in DB. Please choose a different question number.")
+        # if ContestQuestion.objects.filter(contest__cname=cname, qno=qno):
+        #     return HttpResponse("ERROR : Question number already in DB. Please choose a different question number.")
         
         contest = Contest.objects.get(cname=cname)
         cq = ContestQuestion(contest=contest)
-        cq.qno = int(qno)
+        cq.qno = qno
         cq.qtype = qtype
         no = 1
 
@@ -197,6 +202,7 @@ def show_contests(request):
 
 
 @csrf_exempt
+@login_required(login_url='/accounts/login')
 def saveCode(request):
     content = request.body.decode('utf-8')
     data = json.loads(content)
@@ -219,6 +225,7 @@ def saveCode(request):
 
 
 @csrf_exempt
+@login_required(login_url='/accounts/login')
 def getCode(request):
     content = request.body.decode('utf-8')
     data = json.loads(content)
@@ -239,10 +246,13 @@ def remainingTime(request,cname):
 
 
 @csrf_exempt
+@login_required(login_url='/accounts/login')
 def submitResponse(request):
     content = request.body.decode('utf-8')
     data = json.loads(content)
-    # print(data["code"])
+    contest = Contest.objects.get(cname=data["cname"])
+    if contest.endTime <  datetime.now(dt.timezone.utc):
+        return HttpResponse("Contest Over")
     try:
         participant = Participant.objects.get(user = request.user, contest__cname = data["cname"])
         exist_submission = Submission.objects.filter(participant = participant, qno = int(data["qno"])).exists()
@@ -257,20 +267,18 @@ def submitResponse(request):
     except:
         return HttpResponse("DB error")
 
-    res = evaluateSubmission(request.user.username,data["cname"],int(data["qno"]))
+    res = evaluateSubmission(request.user.username, data["cname"], int(data["qno"]))
     return HttpResponse(res)
 
 @login_required(login_url='/accounts/login')
-def result_pg(request, username):
-    if request.user.username == username:
-        participant = Participant.objects.get(user__username = username)
-        print(participant.user.username)
-        template = loader.get_template('results.html')
-        context = {"participant":participant}
-        # context = {}
-        return HttpResponse(template.render(context,request))
-    else:
-        return HttpResponse("Invalid User ID  ¯\_(ツ)_/¯ ")
+def result_pg(request,cname):
+    participant = Participant.objects.get(user__username = request.user.username,contest__cname = cname)
+    score = getParticipantScore(participant)
+    return HttpResponse(str(score))
+    # template = loader.get_template('results.html')
+    # context = {"participant":participant}
+    # context = {}
+    # return HttpResponse(template.render(context,request))
 
 def thankyou_pg(request):
     template = loader.get_template('thankyou.html')

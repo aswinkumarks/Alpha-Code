@@ -199,13 +199,13 @@
 
     
     function finalSubmit(){
-            // var xhttp = new XMLHttpRequest();
+            var xhttp = new XMLHttpRequest();
             if (confirm("Are you sure ?\n\nConfirm to end the exam. !") == true) {
-                var url = "http://127.0.0.1:8000/finalSubmit/";
-                var uname = document.getElementById("user_name").value;
-                url = url+uname;
-                // xhttp.open("GET", url, true);
-                // xhttp.send();
+				var url = "/finalSubmit";
+				var cname = window.location.href.split("/").slice(-1)[0];
+				url = url + "/" + cname;
+                xhttp.open("GET", url, true);
+				xhttp.send();
                 location.href = url;
             }
     }

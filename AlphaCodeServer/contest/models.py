@@ -51,6 +51,7 @@ class ContestQuestion(models.Model):
 class McqQuestion(models.Model):
     cq = models.OneToOneField(ContestQuestion, on_delete=models.CASCADE)
     question = models.TextField()
+    score = models.IntegerField(default=0)
 
     def __str__(self):
         return self.question[:30]
@@ -79,6 +80,7 @@ class TestCase(models.Model):
     OutputType = models.CharField(max_length=30,choices=(('Static','Program output will be same for the given input'),
                                         ('Dynamic','Program ouput will be different for the given input')))
     pgmOutputOrEvalCode = models.TextField()
+    score = models.IntegerField(default =0)
 
 
 class Submission(models.Model):
@@ -87,6 +89,7 @@ class Submission(models.Model):
     language = models.CharField(max_length=50,choices=(('Python','Python pgm'),('C++','C++ pgm'),
                                         ('C','C Program')))
     user_answer = models.TextField()
+    score = models.IntegerField(default = 0)
 
     class Meta:
         constraints = [
