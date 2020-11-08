@@ -15,5 +15,6 @@ urlpatterns = [
     path('admin_page/', views.admin_page),
     path('create_contest/<cname>/create_question/', views.create_question),
     path('finalSubmit/<username>', views.result_pg),
-    path('thankyou', views.thankyou_pg)
+    path('thankyou', views.thankyou_pg),
+    path('testing', views.testing_pg)
 ]
