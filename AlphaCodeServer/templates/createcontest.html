@@ -129,7 +129,7 @@
       return false;
     }
 
-    else if (sd == today){
+    else if (sd == today || ed == today){
       if (st < today_time){
         alert("Contest Start Time cannot be before Current Time!");
         console.log("Contest Start Time cannot be before Current Time!");

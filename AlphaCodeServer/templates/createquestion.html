@@ -76,7 +76,7 @@
                     
                 </style>
 
-                <form class="quiz-data-box" method="POST" action="">
+                <form class="quiz-data-box" method="POST" action="" onsubmit="return validateForm()">
                     
                     <div class="form-row">
                         <div class="form-group col-md-3">
@@ -99,36 +99,22 @@
                       </div>
                     </div>
 
+                    <!-- coding type specific fields -->
+
                     <div class="form-row" id="q_desc">
                       <div class="form-group col-md">
                         <label>Description</label>
-                        <textarea class="form-control" rows="3" name="q_desc"></textarea>
-                      </div>
-                    </div>
-
-                    <div class="form-row" id="mcq-option-row">
-                      <div class="options-container form-group col-md">
-                        <label>MCQ Options [leave blank for Coding] </label><br>
-                        <div class = "addoptionbtn">
-                          <input type="text" name="option1" class="mcq" style="width: 25%;" placeholder="Option 1">
-                          <div class="form-group col-md-1">
-                            <select class="form-control mcq" id="ans_correct" name="ans_correct1">
-                                <option value="False">Wrong</option>
-                                <option value="True">Correct</option>
-                            </select>
-                        </div>  
-                          <button class="add_form_field_mcq">+</button>
-                        </div>
+                        <textarea class="form-control" rows="3" name="q_desc" placeholder="Eg. any extra info (if any)"></textarea>
                       </div>
                     </div>
 
                     <div class="form-row"   id="testcase-row">
                       <div class="testcase-container form-group col-md">
-                        <label>Test Cases for Coding [Leave blank for MCQ]</label><br>
+                        <label>Test Cases for Coding</label><br>
                         <div class = "addtestcasebtn">                      
                           <!-- <input  type="text" name="testcase1"> -->
-                          <textarea class="form-control col-md-7" rows="3" name="testcaseip1" placeholder="Program input"></textarea>
-                          <textarea class="form-control" rows="3" name="outputeval1" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea>
+                          <textarea class="form-control col-md-7" rows="3" name="testcaseip1" placeholder="Program input" ></textarea>
+                          <textarea class="form-control" rows="3" name="outputeval1" placeholder="Output or evalcode" style="margin-left: 10px;" ></textarea>
                           <div class="form-group col-md-1">
                               <select class="form-control" id="testcasetype1" name="testcasetype1">
                                   <option value="Hidden">Hidden</option>
@@ -146,9 +132,27 @@
                       </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Finish</button>
+                    <!-- mcq type question specific field -->
+                    <div class="form-row" id="mcq-option-row">
+                      <div class="options-container form-group col-md">
+                        <label>MCQ Options </label><br>
+                        <div class = "addoptionbtn">
+                          <input type="text" name="option1" class="mcq" style="width: 25%;" placeholder="Option 1">
+                          <div class="form-group col-md-1">
+                            <select class="form-control mcq" id="ans_correct" name="ans_correct1">
+                                <option value="False">Wrong</option>
+                                <option value="True">Correct</option>
+                            </select>
+                        </div>  
+                          <button class="add_form_field_mcq">+</button>
+                        </div>
+                      </div>
+                    </div>
+
+
                     <button type="submit" class="btn btn-primary" >Save and Create Next Question</button>
                   </form>                
+                  <button onclick="window.location.href='/'" class="btn btn-primary">Finish</button>
             </div>
           </div>
           <br>
@@ -251,6 +255,14 @@
         z--;
     })
   });
+
+  function validateForm() {
+    if (document.getElementById("qno").value <= 0){
+      alert("Question number must be >= 1 !");
+      return false;
+    }
+  }
+
 
 </script>
 
