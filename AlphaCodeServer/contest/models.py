@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 class Contest(models.Model):
     cId = models.AutoField(primary_key=True)
     cname = models.CharField(unique=True,max_length=50)
+    desc = models.TextField()
     startTime = models.DateTimeField()
     endTime = models.DateTimeField()
 
