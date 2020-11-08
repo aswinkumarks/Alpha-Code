@@ -79,10 +79,10 @@
                 <form class="quiz-data-box" method="POST" action="" onsubmit="return validateForm()">
                     
                     <div class="form-row">
-                        <div class="form-group col-md-3">
+                        <!-- <div class="form-group col-md-3">
                           <label>Question Number</label>
                           <input type="number" class="form-control" id="qno" name="qno" placeholder="" required>
-                        </div>
+                        </div> -->
                         <div class="form-group col-md">
                           <label>Question Type:</label>
                             <select  class="form-control" id="qtype" name="qtype">
@@ -113,12 +113,12 @@
                         <label>Test Cases for Coding</label><br>
                         <div class = "addtestcasebtn">                      
                           <!-- <input  type="text" name="testcase1"> -->
-                          <textarea class="form-control col-md-7" rows="3" name="testcaseip1" placeholder="Program input" ></textarea>
-                          <textarea class="form-control" rows="3" name="outputeval1" placeholder="Output or evalcode" style="margin-left: 10px;" ></textarea>
+                          <textarea class="form-control col-md-7 testcase" rows="3" name="testcaseip1" placeholder="Program input" required></textarea>
+                          <textarea class="form-control testcase" rows="3" name="outputeval1" placeholder="Output or evalcode" style="margin-left: 10px;" required></textarea>
                           <div class="form-group col-md-1">
                               <select class="form-control" id="testcasetype1" name="testcasetype1">
-                                  <option value="Hidden">Hidden</option>
-                                  <option value="Visible">Visible</option>
+                                  <option value="Hidden">Visible</option>
+                                  <option value="Visible">Hidden</option>
                               </select>
 
                               <select class="form-control" id="testcasetype" name="outputtype1" style="margin-top: 10px;">
@@ -137,9 +137,19 @@
                       <div class="options-container form-group col-md">
                         <label>MCQ Options </label><br>
                         <div class = "addoptionbtn">
-                          <input type="text" name="option1" class="mcq" style="width: 25%;" placeholder="Option 1">
+                          <input type="text" name="option1" class="mcq" style="width: 25%;" placeholder="Option 1" required>
                           <div class="form-group col-md-1">
-                            <select class="form-control mcq" id="ans_correct" name="ans_correct1">
+                            <select class="form-control mcqselect"  name="ans_correct1">
+                                <option value="False">Wrong</option>
+                                <option value="True">Correct</option>
+                            </select>
+                        </div>  
+                          <!-- <button class="add_form_field_mcq">+</button> -->  
+                        </div>
+                        <div class = "addoptionbtn">
+                          <input type="text" name="option2" class="mcq" style="width: 25%;" placeholder="Option 2" required>
+                          <div class="form-group col-md-1">
+                            <select class="form-control mcqselect"  name="ans_correct2">
                                 <option value="False">Wrong</option>
                                 <option value="True">Correct</option>
                             </select>
@@ -176,6 +186,17 @@
           document.getElementById("mcq-option-row").style.display = "flex";
           document.getElementById("q_desc").style.display = "none";
           document.getElementById("testcase-row").style.display = "none";
+          document.querySelectorAll(".mcq").forEach(
+            function (i) {
+              i.required = true;
+            }
+          );
+
+          document.querySelectorAll(".testcase").forEach(
+            function (i) {
+              i.required = false;
+            }
+          );
       }
 
       else 
@@ -183,43 +204,36 @@
         document.getElementById("mcq-option-row").style.display = "none";
         document.getElementById("q_desc").style.display = "flex";
         document.getElementById("testcase-row").style.display = "flex";
+        document.querySelectorAll(".mcq").forEach(
+            function (i) {
+              i.required = false;
+            }
+          );
+          
+          document.querySelectorAll(".testcase").forEach(
+            function (i) {
+              i.required = true;
+            }
+          );
       }
   }
 
   document.getElementById('qtype').onload = fieldDisabler();
   document.getElementById('qtype').onchange = fieldDisabler;
   
-
-
-  function saveQuestion(){
-    var xhttp = new XMLHttpRequest();
-    var cname = document.getElementById("cname").value;
-    var st = document.getElementById("start-time").value;
-    var et = document.getElementById("end-time").value;
-    var url = "http://127.0.0.1:8000/saveResponse/"+cname+"/"+st+"/"+et;
-    //console.log(ans);
-    //xhttp.onreadystatechange = function() {
-    //if (this.readyState == 4 && this.status == 200) {
-        //action to do on return
-    //}
-    //};
-    xhttp.open("POST", url, true);
-    xhttp.send(ans);
-  }
-
   //add new option field
   $(document).ready(function() {
     var max_fields = 5;
     var wrapper = $(".options-container");
     var add_button = $(".add_form_field_mcq");
 
-    var x = 1;
+    var x = 2;
     $(add_button).click(function(e) {
         e.preventDefault();
         if (x < max_fields) {
             x++;
 
-            $(wrapper).append('<div class = "addoptionbtn"><input type="text" name="option'+x+'" style="width: 25%;" placeholder="Option '+x+'"><div class="form-group col-md-1"><select class="form-control" id="ans_correct" name="ans_correct'+x+'"><option value="False">Wrong</option><option value="True">Correct</option></select></div><button class="delete add_form_field_mcq" style="margin-left:5px;">&nbsp;-</button></div>');
+            $(wrapper).append('<div class = "addoptionbtn"><input type="text" name="option'+x+'" style="width: 25%;" placeholder="Option '+x+'" required><div class="form-group col-md-1"><select class="form-control mcqselect"  name="ans_correct'+x+'"><option value="False">Wrong</option><option value="True">Correct</option></select></div><button class="delete add_form_field_mcq" style="margin-left:5px;">&nbsp;-</button></div>');
         } else {
             alert('You Reached the limits')
         }
@@ -243,7 +257,7 @@
         f.preventDefault();
         if (z < max_fields) {
             z++;
-            $(wrapper).append('<div class = "addtestcasebtn"><textarea class="form-control col-md-7" rows="3" name="testcaseip'+z+'" placeholder="Program input"></textarea><textarea class="form-control" rows="3" name="outputeval'+z+'" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea><div class="form-group col-md-1"><select class="form-control" id="testcasetype1" name="testcasetype'+z+'"><option value="Hidden">Hidden</option><option value="Visible">Visible</option></select><select class="form-control" id="testcasetype" name="outputtype'+z+'" style="margin-top: 10px;"><option value="Static">Static o/p</option><option value="Dynamic">Dynamic o/p</option></select></div><button class="delete-testcase add_form_field_testcase" style="margin-left:5px;">&nbsp;-</button></div>');
+            $(wrapper).append('<div class = "addtestcasebtn"><textarea class="form-control col-md-7 testcase" rows="3" name="testcaseip'+z+'" placeholder="Program input"></textarea><textarea class="form-control testcase" rows="3" name="outputeval'+z+'" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea><div class="form-group col-md-1"><select class="form-control" id="testcasetype1" name="testcasetype'+z+'"><option value="Hidden">Hidden</option><option value="Visible">Visible</option></select><select class="form-control" id="testcasetype" name="outputtype'+z+'" style="margin-top: 10px;"><option value="Static">Static o/p</option><option value="Dynamic">Dynamic o/p</option></select></div><button class="delete-testcase add_form_field_testcase" style="margin-left:5px;">&nbsp;-</button></div>');
         } else {
             alert('You Reached the limits')
         }
@@ -257,12 +271,36 @@
   });
 
   function validateForm() {
-    if (document.getElementById("qno").value <= 0){
-      alert("Question number must be >= 1 !");
-      return false;
+    // if (document.getElementById("qno").value <= 0){
+    //   alert("Question number must be >= 1 !");
+    //   return false;
+    // }
+
+    if (document.getElementById("qtype").value == "MCQ"){
+      var option_test_passed = validate_mcq_options();
+      if (!option_test_passed){
+        alert("MCQ options must have atleast 1 correct option!");
+        return false;
+      }
+      return true;
     }
   }
 
+  function validate_mcq_options(){
+    var mcq_tags = document.querySelectorAll(".mcqselect");
+    var flag = false;
+      for(mcq_tag of mcq_tags){
+        if (mcq_tag.value == "True"){
+          console.log("working");
+          flag = true;
+          break;
+        }
+      }
+    if(!flag)
+      return false;
+    return true;
+  }
+  
 
 </script>
 

@@ -88,7 +88,13 @@
 							</div>
 						</div>
 					</div>	
-					{% endfor %}			
+					{% endfor %}
+					<script>
+						{% if server_msg != "" %}
+							alert("Contest has expired ! Wake up early next time.");
+							history.back();
+						{% endif %}
+					</script>			
 				</div>
 			</div>
 		</div>

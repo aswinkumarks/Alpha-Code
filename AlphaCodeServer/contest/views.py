@@ -193,7 +193,7 @@ def getQuestion(request, cname, qno):
 @login_required(login_url='/accounts/login')
 def show_contests(request, msg = ""):
     contests = Contest.objects.all()
-    return render(request,'main.html',{"contests":contests, "server_msg":msg})
+    return render(request,'contests.html',{"contests":contests, "server_msg":msg})
 
 
 @csrf_exempt
