@@ -276,3 +276,8 @@ def thankyou_pg(request):
     template = loader.get_template('thankyou.html')
     context = {}
     return HttpResponse(template.render(context,request))
+
+def testing_pg(request):
+    template = loader.get_template('404.html')
+    context = {}
+    return HttpResponse(template.render(context,request))
