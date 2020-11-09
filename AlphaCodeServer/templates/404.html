@@ -17,25 +17,33 @@
 
 <style>
     body {
-    background-image: linear-gradient(to right, var(--gradient-color-stops)) !important;
-    --gradient-from-color: #000000;
-    --gradient-color-stops: #000000, var(--gradient-to-color, rgb(0, 0, 0)) !important;
-    --gradient-to-color: #890000 !important;
-    /* background: linear-gradient(270deg, #000000, #7d0000, #890000) !important;
-    -webkit-animation: AnimationName 11s ease infinite !important;
-    animation: AnimationName 11s ease infinite !important; */
-}
+        background-image: linear-gradient(to right, var(--gradient-color-stops)) !important;
+        --gradient-from-color: #1b0000;
+        --gradient-color-stops: #580000, var(--gradient-to-color, #1b0000) !important;
+        --gradient-to-color: #1b0000 !important;
+        background: linear-gradient(270deg, #580000, #1b0000);
+        background-size: 600% 600%;
 
-@-webkit-keyframes AnimationName {
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
-}
-@keyframes AnimationName {
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
-}
+        -webkit-animation: AnimationName 5s ease infinite;
+        -moz-animation: AnimationName 5s ease infinite;
+        animation: AnimationName 5s ease infinite;
+    }
+
+    @-webkit-keyframes AnimationName {
+        0%{background-position:0% 50%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 50%}
+    }
+    @-moz-keyframes AnimationName {
+        0%{background-position:0% 50%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 50%}
+    }
+    @keyframes AnimationName {
+        0%{background-position:0% 50%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 50%}
+    }
 </style>
 
 <body class="body">
