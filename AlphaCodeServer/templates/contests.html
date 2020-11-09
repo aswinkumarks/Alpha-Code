@@ -55,8 +55,8 @@
 									<p class=" inline font-semibold text-lg text-blue-800 tracking-wider break-words capitalize">
 										duration &nbsp;&nbsp;: <span class="duration">Send from Backend</span>
 									</p>
-									<p class="pt-3 block font-semibold text-lg text-red-700 tracking-wider break-words capitalize">
-										ends on &nbsp;&nbsp;&nbsp;: <span class="utcToLocal">{{contest.endTime.isoformat}}</span>
+									<p class="time pt-3 block font-semibold text-lg text-red-700 tracking-wider break-words capitalize">
+										ends on &nbsp;&nbsp;&nbsp;: <span class="utcToLocal card_et">{{contest.endTime.isoformat}}</span>
 									</p>
 								</div>	
 								<!--Contest detail model button -->
@@ -96,12 +96,6 @@
 							</div>
 						</div>	
 					{% endfor %}
-					<script>
-						{% if server_msg != "" %}
-							alert("Contest has expired ! Wake up early next time.");
-							history.back();
-						{% endif %}
-					</script>			
 				</div>
 			</div>
 		</div>
@@ -134,8 +128,29 @@
 					}
 					}, 100)
 			}
-		)
-	
+		);
+		
+		//Contest check
+		function contest_card_chk(){
+			var ctr = 0;
+			var today = new Date().toISOString();			
+			document.querySelectorAll(".time").forEach(
+				function (i) {
+					var edt = new Date(document.getElementsByClassName("card_et")[ctr].innerText).toISOString();
+					console.log(ctr);
+					console.log("edate : ",edt);
+					console.log("today : ",today);
+					console.log("today < edt : ",today < edt,"\n\n");
+					if (edt < today){
+						document.getElementsByClassName("startBtn")[ctr].removeAttribute("href");
+						document.getElementsByClassName("startBtn")[ctr].style.cursor = "not-allowed";
+						document.getElementsByClassName("startBtn")[ctr].style.background = "grey";
+					}
+					ctr+=1;				
+            	}
+        	);
+		}
+
 		// Model control
 		var openmodal = document.querySelectorAll('.modal-open');
 		for (var i = 0; i < openmodal.length; i++) {
@@ -164,6 +179,8 @@
 				{day:"2-digit","month":"short","year":"numeric",hour12:true,hour:'numeric',minute:'numeric'});
 			}
 		);
+
+		contest_card_chk();
 	</script>
   	</body>
 </html>
