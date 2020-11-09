@@ -7,6 +7,8 @@ class Contest(models.Model):
     cId = models.AutoField(primary_key=True)
     cname = models.CharField(unique=True,max_length=50)
     desc = models.TextField(blank=True)
+    hosted_by = models.CharField(max_length=150, default="")
+    duration = models.IntegerField(default=0)
     startTime = models.DateTimeField()
     endTime = models.DateTimeField()
 
