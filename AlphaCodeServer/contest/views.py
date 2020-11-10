@@ -101,7 +101,7 @@ def create_question(request, cname):
                     break
 
     template = loader.get_template('createquestion.html')
-    context = {}
+    context = {"cname":cname}
     return HttpResponse(template.render(context, request))
 
 
