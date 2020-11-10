@@ -18,14 +18,18 @@
 						<span class="capitalize p-3 ml-8">{{ user.username }}</span>            
 					</div>
 					<h1 class="inline-block">Contest Preview</h1>
-					<span class="rounded-xl px-4 hover:shadow-inner hover:bg-red-600 hover:text-blue-100"><a href="{% url 'logout' %}">Logout</a></span>
+					<span class="rounded-xl px-4 hover:shadow-inner hover:bg-red-600 hover:text-blue-100 transform hover:scale-110"><a href="{% url 'logout' %}">Logout</a></span>
 			</header>
+			<!-- Delete Alert -->
+			<div role="alert" class="alert">
+				<div id="deleteAlert" class="hidden"><div class="bg-red-500 text-white font-bold rounded-t-lg px-4 py-2 w-1/3 mx-auto mt-10 font-bold text-lg tracking-wider uppercase shadow-inner">Alert</div><div class="justify-center text-center border border-t-0 rounded-b-lg border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700 w-1/3 mx-auto"><p class="font-md text-xl">Are you sure you want to <span class="font-bold uppercase">delete</span> the contest <span id="contestName" class="uppercase font-bold"></span> ?</p><div class="flex justify-center"><button class="mt-4 bg-red-500 px-2 py-1 rounded-lg text-white font-bold tracking-wide shadow-2xl transform hover:scale-110 uppercase focus:outline-none" id="confirmDelete">Yes</button><button class="focus:outline-none bg-red-500 px-2 py-1 mt-4 rounded-lg text-white font-bold tracking-wide ml-5 shadow-2xl transform hover:scale-110 uppercase" id="closeAlert">Cancel</button></div></div></div>
+			</div>
 			<div class="p-10">  
 				{% if user.is_staff %}
-					<div class="flex justify-start">
-						<a href="/create_contest/">
-							<svg class="w-12 h-12 fill-current text-blue-700 transform hover:scale-125" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M464 64h-48V48c0-26.51-21.49-48-48-48H48C21.49 0 0 21.49 0 48v320c0 26.51 21.49 48 48 48h16v48c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zM64 112v272H48c-8.837 0-16-7.163-16-16V48c0-8.837 7.163-16 16-16h320c8.837 0 16 7.163 16 16v16H112c-26.51 0-48 21.49-48 48zm416 352c0 8.837-7.163 16-16 16H112c-8.837 0-16-7.163-16-16V112c0-8.837 7.163-16 16-16h352c8.837 0 16 7.163 16 16v352z"/><path d="M304 176h-32v96h-96v32h96v96h32v-96h96v-32h-96z"/></svg>  
-						</a>
+					<div class="flex justify-center mb-3">
+						<a href="/create_contest/" class="rounded-lg p-3 shadow-2xl border-2 border-blue-700 transition duration-500 ease-in-out bg-blue-100 hover:bg-blue-400 transform hover:-translate-y-1 hover:scale-110">
+							<svg class="inline-block w-8 h-8 fill-current text-blue-700 transform hover:scale-125" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M464 64h-48V48c0-26.51-21.49-48-48-48H48C21.49 0 0 21.49 0 48v320c0 26.51 21.49 48 48 48h16v48c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zM64 112v272H48c-8.837 0-16-7.163-16-16V48c0-8.837 7.163-16 16-16h320c8.837 0 16 7.163 16 16v16H112c-26.51 0-48 21.49-48 48zm416 352c0 8.837-7.163 16-16 16H112c-8.837 0-16-7.163-16-16V112c0-8.837 7.163-16 16-16h352c8.837 0 16 7.163 16 16v352z"/><path d="M304 176h-32v96h-96v32h96v96h32v-96h96v-32h-96z"/></svg>  
+						 <span class="p-2 text-lg font-semibold text-blue-900">Create new contest</span></a>
 					</div>   
 				{% endif %} 
 				<div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4" id="contest-list">
@@ -44,7 +48,8 @@
 										<a href="/editContest/{{contest.cname}}">
 											<svg class="inline-block w-8 h-6 ml-3 transform hover:scale-125" viewBox="0 -1 401.541 401" xmlns="http://www.w3.org/2000/svg"><path d="M381.29 32.242c13.67 13.664 13.67 35.824 0 49.488l-17.68 17.68-61.231-61.23 17.68-17.68c13.671-13.668 35.832-13.668 49.5 0zm0 0" fill="#00acea"/><path d="M363.61 99.41L203.46 259.57h-.01l-61.231-61.23 160.16-160.16zm0 0" fill="#00efd1"/><path d="M142.219 198.34l61.23 61.23-.57.57-84.688 23.462 23.457-84.692zm0 0" fill="#fedb41"/><g fill="#083863"><path d="M370.59 250.96c-5.524 0-10 4.477-10 10v88.79c-.02 16.563-13.438 29.98-30 30H50c-16.563-.02-29.98-13.438-30-30V89.16c.02-16.558 13.438-29.98 30-30h88.79c5.523 0 10-4.476 10-10 0-5.523-4.477-10-10-10H50c-27.602.031-49.969 22.399-50 50v260.59c.031 27.602 22.398 49.969 50 50h280.59c27.601-.031 49.969-22.398 50-50v-88.79c0-5.522-4.477-10-10-10zm0 0"/><path d="M376.633 13.43c-17.59-17.547-46.059-17.547-63.645 0l-178.41 178.41a10.043 10.043 0 00-2.566 4.398l-23.457 84.692a9.997 9.997 0 0012.304 12.308l84.692-23.46a10.018 10.018 0 004.406-2.571l.566-.57L388.36 88.8c17.575-17.57 17.575-46.059 0-63.63zM146.957 217.219l37.613 37.617-52.03 14.414zm56.5 42.355v-.008l6.52 6.52zm0-14.14l-47.094-47.094L302.38 52.324l47.09 47.086zM374.219 74.66l-10.61 10.61-47.086-47.09 10.61-10.61c9.765-9.746 25.582-9.746 35.351 0l11.735 11.746c9.765 9.758 9.765 25.586 0 35.344zm0 0"/></g></svg>
 										</a>
-										<a onclick="delete_contest('{{contest.cname}}')">
+										<a onclick="alert('{{contest.cname}}')">
+										<!-- <a onclick="delete_contest('{{contest.cname}}')"> -->
 											<svg class="inline-block w-10 h-6 ml-9 fill-current text-red-600 transform hover:scale-125" viewBox="-53 0 463 463" width="463pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a"><stop offset=".322" stop-color="#a163f5"/><stop offset=".466" stop-color="#b074ee"/><stop offset=".752" stop-color="#d8a1dd"/><stop offset=".898" stop-color="#efbad3"/></linearGradient><linearGradient id="b" gradientTransform="matrix(1 0 0 -1 -77.307 489.5)" gradientUnits="userSpaceOnUse" x1="258.566" x2="244.835" xlink:href="#a" y1="70.613" y2="564.924"/><linearGradient id="c" gradientTransform="matrix(1 0 0 -1 -77.307 489.5)" gradientUnits="userSpaceOnUse" x1="322.517" x2="308.786" xlink:href="#a" y1="72.389" y2="566.701"/><linearGradient id="d" gradientTransform="matrix(1 0 0 -1 -77.307 489.5)" gradientUnits="userSpaceOnUse" x1="194.616" x2="180.885" xlink:href="#a" y1="68.836" y2="563.148"/><linearGradient id="e" gradientTransform="matrix(1 0 0 -1 -77.307 489.5)" gradientUnits="userSpaceOnUse" x1="265.001" x2="251.27" xlink:href="#a" y1="70.791" y2="565.103"/><path d="M178.691 255.5c-5.515.016-9.984 4.484-10 10v122c0 5.523 4.48 10 10 10 5.524 0 10-4.477 10-10v-122a10.027 10.027 0 00-10-10zm0 0"/><path d="M242.691 255.5c-5.515.016-9.984 4.484-10 10v122c0 5.523 4.48 10 10 10 5.524 0 10-4.477 10-10v-122a10.027 10.027 0 00-10-10zm0 0"/><path d="M114.691 255.5c-5.515.016-9.984 4.484-10 10v122c0 5.523 4.48 10 10 10 5.524 0 10-4.477 10-10v-122a10.027 10.027 0 00-10-10zm0 0"/><path d="M312.293 51.2h-57.2V22.101C255.09 9.895 245.196.004 232.994 0H124.394c-12.207.004-22.098 9.895-22.102 22.102V51.3h-57.2C23.083 51.305 4.294 67.19.63 88.895-3.035 110.598 9.504 131.773 30.293 139a8.365 8.365 0 00-.3 2.2V413c.01 27.61 22.39 49.988 50 50h197.5c27.609-.012 49.991-22.39 50-50V141.2a7.624 7.624 0 00-.302-2.2c20.817-7.25 33.352-28.469 29.664-50.2s-22.523-37.62-44.562-37.6zM122.395 22.101A2.109 2.109 0 01124.492 20h108.602a2.109 2.109 0 012.097 2.102V51.3H122.395zm155 420.898H79.992c-16.547-.047-29.949-13.453-30-30V141.5h257.5V413c-.094 16.566-13.531 29.96-30.097 30zm34.898-321.5h-267.2c-13.863 0-25.1-11.238-25.1-25.102 0-13.859 11.237-25.097 25.1-25.097h267.2c13.863 0 25.102 11.238 25.102 25.097 0 13.864-11.239 25.102-25.102 25.102zm0 0"></svg>
 										</a>
 									</span>
@@ -63,7 +68,7 @@
 								</div>	
 								<!--Contest detail model button -->
 								<div class="flex justify-center">
-									<button class="modal-open text-blue-700 hover:text-indigo-900 font-bold focus:outline-none underline capitalize tracking-wide text-lg">view details</button>
+									<button class="modal-open text-blue-700 hover:text-indigo-900 font-bold focus:outline-none underline capitalize tracking-wide text-lg transform hover:-translate-y-1">view details</button>
 								</div>
 								<div class="flex items-center">
 									<div class="w-full">
@@ -79,7 +84,6 @@
 								<div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-75"></div>
 								<!-- Model card -->
 								<div class="rounded-2xl modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
-									<!-- Add margin if you want to see some of the overlay behind the modal-->
 									<div class="modal-content py-4 text-left px-6">
 										<!--Model title-->
 										<div class="flex justify-between items-center pb-3 truncate">
@@ -101,7 +105,6 @@
 				</div>
 			</div>
 		</div>
-
 	<script>
 		// Time calculator
 		const time = timeInMilliSec => {
@@ -142,8 +145,8 @@
 						i.querySelector(".startBtn").style.background = "grey";
 					}
 					}, 100)
-			}
-		);
+				}
+			);
 
 		// Model control
 		var openmodal = document.querySelectorAll('.modal-open');
@@ -173,22 +176,36 @@
 			}
 		);
 		
-		// Delete contest
+		// Alert for contest delete
+		function alert(cname) {
+        	console.log("alert function is called by " + cname);
+			if(document.getElementById("deleteAlert").className == null || document.getElementById("deleteAlert").className == "hidden"){
+				document.getElementById("contestName").innerText = cname;
+				document.getElementById("deleteAlert").className= "block";
+				document.getElementById("confirmDelete").onclick = () => {delete_contest(cname)};  
+				document.getElementById("closeAlert").onclick = () => closeAlert()
+			}
+		  }
+		
+		function closeAlert() {
+			document.getElementById("deleteAlert").className="hidden";
+		}
+
 		function delete_contest(cname) {
-          var xhttp = new XMLHttpRequest();
-          var url = "/deleteContest/"+cname;
-          console.log(url);
-          if(confirm("Are you sure you want to delete the Contest '"+ cname + "' ?")){
+			console.log("delete_contest is confirmed by " + cname);
+			var xhttp = new XMLHttpRequest();
+          	var url = "/deleteContest/"+cname;
 			xhttp.open("GET", url, true);
             xhttp.send();
             xhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
                 var element = document.getElementById(cname);
-                  element.parentNode.removeChild(element);
+                element.parentNode.removeChild(element);
+				closeAlert();
               }
             };
           } 
-      	}
+
 	</script>
   	</body>
 </html>
