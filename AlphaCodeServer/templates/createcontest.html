@@ -105,51 +105,58 @@
 
   // validation check
   function validateForm() {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1;
-    var yyyy = today.getFullYear();
-    var h = today.getHours();
-    var m = today.getMinutes();
-    // add a zero in front of numbers<10
-    m = checkTime(m);
-    dd = checkTime(dd);
-    var today_time = h + ":" + m;
-    today = yyyy + '-' + mm + '-' + dd;
-    var sd = document.forms["ContestForm"]["start-date"].value;
-    var ed = document.forms["ContestForm"]["end-date"].value;
-    var st = document.forms["ContestForm"]["start-time"].value;
-    var et = document.forms["ContestForm"]["end-time"].value;
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+      var yyyy = today.getFullYear();
+      var h = today.getHours();
+      var m = today.getMinutes();
+      // add a zero in front of numbers<10
+      m = checkTime(m);
+      h = checkTime(h);
+      dd = checkTime(dd);
+      var today_time = h + ":" + m;
+      today = yyyy + '-' + mm + '-' + dd;
+      var sd = document.forms["ContestForm"]["start-date"].value;
+      var ed = document.forms["ContestForm"]["end-date"].value;
+      var st = document.forms["ContestForm"]["start-time"].value;
+      var et = document.forms["ContestForm"]["end-time"].value;
 
     // var today = Date.parse(today);
     // var sd = Date.parse(sd);
     // var ed = Date.parse(ed);
+    console.log("today : ", today);
+    console.log("today_time : ", today_time);
+    console.log("sd : ", sd);
+    console.log("ed : ", ed);
+    console.log("st : ", st);
+    console.log("et : ", et);
 
-    if (ed < today) {
-      alert("Contest End Date cannot be before Today!");
-      console.log("Contest End Date cannot be before Today!");
+    if (sd > ed ){
+      alert("Contest End Date cannot be before Start Date!");
+      return false;
+    }
+    
+    if (sd < today || ed < today) {
+      alert("Contest Start/End Date cannot be before Today!");
       return false;
     }
 
-    else if (sd == today){
-      if(st < today_time) {
-        alert("Contest Start Time cannot be before Current Time!");
-        console.log("Contest Start Time cannot be before Current Time!");
-        return false;
-      }
+    if (!(sd == today && st > today_time)){
+      alert("Contest Start Time cannot be before/equal to Current Time!");
+      return false;
     }
 
-    else if (ed == today){
-      if (et <= today_time) {
-        alert("Contest End Time cannot be before/equal to Current Time!");
-        console.log("Contest End Time cannot be before/equal to Current Time!");
-        return false;
-      }
+    if (ed == today && et < today_time){
+      alert("Contest End Time cannot be before/equal to Current Time!");
+      return false;
     }
 
-    // enabling this creates bugs
-    // return true; 
-
+    if (sd == ed && st >= et){
+      alert("Contest End Time cannot be before/equal to Start Time!");
+      return false;
+    }
+    return true;
   }
 
   function setTimezoneOffset() {

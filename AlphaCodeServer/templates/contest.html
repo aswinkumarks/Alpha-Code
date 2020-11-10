@@ -14,6 +14,12 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %} ">
 </head>
 
+<style>
+.custom-control{
+    padding:0;
+}
+</style>
+
 <body style="background:dodgerblue ">
 
     <nav>
@@ -72,7 +78,7 @@
             <br>
 
             <div class="row" id="mcq-options-row">
-                <div class="col-md-10">
+                <div class="col-md-10" id="mcq_options_div">
                     <!-- <form action="" method="POST"> -->
                     {% for option in options %}
                     <div class="form-check">
@@ -295,9 +301,9 @@
             if (this.readyState == 4 && this.status == 200) {
                 data = JSON.parse(this.responseText);
                 // data = this.responseText;
-                console.log("data : " + data)
-                console.log("data : " + data["options"])
-                console.log("data : " + data["qno"])
+                // console.log("data : " + data)
+                // console.log("data : " + data["options"])
+                // console.log("data : " + data["qno"])
                 document.getElementById("question").innerHTML = qno + ". " + data["question"];
                 document.getElementById("desc").innerHTML = data["desc"];
                 document.getElementById("qtype").value = data["qtype"];
@@ -312,6 +318,17 @@
                     document.getElementById("mcq-options-row").style.display = "flex";
                     document.getElementById("submitcode").style.display = "none";
                     document.getElementById("coding-eg-ip-op").style.display = "none";
+
+                    //remove prev mcq question options
+                    mcq_opt_div = document.getElementById("mcq_options_div")
+                    mcq_opt_div.innerHTML = "";
+                    var option_html = ""
+                    // refresh with options of new mcq question
+                    for(option of data["options"]){
+                        option_html += '<div class="form-check"><div class="custom-control custom-checkbox"><input type="checkbox" class="form-check-input custom-control-input" id="'+option+'" name="optcheckbox" value="'+option+'"><label class="custom-control-label" for="'+option+'">'+option+'</label></div></div>'
+                    }
+                    mcq_opt_div.innerHTML = option_html;
+
                 }
                 else {
                     document.getElementById("mcq-options-row").style.display = "none";

@@ -90,6 +90,10 @@
                                 <option value="MCQ">MCQ</option>
                             </select>
                         </div>
+                        <div class="form-group col-md-3">
+                          <label>Score</label>
+                          <input type="number" class="form-control" id="score" name="score" value="1" required>
+                        </div>
                     </div>
 
                     <div class="form-row">
@@ -271,10 +275,10 @@
   });
 
   function validateForm() {
-    // if (document.getElementById("qno").value <= 0){
-    //   alert("Question number must be >= 1 !");
-    //   return false;
-    // }
+    if (document.getElementById("score").value <= 0){
+      alert("Score must be >= 1 !");
+      return false;
+    }
 
     if (document.getElementById("qtype").value == "MCQ"){
       var option_test_passed = validate_mcq_options();
