@@ -53,7 +53,7 @@
 								<!-- Time of the contest -->
 								<div class="m-3">
 									<p class=" inline font-semibold text-lg text-blue-800 tracking-wider break-words capitalize">
-										duration &nbsp;&nbsp;: <span class="duration">Send from Backend</span>
+										duration &nbsp;&nbsp;: <span class="duration"></span>
 									</p>
 									<p class="time pt-3 block font-semibold text-lg text-red-700 tracking-wider break-words capitalize">
 										ends on &nbsp;&nbsp;&nbsp;: <span class="utcToLocal card_et">{{contest.endTime.isoformat}}</span>
@@ -65,7 +65,7 @@
 								</div>
 								<div class="flex items-center">
 									<div class="w-full">
-										<a href="/startContest/{{contest.cname}}" class="startBtn pointer-events-none text-red-600 inline-block login-btn text-center hover:bg-blue-500">
+										<a href="/startContest/{{contest.cname}}" class="startBtn pointer-events-none text-red-600 inline-block login-btn text-center hover:bg-blue-500 hover:outline-none">
 										Starts in <span class="timed"></span>
 										</a>
 									</div>
@@ -101,55 +101,43 @@
 		</div>
 
 	<script>
-		// Starts in timer
+		// Starts-in timer and Expiry button
 		document.querySelectorAll(".contestCard").forEach(
 			function(i) {
 				var startTime = i.querySelector(".startTime").innerText
 				var endTime = i.querySelector(".endTime").innerText
 				i.querySelector(".duration").innerText = "Send from backend";
 				var countDownDate = new Date(startTime).getTime();
+				var endCountDown = new Date(endTime).getTime();
 				var x = setInterval(function() {
 					// Get today's date and time
 					var now = new Date().getTime();
 					var timeToStart = countDownDate - now;
+					var timeToEnd = endCountDown - now;
 					// Time calculations for days, hours, minutes and seconds
 					var days = Math.floor(timeToStart / (1000 * 60 * 60 * 24));
 					var hours = Math.floor((timeToStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 					var minutes = Math.floor((timeToStart % (1000 * 60 * 60)) / (1000 * 60));
 					var seconds = Math.floor((timeToStart % (1000 * 60)) / 1000);
-					// When the count down is finished
-					if (timeToStart < 0) {
+					// When the count down is finished but the contest is not expired
+					if (timeToStart < 0 && timeToEnd > 0) {
 						clearInterval(x);
 						i.querySelector(".startBtn").innerText = "Start"
 						i.querySelector(".startBtn").classList.remove("pointer-events-none")
 					}
-					else {
+					// when contest is yet to start
+					else if(timeToEnd > 0) {
 						i.querySelector(".startBtn").innerHTML = "Starts In " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+					}
+					// contest expired
+					else {
+						i.querySelector(".startBtn").innerText = "EXPIRED"
+						i.querySelector(".startBtn").classList.add("pointer-events-none")
+						i.querySelector(".startBtn").style.background = "grey";
 					}
 					}, 100)
 			}
 		);
-		
-		//Contest check
-		function contest_card_chk(){
-			var ctr = 0;
-			var today = new Date().toISOString();			
-			document.querySelectorAll(".time").forEach(
-				function (i) {
-					var edt = new Date(document.getElementsByClassName("card_et")[ctr].innerText).toISOString();
-					console.log(ctr);
-					console.log("edate : ",edt);
-					console.log("today : ",today);
-					console.log("today < edt : ",today < edt,"\n\n");
-					if (edt < today){
-						document.getElementsByClassName("startBtn")[ctr].removeAttribute("href");
-						document.getElementsByClassName("startBtn")[ctr].style.cursor = "not-allowed";
-						document.getElementsByClassName("startBtn")[ctr].style.background = "grey";
-					}
-					ctr+=1;				
-            	}
-        	);
-		}
 
 		// Model control
 		var openmodal = document.querySelectorAll('.modal-open');
@@ -180,7 +168,7 @@
 			}
 		);
 
-		contest_card_chk();
+		// contest_card_chk();
 
 		function delete_contest(cname) {
           var xhttp = new XMLHttpRequest();
