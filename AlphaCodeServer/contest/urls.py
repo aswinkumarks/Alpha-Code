@@ -19,5 +19,5 @@ urlpatterns = [
     path('thankyou', views.thankyou_pg),
     path('testing', views.testing_pg),
     path('deleteContest/<cname>', views.delete_contest),
-    path('editContest', views.delete_contest)
+    # path('editContest', views.edit_contest)
 ]
