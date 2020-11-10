@@ -21,11 +21,13 @@
 					<span class="rounded-xl px-4 hover:shadow-inner hover:bg-red-600 hover:text-blue-100"><a href="{% url 'logout' %}">Logout</a></span>
 			</header>
 			<div class="p-10">  
-				<div class="flex justify-start">
-					<a href="/create_contest/">
-						<svg class="w-12 h-12 fill-current text-blue-700 transform hover:scale-125" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M464 64h-48V48c0-26.51-21.49-48-48-48H48C21.49 0 0 21.49 0 48v320c0 26.51 21.49 48 48 48h16v48c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zM64 112v272H48c-8.837 0-16-7.163-16-16V48c0-8.837 7.163-16 16-16h320c8.837 0 16 7.163 16 16v16H112c-26.51 0-48 21.49-48 48zm416 352c0 8.837-7.163 16-16 16H112c-8.837 0-16-7.163-16-16V112c0-8.837 7.163-16 16-16h352c8.837 0 16 7.163 16 16v352z"/><path d="M304 176h-32v96h-96v32h96v96h32v-96h96v-32h-96z"/></svg>  
-					</a>
-				</div>    
+				{% if user.is_staff %}
+					<div class="flex justify-start">
+						<a href="/create_contest/">
+							<svg class="w-12 h-12 fill-current text-blue-700 transform hover:scale-125" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M464 64h-48V48c0-26.51-21.49-48-48-48H48C21.49 0 0 21.49 0 48v320c0 26.51 21.49 48 48 48h16v48c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zM64 112v272H48c-8.837 0-16-7.163-16-16V48c0-8.837 7.163-16 16-16h320c8.837 0 16 7.163 16 16v16H112c-26.51 0-48 21.49-48 48zm416 352c0 8.837-7.163 16-16 16H112c-8.837 0-16-7.163-16-16V112c0-8.837 7.163-16 16-16h352c8.837 0 16 7.163 16 16v352z"/><path d="M304 176h-32v96h-96v32h96v96h32v-96h96v-32h-96z"/></svg>  
+						</a>
+					</div>   
+				{% endif %} 
 				<div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4" id="contest-list">
 					{% for contest in contests %}
 						<!-- Contest card -->
@@ -49,7 +51,7 @@
 									{% endif %}
 								</div>
 								<!-- Organisation name (Need to be passed from backend) -->
-								<div class="mt-6 ml-3 text-blue-800 font-semibold text-lg tracking-wide truncate capitalize">hosted by : Google</div>
+								<div class="mt-6 ml-3 text-blue-800 font-semibold text-lg tracking-wider truncate capitalize">hosted by : Google</div>
 								<!-- Time of the contest -->
 								<div class="m-3">
 									<p class=" inline font-semibold text-lg text-blue-800 tracking-wider break-words capitalize">
@@ -101,33 +103,37 @@
 		</div>
 
 	<script>
+		// Time calculator
+		const time = timeInMilliSec => {
+			var days = Math.floor(timeInMilliSec / (1000 * 60 * 60 * 24));
+			var hours = Math.floor((timeInMilliSec % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			var minutes = Math.floor((timeInMilliSec % (1000 * 60 * 60)) / (1000 * 60));
+			var seconds = Math.floor((timeInMilliSec % (1000 * 60)) / 1000);
+			return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+		}
+
 		// Starts-in timer and Expiry button
 		document.querySelectorAll(".contestCard").forEach(
 			function(i) {
-				var startTime = i.querySelector(".startTime").innerText
-				var endTime = i.querySelector(".endTime").innerText
-				i.querySelector(".duration").innerText = "Send from backend";
+				var startTime = i.querySelector(".startTime").innerText;
+				var endTime = i.querySelector(".endTime").innerText;
 				var countDownDate = new Date(startTime).getTime();
 				var endCountDown = new Date(endTime).getTime();
+				var duration = endCountDown - countDownDate
+				i.querySelector(".duration").innerText = time(duration);
 				var x = setInterval(function() {
-					// Get today's date and time
 					var now = new Date().getTime();
 					var timeToStart = countDownDate - now;
 					var timeToEnd = endCountDown - now;
-					// Time calculations for days, hours, minutes and seconds
-					var days = Math.floor(timeToStart / (1000 * 60 * 60 * 24));
-					var hours = Math.floor((timeToStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-					var minutes = Math.floor((timeToStart % (1000 * 60 * 60)) / (1000 * 60));
-					var seconds = Math.floor((timeToStart % (1000 * 60)) / 1000);
-					// When the count down is finished but the contest is not expired
+					// Contest started
 					if (timeToStart < 0 && timeToEnd > 0) {
 						clearInterval(x);
 						i.querySelector(".startBtn").innerText = "Start"
 						i.querySelector(".startBtn").classList.remove("pointer-events-none")
 					}
-					// when contest is yet to start
+					// Contest is yet to start
 					else if(timeToEnd > 0) {
-						i.querySelector(".startBtn").innerHTML = "Starts In " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+						i.querySelector(".startBtn").innerHTML = "Starts In " + time(timeToStart)
 					}
 					// contest expired
 					else {
@@ -153,7 +159,6 @@
 		for (var i = 0; i < closemodal.length; i++) {
 			closemodal[i].addEventListener('click', toggleModal);
 		}
-				
 		function toggleModal () {
 			const modal = document.querySelector('.modal');
 			modal.classList.toggle('opacity-0');
@@ -167,9 +172,8 @@
 				{day:"2-digit","month":"short","year":"numeric",hour12:true,hour:'numeric',minute:'numeric'});
 			}
 		);
-
-		// contest_card_chk();
-
+		
+		// Delete contest
 		function delete_contest(cname) {
           var xhttp = new XMLHttpRequest();
           var url = "/deleteContest/"+cname;
@@ -185,8 +189,6 @@
             };
           } 
       	}
-
-
 	</script>
   	</body>
 </html>
