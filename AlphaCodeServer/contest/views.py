@@ -179,7 +179,7 @@ def getQuestion(request, cname, qno):
 @login_required(login_url='/accounts/login')
 def show_contests(request, msg=""):
     contests = Contest.objects.all()
-    return render(request, 'contests.html', {"contests": contests, "server_msg": msg})
+    return render(request, 'contestsDashboard.html', {"contests": contests, "server_msg": msg})
 
 
 @csrf_exempt
@@ -282,6 +282,6 @@ def testing_pg(request):
 def delete_contest(request, cname):
     if request.user.is_staff:
         Contest.objects.get(cname=cname).delete()
-        template = loader.get_template('contests.html')
+        template = loader.get_template('contestsDashboard.html')
         context = {}
         return HttpResponse(template.render(context, request))

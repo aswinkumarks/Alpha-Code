@@ -68,7 +68,7 @@
 								</div>	
 								<!--Contest detail model button -->
 								<div class="flex justify-center">
-									<button class="modal-open text-blue-700 hover:text-indigo-900 font-bold focus:outline-none underline capitalize tracking-wide text-lg transform hover:-translate-y-1">view details</button>
+									<button onClick="modelTrigger(event, `{{contest.cname}}`, `{{contest.desc}}`, `{{contest.startTime}}`, `{{contest.endTime}}`)"" class="modal-open text-blue-700 hover:text-indigo-900 font-bold focus:outline-none underline capitalize tracking-wide text-lg transform hover:-translate-y-1">view details</button>
 								</div>
 								<div class="flex items-center">
 									<div class="w-full">
@@ -83,19 +83,28 @@
 								<!-- Overlay -->
 								<div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-75"></div>
 								<!-- Model card -->
-								<div class="rounded-2xl modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+								<div class="flex-col rounded-2xl modal-container bg-white w-screen max-h-screen ml-12 mr-12 lg:w-1/2 mx-auto rounded shadow-lg z-50 overflow-y-auto">
 									<div class="modal-content py-4 text-left px-6">
 										<!--Model title-->
-										<div class="flex justify-between items-center pb-3 truncate">
-											<div class="w-full text-center">
-												<p class="text-xl font-bold text-center text-blue-900 uppercase modelTitle"></p>
+										<div class="flex-col items-center pb-3 truncate">
+											<div class="text-center border-b-2 border-blue-300 p-3">
+												<p class="text-xl font-bold text-center text-blue-900 uppercase modelTitle">{{ contest.cname }}</p>
 											</div>
 										</div>
 										<!--Model body-->
-										<span class="text-blue-800 text-md tracking-wide text-center word-break">{{ contest.desc }}</span>
-										<!--Model close button-->
-										<div class="flex justify-end pt-2">
-											<button class="modal-close px-4 bg-blue-700 p-3 rounded-lg text-white hover:bg-blue-500">Close</button>
+										<div class="mt-3 max-h-screen text-blue-800 text-md tracking-wide word-break text-md font-semibold tracking-wide px-5">
+											<span class="inline-block modelContestDesctription">{{ contest.desc }}</span>
+											<div class="p-6 flex justify-between text-lg font-semibold border-b-2 border-blue-300">
+												<span>Start Time : <span class="utcToLocal modelStartTime">{{contest.startTime.isoformat}}</span></span> 
+												<span>End Time : <span class="utcToLocal modelEndTime">{{contest.endTime.isoformat}}</span></span> 
+											</div>
+											<div class="flex-col items-center text-center text-blue-800 p-3">
+												<span class="inline-block text-xl font-bold tracking-wide">All the Best !</span>
+												<!--Model close button-->
+												<div>
+													<button class="mt-2 modal-close p-4 bg-blue-700 rounded-lg text-white hover:bg-blue-500 font-semibold tracking-wider focus:outline-none">Close</button>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -106,7 +115,7 @@
 			</div>
 		</div>
 	<script>
-		// Time calculator
+		// Time Conversion
 		const time = timeInMilliSec => {
 			var days = Math.floor(timeInMilliSec / (1000 * 60 * 60 * 24));
 			var hours = Math.floor((timeInMilliSec % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -148,24 +157,26 @@
 				}
 			);
 
-		// Model control
-		var openmodal = document.querySelectorAll('.modal-open');
-		for (var i = 0; i < openmodal.length; i++) {
-		openmodal[i].addEventListener('click', function(event){
+		const modelTrigger = (event, modelTitle, desc, startDate, endDate) => {
 			event.preventDefault();
-			toggleModal();
-		})
+			toggleModal(modelTitle, desc, startDate, endDate);
 		}
+
 		const overlay = document.querySelector('.modal-overlay');
 		overlay.addEventListener('click', toggleModal);
 		var closemodal = document.querySelectorAll('.modal-close');
 		for (var i = 0; i < closemodal.length; i++) {
 			closemodal[i].addEventListener('click', toggleModal);
 		}
-		function toggleModal () {
+
+		function toggleModal (modelTitle, desc, startDate, endDate) {
 			const modal = document.querySelector('.modal');
 			modal.classList.toggle('opacity-0');
 			modal.classList.toggle('pointer-events-none');
+			document.querySelector(".modelTitle").innerText = modelTitle;
+			document.querySelector(".modelContestDesctription").innerText = desc;
+			document.querySelector(".modelStartTime").innerText = startDate;
+			document.querySelector(".modelEndTime").innerText = endDate;
 		}
 
 		//Time conversion
