@@ -68,7 +68,7 @@
 								</div>	
 								<!--Contest detail model button -->
 								<div class="flex justify-center">
-									<button onClick="modelTrigger(event, `{{contest.cname}}`, `{{contest.desc}}`, `{{contest.startTime}}`, `{{contest.endTime}}`)"" class="modal-open text-blue-700 hover:text-indigo-900 font-bold focus:outline-none underline capitalize tracking-wide text-lg transform hover:-translate-y-1">view details</button>
+									<button onClick="modelTrigger(event, `{{contest.cname}}`, `{{contest.desc}}`, `{{contest.startTime.isoformat}}`, `{{contest.endTime.isoformat}}`)"" class="modal-open text-blue-700 hover:text-indigo-900 font-bold focus:outline-none underline capitalize tracking-wide text-lg transform hover:-translate-y-1">view details</button>
 								</div>
 								<div class="flex items-center">
 									<div class="w-full">
@@ -124,6 +124,9 @@
 			return `${days}d ${hours}h ${minutes}m ${seconds}s`;
 		}
 
+		//utc to ist
+		time_conv();
+	
 		// Starts-in timer and Expiry button
 		document.querySelectorAll(".contestCard").forEach(
 			function(i) {
@@ -160,6 +163,7 @@
 		const modelTrigger = (event, modelTitle, desc, startDate, endDate) => {
 			event.preventDefault();
 			toggleModal(modelTitle, desc, startDate, endDate);
+			time_conv();
 		}
 
 		const overlay = document.querySelector('.modal-overlay');
@@ -179,13 +183,15 @@
 			document.querySelector(".modelEndTime").innerText = endDate;
 		}
 
-		//Time conversion
-		document.querySelectorAll(".utcToLocal").forEach(
-			function (i) {
-				i.innerText = new Date(i.innerText).toLocaleString({},
-				{day:"2-digit","month":"short","year":"numeric",hour12:true,hour:'numeric',minute:'numeric'});
-			}
-		);
+		function time_conv(){
+			//Time conversion
+			document.querySelectorAll(".utcToLocal").forEach(
+				function (i) {
+					i.innerText = new Date(i.innerText).toLocaleString({},
+					{day:"2-digit","month":"short","year":"numeric",hour12:true,hour:'numeric',minute:'numeric'});
+				}
+			);
+		}
 		
 		// Alert for contest delete
 		function alert(cname) {

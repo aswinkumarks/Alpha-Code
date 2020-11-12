@@ -13,14 +13,42 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %} ">
 </head>
 
+<style>
+  .quiz-data-box{
+      background: ghostwhite;
+      padding: 20px;
+  }
+  .quiz-data-box button{
+    float: right;
+    margin-right: 15px;
+    margin-top: 35px;
+  }
+
+  .addoptionbtn button{
+    float: none;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 5px;
+  }
+
+  .addoptionbtn, .addtestcasebtn{
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+  .addtestcasebtn button{
+    float: none;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 5px;
+    margin-left: 5px;
+  }
+</style>
+
 <body style="background:dodgerblue ">
     
     <nav>
-        <h1 style="width: fit-content;
-            font-size: 1.75rem;
-            padding: 10px;">
-            CODE PLATFORM XYZ  
-        </h1>
+        <h1 style="width: fit-content; font-size: 1.75rem; padding: 10px;">Contest : {{cname}} </h1>
         <ul id="navelements">
             <div class="loginsignup">                
                 <li class="username">{{ user.username }}</li>
@@ -31,51 +59,13 @@
     </nav>
     <br><br><br>
 
-    <div class="container-fluid">
-        
+    <div class="container-fluid">       
         <div class="container-fluid">
-          
           <div class="row">
             <div class="col-md">
                 <h4>Question Creation Panel</h4>
                 <!-- <p>Resize the browser window to see the effect.</p> -->
                 <br>
-
-                <style>
-                    .quiz-data-box{
-                        background: ghostwhite;
-                        padding: 20px;
-                    }
-                    .quiz-data-box button{
-                      float: right;
-                      margin-right: 15px;
-                      margin-top: 35px;
-                    }
-
-                    .addoptionbtn button{
-                      float: none;
-                      margin-right: 0;
-                      margin-top: 0;
-                      margin-bottom: 5px;
-                    }
-
-                    .addoptionbtn, .addtestcasebtn{
-                      display: flex;
-                      margin-bottom: 10px;
-                    }
-
-
-                    .addtestcasebtn button{
-                      float: none;
-                      margin-right: 0;
-                      margin-top: 0;
-                      margin-bottom: 5px;
-                      margin-left: 5px;
-                    }
-
-                    
-                </style>
-
                 <form class="quiz-data-box" method="POST" action="" onsubmit="return validateForm()">
                     
                     <div class="form-row">
@@ -187,6 +177,7 @@
     if (this.value == 'MCQ') 
       {
           // document.getElementById("q_desc").disabled = true;
+          document.getElementById("score").value = 1;
           document.getElementById("mcq-option-row").style.display = "flex";
           document.getElementById("q_desc").style.display = "none";
           document.getElementById("testcase-row").style.display = "none";
@@ -205,6 +196,7 @@
 
       else 
       {
+        document.getElementById("score").value = 10;
         document.getElementById("mcq-option-row").style.display = "none";
         document.getElementById("q_desc").style.display = "flex";
         document.getElementById("testcase-row").style.display = "flex";
