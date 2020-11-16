@@ -6,13 +6,11 @@ import json
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 import datetime as dt
-from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from .evaluate import evaluateSubmission
 from .evaluate import getParticipantScore
 from .extra_scripts import *
 from .db_handler import *
-
 
 @csrf_exempt
 def create_contest(request):
@@ -21,12 +19,7 @@ def create_contest(request):
 
     if request.method == 'POST':
         cname = request.POST.get("cname")
-        start_date_time = combine_date_and_time(request.POST.get("start-date"),
-                                                request.POST.get("start-time"), int(request.POST.get("time_zone_offset")))
-        end_date_time = combine_date_and_time(request.POST.get("end-date"),
-                                              request.POST.get("end-time"),  int(request.POST.get("time_zone_offset")))
-        res = save_new_contest_info(cname=request.POST.get("cname"), desc=request.POST.get("contest_desc"),
-                                    start_time=start_date_time, end_time=end_date_time)
+        res = save_new_contest_info(request.POST)
         if not res:
             return HttpResponse("ERROR : Contest Name already in use. Please choose a different one.")
 
@@ -43,62 +36,11 @@ def create_question(request, cname):
         return HttpResponse("<h1>Access Denied</h1>")
 
     if request.method == 'POST':
-        res = request.body
-        res = res.decode('utf-8')
-        qtype = request.POST.get("qtype")
-        q_desc = request.POST.get("q_desc")
-        question = request.POST.get("question")
-        contest_questions = ContestQuestion.objects.filter(contest__cname=cname).order_by('-qno')
-        if len(contest_questions) == 0:
-            qno = 1
-        else:
-            qno = contest_questions.first().qno + 1
-
-        contest = Contest.objects.get(cname=cname)
-        cq = ContestQuestion(contest=contest)
-        cq.qno = qno
-        cq.qtype = qtype
-        no = 1
-
-        if qtype == 'MCQ':
-            mcq_question = McqQuestion(cq=cq, question=question)
-            cq.save()
-            mcq_question.save()
-
-            while True:
-                try:
-                    op_value = request.POST.get('option'+str(no))
-                    correct = False
-                    if request.POST.get('ans_correct'+str(no)) == "True":
-                        correct = True
-                    option = Option(question=mcq_question,option=op_value, correct_option=correct)
-                    option.save()
-                    no += 1
-                except:
-                    print(no, 'finished')
-                    break
-
-        else:
-            codingQues = CodingQuestion(cq=cq, question=question, description=q_desc)
-            cq.save()
-            codingQues.save()
-
-            while True:
-                try:
-                    inp = request.POST.get('testcaseip'+str(no))
-                    opt = request.POST.get('outputeval'+str(no))
-                    t_type = request.POST.get('testcasetype'+str(no))
-                    opt_type = request.POST.get('outputtype'+str(no))
-                    tc = TestCase(question=codingQues)
-                    tc.testCaseType = t_type
-                    tc.pgmInput = inp
-                    tc.OutputType = opt_type
-                    tc.pgmOutputOrEvalCode = opt
-                    tc.save()
-                    no += 1
-                except:
-                    print(no, 'finished')
-                    break
+        try:
+            create_new_question(request.POST, cname)
+        except Exception as e:
+            print(e)
+            return HttpResponseRedirect('/error')
 
     template = loader.get_template('createquestion.html')
     context = {"cname":cname}
@@ -272,7 +214,7 @@ def thankyou_pg(request):
     return HttpResponse(template.render(context, request))
 
 
-def testing_pg(request):
+def error_page(request):
     template = loader.get_template('404.html')
     context = {}
     return HttpResponse(template.render(context, request))
