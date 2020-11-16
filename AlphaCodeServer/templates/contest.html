@@ -194,7 +194,7 @@
     function finalSubmit() {
         var xhttp = new XMLHttpRequest();
         if (confirm("Are you sure ?\n\nConfirm to end the exam. !") == true) {
-            var url = "/finalSubmit";
+            var url = "/final_submit";
             var cname = window.location.href.split("/").slice(-1)[0];
             url = url + "/" + cname;
             xhttp.open("GET", url, true);
