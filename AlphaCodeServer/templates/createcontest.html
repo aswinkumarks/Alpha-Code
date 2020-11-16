@@ -79,6 +79,14 @@
                 <label>Description</label>
                 <input type="text" class="form-control" id="cdst" name="contest_desc" placeholder="">
               </div>
+              <div class="form-group col-md-3">
+                <label>Host</label>
+                <input type="text" class="form-control" id="hosted_by" name="hosted_by" placeholder="">
+              </div>
+              <div class="form-group col-md-3">
+                <label>Duration</label>
+                <input type="text" class="form-control" id="duration" name="duration" placeholder="">
+              </div>
             </div>
             <input type="hidden" name="time_zone_offset" id="time_zone_offset">
             <input type="submit" class="btn btn-primary" value="Procees to Question Creation">
@@ -142,7 +150,7 @@
       return false;
     }
 
-    if (!(sd == today && st > today_time)){
+    if (sd == today && st <= today_time){
       alert("Contest Start Time cannot be before/equal to Current Time!");
       return false;
     }

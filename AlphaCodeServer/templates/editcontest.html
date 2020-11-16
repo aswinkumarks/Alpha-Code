@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Code Platform</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="{% static 'css/main.css' %} ">
+</head>
+
+<body style="background:dodgerblue ">
+
+  <nav>
+    <h1 style="width: fit-content;
+            font-size: 1.75rem;
+            padding: 10px;">
+      {{cname}}
+    </h1>
+    <ul id="navelements">
+      <div class="loginsignup">
+        <li class="username">{{ user.username }}</li>
+        <input id="user_name" type="hidden" value='{{ user.username }}'>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+      </div>
+    </ul>
+  </nav>
+  <br><br><br>
+
+  <div class="container-fluid">
+
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-md">
+          <h4>Contest Edit Panel</h4>
+          <!-- <p>Resize the browser window to see the effect.</p> -->
+          <br>
+
+          <style>
+            .quiz-data-box {
+              background: ghostwhite;
+              padding: 20px;
+              border-radius: 5px;
+            }
+
+            .quiz-data-box input {
+              margin-top: 30px;
+            }
+          </style>
+
+          <form class="quiz-data-box" method="POST" action="" name="ContestForm">
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label>Contest Name</label>
+                <input type="text" class="form-control" id="cname" name="cname" placeholder="" value="{{cname}}" required>
+              </div>
+              <div class="form-group col-md-3">
+                <label>Start Date:</label>
+                <input type="date" class="form-control" id="start-date" name="start-date" value="{{startDate.isoformat}}" required>
+                <label>Time:</label>
+                <input type="time" class="form-control" id="start-time" name="start-time" required>
+              </div>
+              <div class="form-group col-md-3">
+                <label>End Date:</label>
+                <input type="date" class="form-control" id="end-date" name="end-date" value="{{endDate.isoformat}}" required>
+                <label>Time:</label>
+                <input type="time" class="form-control" id="end-time" name="end-time" required>
+              </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                  <label>Description</label>
+                  <input type="text" class="form-control" id="cdst" name="contest_desc"  value="{{desc}}" placeholder="">
+                </div>
+                <div class="form-group col-md-3">
+                  <label>Host</label>
+                  <input type="text" class="form-control" id="hosted_by" name="hosted_by"  value="{{hosted_by}}" placeholder="">
+                </div>
+                <div class="form-group col-md-3">
+                  <label>Duration</label>
+                  <input type="text" class="form-control" id="duration" name="duration" value="{{duration}}" placeholder="">
+                </div>
+              </div>
+            <input type="hidden" name="time_zone_offset" id="time_zone_offset">
+            <input type="hidden" id="sdate" value="{{startDate.isoformat}}">
+            <input type="hidden" id="edate" value="{{endDate.isoformat}}">
+            <input type="submit" class="btn btn-primary" value="Save">
+          </form>
+          
+          {% for qno, qinfo in questions.items %}
+          <br>  
+          <form class="quiz-data-box" method="POST" name="questionEditForm">
+              <div id="question_card">
+                <div class="form-row">
+                    <div class="form-group col-md">
+                      <label>Question Type:</label>
+                        <select  class="form-control" id="qtype" name="qtype">
+                            <option value="Coding">Coding</option>
+                            <option value="MCQ">MCQ</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label>Score</label>
+                      <input type="number" class="form-control" id="score" name="score" value="{{qinfo.qobj.score}}" required>
+                    </div>
+                  <div class="form-group col-md">
+                    <label>Question</label>
+                    <textarea class="form-control" rows="3" id="question" name="question" required>{{qinfo.qobj.question}}</textarea>
+                  </div>
+                </div>
+
+                <!-- coding type specific fields -->
+                {% if q.qtype == "Coding" %}
+                <div class="form-row" id="q_desc">
+                  <div class="form-group col-md">
+                    <label>Description</label>
+                    <textarea class="form-control" rows="3" name="q_desc" placeholder="Eg. any extra info (if any)"></textarea>
+                  </div>
+                </div>
+
+                <div class="form-row"   id="testcase-row">
+                  <div class="testcase-container form-group col-md">
+                    <label>Test Cases for Coding</label><br>
+                    <div class = "addtestcasebtn">                      
+                      <!-- <input  type="text" name="testcase1"> -->
+                      <textarea class="form-control col-md-7 testcase" rows="3" name="testcaseip1" placeholder="Program input" required></textarea>
+                      <textarea class="form-control testcase" rows="3" name="outputeval1" placeholder="Output or evalcode" style="margin-left: 10px;" required></textarea>
+                      <div class="form-group col-md-1">
+                          <select class="form-control" id="testcasetype1" name="testcasetype1">
+                              <option value="Hidden">Visible</option>
+                              <option value="Visible">Hidden</option>
+                          </select>
+
+                          <select class="form-control" id="testcasetype" name="outputtype1" style="margin-top: 10px;">
+                            <option value="Static">Static o/p</option>
+                            <option value="Dynamic">Dynamic o/p</option>
+                        </select>
+                      </div>                          
+                      <button class="add_form_field_testcase">+</button>
+                     
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+
+                {% if q.qtype == "MCQ" %}
+                <!-- mcq type question specific field -->
+                <div class="form-row" id="mcq-option-row">
+                  <div class="options-container form-group col-md">
+                    <label>MCQ Options </label><br>
+                    <div class = "addoptionbtn">
+                      <input type="text" name="option1" class="mcq" style="width: 25%;" placeholder="Option 1" required>
+                      <div class="form-group col-md-1">
+                        <select class="form-control mcqselect"  name="ans_correct1">
+                            <option value="False">Wrong</option>
+                            <option value="True">Correct</option>
+                        </select>
+                    </div>  
+                      <!-- <button class="add_form_field_mcq">+</button> -->  
+                    </div>
+                    <div class = "addoptionbtn">
+                      <input type="text" name="option2" class="mcq" style="width: 25%;" placeholder="Option 2" required>
+                      <div class="form-group col-md-1">
+                        <select class="form-control mcqselect"  name="ans_correct2">
+                            <option value="False">Wrong</option>
+                            <option value="True">Correct</option>
+                        </select>
+                    </div>  
+                      <button class="add_form_field_mcq">+</button>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary" >Save</button>
+              </div>
+              <hr>
+          </form>
+          {% endfor %}
+
+        </div>
+
+      </div>
+      <br>
+
+    </div>
+  </div>
+</body>
+
+<script>
+
+    var sd = document.getElementById("sdate").value
+    var ed = document.getElementById("edate").value
+    console.log(sd)
+    console.log(ed)
+    document.getElementById("start-time").value = sd.match(/\d\d:\d\d/)[0];
+    document.getElementById("end-time").value = ed.match(/\d\d:\d\d/)[0];
+    sd = new Date(sd);
+    ed = new Date(ed);    
+    document.getElementById("start-date").value = sd.getFullYear()+'-' + (sd.getMonth()+1) + '-'+sd.getDate();
+    document.getElementById("end-date").value = ed.getFullYear()+'-' + (ed.getMonth()+1) + '-'+ed.getDate();
+
+  function setTimezoneOffset() {
+    offset = new Date().getTimezoneOffset();
+    document.getElementById("time_zone_offset").value = offset;
+  }
+  setTimezoneOffset();
+  console.log(offset);
+
+  // field disabler
+  function fieldDisabler(){
+    if (this.value == 'MCQ') 
+      {
+          // document.getElementById("q_desc").disabled = true;
+          document.getElementById("score").value = 1;
+          document.getElementById("mcq-option-row").style.display = "flex";
+          document.getElementById("q_desc").style.display = "none";
+          document.getElementById("testcase-row").style.display = "none";
+          document.querySelectorAll(".mcq").forEach(
+            function (i) {
+              i.required = true;
+            }
+          );
+
+          document.querySelectorAll(".testcase").forEach(
+            function (i) {
+              i.required = false;
+            }
+          );
+      }
+
+      else 
+      {
+        document.getElementById("score").value = 10;
+        document.getElementById("mcq-option-row").style.display = "none";
+        document.getElementById("q_desc").style.display = "flex";
+        document.getElementById("testcase-row").style.display = "flex";
+        document.querySelectorAll(".mcq").forEach(
+            function (i) {
+              i.required = false;
+            }
+          );
+          
+          document.querySelectorAll(".testcase").forEach(
+            function (i) {
+              i.required = true;
+            }
+          );
+      }
+  }
+
+  document.getElementById('qtype').onload = fieldDisabler();
+  document.getElementById('qtype').onchange = fieldDisabler;
+  
+  //add new option field
+  $(document).ready(function() {
+    var max_fields = 5;
+    var wrapper = $(".options-container");
+    var add_button = $(".add_form_field_mcq");
+
+    var x = 2;
+    $(add_button).click(function(e) {
+        e.preventDefault();
+        if (x < max_fields) {
+            x++;
+
+            $(wrapper).append('<div class = "addoptionbtn"><input type="text" name="option'+x+'" style="width: 25%;" placeholder="Option '+x+'" required><div class="form-group col-md-1"><select class="form-control mcqselect"  name="ans_correct'+x+'"><option value="False">Wrong</option><option value="True">Correct</option></select></div><button class="delete add_form_field_mcq" style="margin-left:5px;">&nbsp;-</button></div>');
+        } else {
+            alert('You Reached the limits')
+        }
+    });
+
+    $(wrapper).on("click", ".delete", function(e) {
+        e.preventDefault();
+        $(this).parent('div').remove();
+        x--;
+    })
+  });
+
+  //add new test case
+  $(document).ready(function() {
+    var max_fields = 10;
+    var wrapper = $(".testcase-container");
+    var add_button = $(".add_form_field_testcase");
+
+    var z = 1;
+    $(add_button).click(function(f) {
+        f.preventDefault();
+        if (z < max_fields) {
+            z++;
+            $(wrapper).append('<div class = "addtestcasebtn"><textarea class="form-control col-md-7 testcase" rows="3" name="testcaseip'+z+'" placeholder="Program input"></textarea><textarea class="form-control testcase" rows="3" name="outputeval'+z+'" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea><div class="form-group col-md-1"><select class="form-control" id="testcasetype1" name="testcasetype'+z+'"><option value="Hidden">Hidden</option><option value="Visible">Visible</option></select><select class="form-control" id="testcasetype" name="outputtype'+z+'" style="margin-top: 10px;"><option value="Static">Static o/p</option><option value="Dynamic">Dynamic o/p</option></select></div><button class="delete-testcase add_form_field_testcase" style="margin-left:5px;">&nbsp;-</button></div>');
+        } else {
+            alert('You Reached the limits')
+        }
+    });
+
+    $(wrapper).on("click", ".delete-testcase", function(f) {
+        f.preventDefault();
+        $(this).parent('div').remove();
+        z--;
+    })
+  });
+
+
+</script>
+
+</html>
