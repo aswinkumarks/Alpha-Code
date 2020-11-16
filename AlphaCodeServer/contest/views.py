@@ -18,7 +18,7 @@ def create_contest(request):
         return HttpResponse("<h1>Access Denied</h1>")
 
     if request.method == 'POST':
-        cname = request.POST.get("cname")
+        cname = request.POST.get("cname").strip()
         res = save_new_contest_info(request.POST)
         if not res:
             return HttpResponse("ERROR : Contest Name already in use. Please choose a different one.")
@@ -87,13 +87,13 @@ def disp_contest_pg(request, cname):
 @login_required(login_url='/accounts/login')
 def startContest(request, cname):
     contest = Contest.objects.get(cname=cname)
-    exist = Participant.objects.filter(
-        user=request.user, contest__cname=cname).exists()
-    if not exist:
+    participants = Participant.objects.filter(user=request.user, contest__cname=cname)
+    if len(participants) == 0:
         participant = Participant(user=request.user, contest=contest)
         participant.save()
-
-    if contest.endTime > datetime.now(dt.timezone.utc):
+    else:
+        participant = participants[0]
+    if contest.endTime > datetime.now(dt.timezone.utc) and participant.submition_time is None:
         return HttpResponseRedirect("/contest/"+cname)
     else:
         return HttpResponseRedirect("/contests/ContestOver")
@@ -195,6 +195,14 @@ def submitResponse(request):
 
     res = evaluateSubmission(request.user.username, data["cname"], int(data["qno"]))
     return HttpResponse(res)
+
+
+@login_required(login_url='/accounts/login')
+def final_submit(request, cname):
+    participant = Participant.objects.get(user=request.user, contest__cname=cname)
+    participant.submition_time = datetime.now(dt.timezone.utc)
+    participant.save()
+    return HttpResponseRedirect("/%s/results"%(cname))
 
 
 @login_required(login_url='/accounts/login')

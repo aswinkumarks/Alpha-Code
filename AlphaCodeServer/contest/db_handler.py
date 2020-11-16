@@ -4,7 +4,7 @@ from .extra_scripts import *
 
 def save_new_contest_info(post_data):
     try:
-        cname = post_data.get("cname")
+        cname = post_data.get("cname").strip()
         start_time = combine_date_and_time(post_data.get("start-date"), post_data.get("start-time"),
                                                 int(post_data.get("time_zone_offset")))
         end_time = combine_date_and_time(post_data.get("end-date"), post_data.get("end-time"),

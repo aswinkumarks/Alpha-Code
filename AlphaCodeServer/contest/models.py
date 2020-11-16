@@ -19,10 +19,10 @@ class Contest(models.Model):
 class Participant(models.Model):
     user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
-    start_time = models.TimeField(auto_now_add=True)
+    start_time = models.DateTimeField(auto_now_add=True)
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     rank = models.IntegerField(default=9999999)
-    submition_time = models.TimeField(null=True)
+    submition_time = models.DateTimeField(null=True)
 
     class Meta:
         constraints = [
