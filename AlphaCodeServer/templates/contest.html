@@ -274,7 +274,7 @@
         var code = editor.getValue();
         var lang = document.getElementById('lang').value;
         var url = "/saveCode"
-        var cname = window.location.href.split("/").slice(-1)[0];
+        var cname = decodeURI(window.location.pathname.split("/").pop());
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 console.log(this.responseText);
@@ -319,6 +319,7 @@
                     document.getElementById("mcq-options-row").style.display = "flex";
                     document.getElementById("submitcode").style.display = "none";
                     document.getElementById("coding-eg-ip-op").style.display = "none";
+                    document.getElementById("coding-window-container").style.display = "none";
 
                     //remove prev mcq question options
                     mcq_opt_div = document.getElementById("mcq_options_div")
@@ -335,6 +336,7 @@
                     document.getElementById("mcq-options-row").style.display = "none";
                     document.getElementById("submitcode").style.display = "block";
                     document.getElementById("coding-eg-ip-op").style.display = "block";
+                    document.getElementById("coding-window-container").style.display = "flex";
                 }
                 getPrevCode();
             }
@@ -350,7 +352,7 @@
         var qno = document.getElementById("ques_no").value;
         var lang = document.getElementById('lang').value;
         var url = "/submitResponse"
-        var cname = window.location.href.split("/").slice(-1)[0];
+        var cname = decodeURI(window.location.pathname.split("/").pop());
         var qtype = document.getElementById("qtype").value;
         if (qtype == "MCQ") {
             // var options = document.getElementsByName('optradio');

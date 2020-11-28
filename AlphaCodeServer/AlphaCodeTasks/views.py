@@ -7,10 +7,8 @@ import json
 
 
 def runTask(data):
-
 	task = Task(task_type='Execute Code',info=json.dumps(data))
 	task.save()
-
 
 	available_server = RunServer.objects.filter(status='Running')
 	if len(available_server) == 0:
@@ -30,19 +28,15 @@ def runTask(data):
 			server.save()
 			task.status = 'Running'
 			task.save()
-
 			try:
 				data = conn.recv_data()
 				task_executed = True
 				output = data['response']
 				break
-
 			except:
 				output = 'Run Server Error: No response from server'
-
 			server.no_alloted_tasks -= 1
 			server.save()
-
 		except:
 			output = 'Run Server Error: Cannot connect to server'
 

@@ -168,7 +168,7 @@ def getCode(request):
 def remainingTime(request, cname):
     contest = Contest.objects.get(cname=cname)
     rem_time = contest.endTime - datetime.now(dt.timezone.utc)
-    return HttpResponse(str(rem_time.seconds))
+    return HttpResponse(str(rem_time.total_seconds()))
 
 
 @csrf_exempt
@@ -201,6 +201,7 @@ def submitResponse(request):
 def final_submit(request, cname):
     participant = Participant.objects.get(user=request.user, contest__cname=cname)
     participant.submition_time = datetime.now(dt.timezone.utc)
+    participant.score = getParticipantScore(participant)
     participant.save()
     return HttpResponseRedirect("/%s/results"%(cname))
 
@@ -212,7 +213,6 @@ def result_pg(request, cname):
     # return HttpResponse(str(score))
     template = loader.get_template('results.html')
     context = {"participant":participant}
-    context = {}
     return HttpResponse(template.render(context,request))
 
 

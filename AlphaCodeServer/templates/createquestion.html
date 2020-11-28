@@ -73,14 +73,14 @@
                           <label>Question Number</label>
                           <input type="number" class="form-control" id="qno" name="qno" placeholder="" required>
                         </div> -->
-                        <div class="form-group col-md">
+                        <div class="form-group col-md-2">
                           <label>Question Type:</label>
                             <select  class="form-control" id="qtype" name="qtype">
                                 <option value="Coding">Coding</option>
                                 <option value="MCQ">MCQ</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2" id="mcq-score">
                           <label>Score</label>
                           <input type="number" class="form-control" id="score" name="score" value="1" required>
                         </div>
@@ -107,7 +107,7 @@
                         <label>Test Cases for Coding</label><br>
                         <div class = "addtestcasebtn">                      
                           <!-- <input  type="text" name="testcase1"> -->
-                          <textarea class="form-control col-md-7 testcase" rows="3" name="testcaseip1" placeholder="Program input" required></textarea>
+                          <textarea class="form-control col-md-5 testcase" rows="3" name="testcaseip1" placeholder="Program input" required></textarea>
                           <textarea class="form-control testcase" rows="3" name="outputeval1" placeholder="Output or evalcode" style="margin-left: 10px;" required></textarea>
                           <div class="form-group col-md-1">
                               <select class="form-control" id="testcasetype1" name="testcasetype1">
@@ -119,6 +119,10 @@
                                 <option value="Static">Static o/p</option>
                                 <option value="Dynamic">Dynamic o/p</option>
                             </select>
+                          </div>
+                          <div class="form-group col-md-1">
+                            <label>Score</label>
+                            <input type="number" class="form-control" id="score" name="score1" value="10" required>
                           </div>                          
                           <button class="add_form_field_testcase">+</button>
                          
@@ -161,10 +165,6 @@
           </div>
           <br>
 
-          <div class="row" style="background: azure;padding: 20px;">
-            <div class="col-md-10">
-            </div>
-          </div>
           <br>        
         </div>
       </div>
@@ -179,6 +179,7 @@
           // document.getElementById("q_desc").disabled = true;
           document.getElementById("score").value = 1;
           document.getElementById("mcq-option-row").style.display = "flex";
+          document.getElementById("mcq-score").style.display = "inline-block";
           document.getElementById("q_desc").style.display = "none";
           document.getElementById("testcase-row").style.display = "none";
           document.querySelectorAll(".mcq").forEach(
@@ -197,6 +198,7 @@
       else 
       {
         document.getElementById("score").value = 10;
+        document.getElementById("mcq-score").style.display = "none";
         document.getElementById("mcq-option-row").style.display = "none";
         document.getElementById("q_desc").style.display = "flex";
         document.getElementById("testcase-row").style.display = "flex";
@@ -248,12 +250,22 @@
     var wrapper = $(".testcase-container");
     var add_button = $(".add_form_field_testcase");
 
-    var z = 1;
+    var op_no = 1;
     $(add_button).click(function(f) {
         f.preventDefault();
-        if (z < max_fields) {
-            z++;
-            $(wrapper).append('<div class = "addtestcasebtn"><textarea class="form-control col-md-7 testcase" rows="3" name="testcaseip'+z+'" placeholder="Program input"></textarea><textarea class="form-control testcase" rows="3" name="outputeval'+z+'" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea><div class="form-group col-md-1"><select class="form-control" id="testcasetype1" name="testcasetype'+z+'"><option value="Hidden">Hidden</option><option value="Visible">Visible</option></select><select class="form-control" id="testcasetype" name="outputtype'+z+'" style="margin-top: 10px;"><option value="Static">Static o/p</option><option value="Dynamic">Dynamic o/p</option></select></div><button class="delete-testcase add_form_field_testcase" style="margin-left:5px;">&nbsp;-</button></div>');
+        if (op_no < max_fields) {
+            op_no++;
+            $(wrapper).append(`<div class = "addtestcasebtn"><textarea class="form-control col-md-5 testcase" rows="3" name="testcaseip${op_no}" placeholder="Program input"></textarea>
+              <textarea class="form-control testcase" rows="3" name="outputeval${op_no}" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea>
+              <div class="form-group col-md-1"><select class="form-control" id="testcasetype1" name="testcasetype${op_no}">
+                <option value="Hidden">Hidden</option><option value="Visible">Visible</option></select>
+                <select class="form-control" id="testcasetype" name="outputtype${op_no}" style="margin-top: 10px;">
+                <option value="Static">Static o/p</option><option value="Dynamic">Dynamic o/p</option></select>
+              </div>
+              <div class="form-group col-md-1"><label>Score</label>
+                <input type="number" class="form-control" id="score" name="score${op_no}" value="10" required>
+              </div>
+              <button class="delete-testcase add_form_field_testcase" style="margin-left:5px;">&nbsp;-</button></div>`);
         } else {
             alert('You Reached the limits')
         }
@@ -262,7 +274,7 @@
     $(wrapper).on("click", ".delete-testcase", function(f) {
         f.preventDefault();
         $(this).parent('div').remove();
-        z--;
+        op_no--;
     })
   });
 
