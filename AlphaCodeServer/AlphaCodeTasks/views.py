@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.template import loader
 from .models import Task,RunServer
 from django.views.decorators.csrf import csrf_exempt
 from .network import Network
 import json
+from contest.models import *
 
 
 def runTask(data):
@@ -17,7 +19,6 @@ def runTask(data):
 
 	servers = sorted(available_server,key=lambda x:x.no_alloted_tasks)
 	msg = {'taskId':task.tId,'type':task.task_type,'data':data}
-
 	output = "Run Server Error: Un-Known Error"
 	task_executed = False
 	for server in servers:
@@ -44,22 +45,54 @@ def runTask(data):
 		task.status = 'Completed'
 		task.save()
 
-	return output
+	return {"status":task_executed, "output":output}
+
+
+def runTestCase(testcase, data):
+	task_output = runTask(data)
+	if not task_output["status"]:
+		return {"status":False, "output":"Code Run Server Error"}
+
+	output = task_output["output"]
+	output = output.strip()
+	correct_ans = False
+	if testcase.OutputType == "Static":
+		if output == testcase.pgmOutputOrEvalCode:
+			correct_ans = True
+	else:
+		data = {'language':"Python",
+			'code':testcase.pgmOutputOrEvalCode,
+			'input':testcase.pgmInput+'\n'+output}
+		res = runTask(data)
+		res = res.strip()
+		if res.split(':')[0] == "Run Server Error":
+			return res
+		if res == "True":
+			correct_ans = True
+
+	return {"status": True, "output":output, "input": data["input"], "correct_ans":correct_ans}
 
 
 @csrf_exempt
-def run(request,lang,Q_no=0):
+def run(request):
 	res = request.body
 	res = res.decode('utf-8')
-	res = json.loads(res)
-	# print(res)
-	code = res["code"]
-	inputStr = res["input"]
-	data = {'language':lang,'code':code,'input':inputStr}
+	data = json.loads(res)
+	cname = data['contest name']
+	cq  = ContestQuestion.objects.get(contest__cname=data['contest name'],qno=data["qno"])
+	question = CodingQuestion.objects.get(cq=cq)
+	testcases = TestCase.objects.filter(question=question)
+	results = []
+	for testcase in testcases:
+		task_data = {'language':data['lang'],
+					'code':data['code'],
+					'input':testcase.pgmInput}
+		res = runTestCase(testcase, task_data)
+		res["expected_output"] = testcase.pgmOutputOrEvalCode
+		results.append(res)
 
-	output = runTask(data)
-	# print("Output:",output)
-	output = output.replace("<",'&lt')
-	output = output.replace(">",'&gt')
-	# print(output)
-	return HttpResponse(output)
+	# output = output.replace("<",'&lt')
+	# output = output.replace(">",'&gt')
+	template = loader.get_template('code-output-block.html')
+	context = {"testcase_results":results}
+	return HttpResponse(template.render(context,request))

@@ -27,7 +27,8 @@ def evaluateSubmission(uname, cname, qno):
 			data = {'language':submitted_ans.language,
 					'code':submitted_ans.user_answer,
 					'input':testcase.pgmInput}
-			output = runTask(data)
+			task_output = runTask(data)
+			output = task_output["output"]
 			output = output.strip()
 			if output.split(':')[0] == "Run Server Error":
 				return output
