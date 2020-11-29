@@ -226,12 +226,3 @@ def error_page(request):
     template = loader.get_template('404.html')
     context = {}
     return HttpResponse(template.render(context, request))
-
-
-@login_required(login_url='/accounts/login')
-def delete_contest(request, cname):
-    if request.user.is_staff:
-        Contest.objects.get(cname=cname).delete()
-        template = loader.get_template('contestsDashboard.html')
-        context = {}
-        return HttpResponse(template.render(context, request))

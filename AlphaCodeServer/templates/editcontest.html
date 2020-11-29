@@ -14,13 +14,13 @@
   <link rel="stylesheet" href="{% static 'css/main.css' %} ">
 </head>
 
-<body style="background:dodgerblue ">
+<body style="background:lightgreen">
 
   <nav>
     <h1 style="width: fit-content;
             font-size: 1.75rem;
             padding: 10px;">
-      {{cname}}
+      {{cname}} : Edit Mode
     </h1>
     <ul id="navelements">
       <div class="loginsignup">
@@ -93,104 +93,150 @@
             <input type="hidden" id="edate" value="{{endDate.isoformat}}">
             <input type="submit" class="btn btn-primary" value="Save">
           </form>
-          
-          {% for qno, qinfo in questions.items %}
-          <br>  
-          <form class="quiz-data-box" method="POST" name="questionEditForm">
-              <div id="question_card">
-                <div class="form-row">
-                    <div class="form-group col-md">
-                      <label>Question Type:</label>
-                        <select  class="form-control" id="qtype" name="qtype">
-                            <option value="Coding">Coding</option>
-                            <option value="MCQ">MCQ</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-3">
-                      <label>Score</label>
-                      <input type="number" class="form-control" id="score" name="score" value="{{qinfo.qobj.score}}" required>
-                    </div>
-                  <div class="form-group col-md">
-                    <label>Question</label>
-                    <textarea class="form-control" rows="3" id="question" name="question" required>{{qinfo.qobj.question}}</textarea>
-                  </div>
-                </div>
+        </div>
+      </div>
 
-                <!-- coding type specific fields -->
-                {% if q.qtype == "Coding" %}
-                <div class="form-row" id="q_desc">
-                  <div class="form-group col-md">
-                    <label>Description</label>
-                    <textarea class="form-control" rows="3" name="q_desc" placeholder="Eg. any extra info (if any)"></textarea>
-                  </div>
-                </div>
-
-                <div class="form-row"   id="testcase-row">
-                  <div class="testcase-container form-group col-md">
-                    <label>Test Cases for Coding</label><br>
-                    <div class = "addtestcasebtn">                      
-                      <!-- <input  type="text" name="testcase1"> -->
-                      <textarea class="form-control col-md-7 testcase" rows="3" name="testcaseip1" placeholder="Program input" required></textarea>
-                      <textarea class="form-control testcase" rows="3" name="outputeval1" placeholder="Output or evalcode" style="margin-left: 10px;" required></textarea>
-                      <div class="form-group col-md-1">
-                          <select class="form-control" id="testcasetype1" name="testcasetype1">
-                              <option value="Hidden">Visible</option>
-                              <option value="Visible">Hidden</option>
-                          </select>
-
-                          <select class="form-control" id="testcasetype" name="outputtype1" style="margin-top: 10px;">
-                            <option value="Static">Static o/p</option>
-                            <option value="Dynamic">Dynamic o/p</option>
-                        </select>
-                      </div>                          
-                      <button class="add_form_field_testcase">+</button>
-                     
-                    </div>
-                  </div>
-                </div>
-                {% endif %}
-
-                {% if q.qtype == "MCQ" %}
-                <!-- mcq type question specific field -->
-                <div class="form-row" id="mcq-option-row">
-                  <div class="options-container form-group col-md">
-                    <label>MCQ Options </label><br>
-                    <div class = "addoptionbtn">
-                      <input type="text" name="option1" class="mcq" style="width: 25%;" placeholder="Option 1" required>
-                      <div class="form-group col-md-1">
-                        <select class="form-control mcqselect"  name="ans_correct1">
-                            <option value="False">Wrong</option>
-                            <option value="True">Correct</option>
-                        </select>
-                    </div>  
-                      <!-- <button class="add_form_field_mcq">+</button> -->  
-                    </div>
-                    <div class = "addoptionbtn">
-                      <input type="text" name="option2" class="mcq" style="width: 25%;" placeholder="Option 2" required>
-                      <div class="form-group col-md-1">
-                        <select class="form-control mcqselect"  name="ans_correct2">
-                            <option value="False">Wrong</option>
-                            <option value="True">Correct</option>
-                        </select>
-                    </div>  
-                      <button class="add_form_field_mcq">+</button>
-                    </div>
-                  </div>
-                </div>
-                {% endif %}
-                <button type="submit" class="btn btn-primary" >Save</button>
-              </div>
-              <hr>
-          </form>
+      <div class="row">
+        <br>
+        <br>
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" >Q.No.</a>
+          {% for qno in questions.keys %}
+            <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#qno-{{qno}}" role="tab" aria-controls="qno-{{qno}}" aria-selected="true">{{qno}}</a>
           {% endfor %}
 
         </div>
 
-      </div>
-      <br>
+        
+          <div class="tab-content col-md" id="v-pills-tabContent">
+            {% for qno, qinfo in questions.items %}
+              <div class="tab-pane fade" id="qno-{{qno}}" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                <div class="form-row">
+                  <!-- <div class="form-group col-md-1">
+                    <label>Type:</label>
+                      <select  class="form-control" id="qtype" name="qtype">
+                        {% if qinfo.qtype == "Coding" %}
+                          <option value="Coding" selected>Coding</option>
+                          <option value="MCQ">MCQ</option>
+                        {% endif %}
+                        {% if qinfo.qtype == "MCQ" %}
+                          <option value="Coding">Coding</option>
+                          <option value="MCQ" selected>MCQ</option>
+                        {% endif %}
+                      </select>
+                  </div> -->
+                  <div class="form-group col-md">
+                    <label>Question</label>
+                    <textarea class="form-control" rows="3" id="question" name="question" required>{{qinfo.qobj.question}}</textarea>
+                  </div>
+                  {% if qinfo.qtype == "Coding" %}
+                  <div class="form-group col-md">
+                    <label>Description</label>
+                    <textarea class="form-control" rows="3" name="q_desc" placeholder="Eg. any extra info (if any)">{{qinfo.qobj.description}}</textarea>
+                  </div>
+                  {% endif %}
+                </div>
 
+                {% if qinfo.qtype == "Coding" %}
+                  <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    {% for tc in qinfo.testcases %}
+                    <li class="nav-item">
+                      <a class="nav-link" id="home-tab" data-toggle="tab" href="#tc-{{forloop.counter}}" role="tab" aria-controls="home" aria-selected="true">Test Case {{forloop.counter}}</a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+
+                  <div class="tab-content col-md" id="myTabContent">
+                    {% for tc in qinfo.testcases %}
+                      <div class="tab-pane fade" id="tc-{{forloop.counter}}" role="tabpanel" aria-labelledby="home-tab">                     
+                        <div class="form-row"   id="testcase-row">
+                          <div class="testcase-container form-group col-md">                      
+                            <div class = "addtestcasebtn">   
+
+                              <div class="form-row" style="margin-top:10px">
+                                <div class="form-group col-md-2">
+                                                                            
+                                  <select class="form-control" id="testcasetype1" name="testcasetype1">
+                                    {% if tc.testCaseType == "Visible" %}
+                                      <option value="Hidden">Visible</option>
+                                      <option value="Visible">Hidden</option>                                    
+                                      {% else %}
+                                      <option value="Visible">Hidden</option>
+                                      <option value="Hidden">Visible</option>                                   
+                                    {% endif %}
+                                  </select>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                                                            
+                                  <select class="form-control" id="testcasetype" name="outputtype1">
+                                    {% if tc.OutputType == "Dynamic" %}
+                                      <option value="Dynamic">Dynamic o/p</option>
+                                      <option value="Static">Static o/p</option>                                           
+                                    {% else %}
+                                      <option value="Static">Static o/p</option>
+                                      <option value="Dynamic">Dynamic o/p</option>                              
+                                    {% endif %}
+                                  </select>
+                                </div>
+
+                                <button class="add_form_field_testcase">+</button> 
+                              </div>                          
+                              
+                              <br>
+                              <div class="form-row">
+                                <div class="form-group col-md-6">
+                                  <label>Input</label>                                             
+                                  <textarea class="form-control col-md testcase" rows="3" name="testcaseip1" placeholder="Program input" required>{{tc.pgmInput}}</textarea>
+                                </div>
+                                <div class="form-group col-md-6">
+                                  <label>Output</label>                                             
+                                <textarea class="form-control testcase col-md" rows="3" name="outputeval1" placeholder="Output or evalcode" style="margin-left: 10px;" required>{{tc.pgmOutputOrEvalCode}}</textarea>
+                                </div>
+                              </div>
+                          
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>                 
+                {% endif %}
+
+                {% if qinfo.qtype == "MCQ" %}
+                  <div class="form-row" id="mcq-option-row">
+                    <div class="options-container form-group col-md">
+                      <label>MCQ Options </label><br>
+                      {% for opt in qinfo.options %}
+                        <div class = "addoptionbtn">
+                          <div class="form-row">
+                            <div class="form-group col-md" style="display:flex">
+                          <input type="text" name="option".join({{loop.index0}}) class="mcq col-md-4" style="width: 25%;" placeholder="Option 1"  value={{opt.option}} required>
+                          <!-- <div class="form-group col-md-1"> -->
+                            <select class="form-control mcqselect col-md-2"  name="ans_correct1">                              
+                              {% if opt.correct_option %}
+                              <option value="False">Wrong</option>
+                              <option value="True" selected>Correct</option>
+                              {% else %}
+                              <option value="False">Wrong</option>
+                              <option value="True">Correct</option>
+                              {% endif %}
+                            </select>
+                          <!-- </div>   -->
+                            </div>
+                          </div>
+                        </div>
+                        
+                      {% endfor %}
+                      <button class="add_form_field_mcq">Add new Option</button>
+                    </div>
+                </div>                      
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        
     </div>
-  </div>
 </body>
 
 <script>
@@ -212,101 +258,6 @@
   }
   setTimezoneOffset();
   console.log(offset);
-
-  // field disabler
-  function fieldDisabler(){
-    if (this.value == 'MCQ') 
-      {
-          // document.getElementById("q_desc").disabled = true;
-          document.getElementById("score").value = 1;
-          document.getElementById("mcq-option-row").style.display = "flex";
-          document.getElementById("q_desc").style.display = "none";
-          document.getElementById("testcase-row").style.display = "none";
-          document.querySelectorAll(".mcq").forEach(
-            function (i) {
-              i.required = true;
-            }
-          );
-
-          document.querySelectorAll(".testcase").forEach(
-            function (i) {
-              i.required = false;
-            }
-          );
-      }
-
-      else 
-      {
-        document.getElementById("score").value = 10;
-        document.getElementById("mcq-option-row").style.display = "none";
-        document.getElementById("q_desc").style.display = "flex";
-        document.getElementById("testcase-row").style.display = "flex";
-        document.querySelectorAll(".mcq").forEach(
-            function (i) {
-              i.required = false;
-            }
-          );
-          
-          document.querySelectorAll(".testcase").forEach(
-            function (i) {
-              i.required = true;
-            }
-          );
-      }
-  }
-
-  document.getElementById('qtype').onload = fieldDisabler();
-  document.getElementById('qtype').onchange = fieldDisabler;
-  
-  //add new option field
-  $(document).ready(function() {
-    var max_fields = 5;
-    var wrapper = $(".options-container");
-    var add_button = $(".add_form_field_mcq");
-
-    var x = 2;
-    $(add_button).click(function(e) {
-        e.preventDefault();
-        if (x < max_fields) {
-            x++;
-
-            $(wrapper).append('<div class = "addoptionbtn"><input type="text" name="option'+x+'" style="width: 25%;" placeholder="Option '+x+'" required><div class="form-group col-md-1"><select class="form-control mcqselect"  name="ans_correct'+x+'"><option value="False">Wrong</option><option value="True">Correct</option></select></div><button class="delete add_form_field_mcq" style="margin-left:5px;">&nbsp;-</button></div>');
-        } else {
-            alert('You Reached the limits')
-        }
-    });
-
-    $(wrapper).on("click", ".delete", function(e) {
-        e.preventDefault();
-        $(this).parent('div').remove();
-        x--;
-    })
-  });
-
-  //add new test case
-  $(document).ready(function() {
-    var max_fields = 10;
-    var wrapper = $(".testcase-container");
-    var add_button = $(".add_form_field_testcase");
-
-    var z = 1;
-    $(add_button).click(function(f) {
-        f.preventDefault();
-        if (z < max_fields) {
-            z++;
-            $(wrapper).append('<div class = "addtestcasebtn"><textarea class="form-control col-md-7 testcase" rows="3" name="testcaseip'+z+'" placeholder="Program input"></textarea><textarea class="form-control testcase" rows="3" name="outputeval'+z+'" placeholder="Output or evalcode" style="margin-left: 10px;"></textarea><div class="form-group col-md-1"><select class="form-control" id="testcasetype1" name="testcasetype'+z+'"><option value="Hidden">Hidden</option><option value="Visible">Visible</option></select><select class="form-control" id="testcasetype" name="outputtype'+z+'" style="margin-top: 10px;"><option value="Static">Static o/p</option><option value="Dynamic">Dynamic o/p</option></select></div><button class="delete-testcase add_form_field_testcase" style="margin-left:5px;">&nbsp;-</button></div>');
-        } else {
-            alert('You Reached the limits')
-        }
-    });
-
-    $(wrapper).on("click", ".delete-testcase", function(f) {
-        f.preventDefault();
-        $(this).parent('div').remove();
-        z--;
-    })
-  });
-
 
 </script>
 

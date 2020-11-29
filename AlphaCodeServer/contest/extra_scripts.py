@@ -16,7 +16,10 @@ def get_all_contest_questions(cname):
     for cq in cqs:
         if cq.qtype == 'MCQ':
             q = cq.mcqquestion
+            options = Option.objects.filter(question=q)
+            data[cq.qno] = {"qobj":q, "qtype":cq.qtype, "options": options}
         else:
             q = cq.codingquestion
-        data[cq.qno] = {"qobj":q, "qtype":cq.qtype}
+            testcases = TestCase.objects.filter(question=q)
+            data[cq.qno] = {"qobj":q, "qtype":cq.qtype, "testcases":testcases}
     return data
