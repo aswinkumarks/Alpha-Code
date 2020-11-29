@@ -22,7 +22,7 @@ class Participant(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     rank = models.IntegerField(default=9999999)
-    submition_time = models.DateTimeField(null=True)
+    submition_time = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         constraints = [
@@ -53,7 +53,7 @@ class ContestQuestion(models.Model):
 class McqQuestion(models.Model):
     cq = models.OneToOneField(ContestQuestion, on_delete=models.CASCADE)
     question = models.TextField()
-    score = models.IntegerField(default=0)
+    score = models.IntegerField(default=1)
 
     def __str__(self):
         return self.question[:30]

@@ -40,9 +40,9 @@
                         <h6>Score : {{participant.score}}</h6>
                         <h6>Rank : {{participant.rank}}</h6>
                         <hr/>
-                        <p style="margin-bottom: 0;">Starting Time : {{participant.start_time}}
+                        <p style="margin-bottom: 0;">Starting Time : <span class="utcToLocal">{{participant.start_time.isoformat}}</span>
                             <br>
-                        Time of Submition : {{participant.submition_time}}</p>
+                        Time of Submition :<span class="utcToLocal">{{participant.submition_time.isoformat}}</span></p>
                         <!-- <hr/> -->
                         <a id="finish-btn" type="submit" class="btn" onclick="finishContest()" >Finish</a>
                 </div>
@@ -53,11 +53,18 @@
 
 <script>
 
-function finishContest(){
-    var url = "/";
-    url = url+"thankyou";
-    location.href = url;
-}
+    function finishContest(){
+        var url = "/";
+        url = url+"thankyou";
+        location.href = url;
+    }
+
+    document.querySelectorAll(".utcToLocal").forEach(
+        function (i) {
+            i.innerText = new Date(i.innerText).toLocaleString({},
+            {day:"2-digit","month":"short","year":"numeric",hour12:true,hour:'numeric',minute:'numeric'});
+        }
+    );
 
 </script>
 

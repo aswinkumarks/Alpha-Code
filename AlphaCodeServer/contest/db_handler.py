@@ -24,6 +24,7 @@ def save_new_contest_info(post_data):
 
 def save_new_mcq_question(cq_obj, post_data):
     question = post_data.get("question")
+    score = post_data.get("score")
     mcq_question = McqQuestion(cq=cq_obj, question=question)
     mcq_question.save()
     no = 1 
@@ -54,8 +55,9 @@ def save_new_coding_question(cq_obj, post_data):
             opt = post_data.get('outputeval'+str(no))
             t_type = post_data.get('testcasetype'+str(no))
             opt_type = post_data.get('outputtype'+str(no))
+            score = post_data.get('score'+str(no))
             tc = TestCase(question=codingQues, testCaseType=t_type, pgmInput=inp,
-                        OutputType=opt_type, pgmOutputOrEvalCode= opt)
+                        OutputType=opt_type, pgmOutputOrEvalCode=opt, score=score)
             tc.save()
             no += 1
         except:

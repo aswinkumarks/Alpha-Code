@@ -1,0 +1,37 @@
+<div id="output" class="col-md-6" style="background: azure;padding: 20px; border-radius: 1rem;"> 
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      {% for testcase_result in testcase_results%}
+        <li class="nav-item">
+          {% if forloop.counter == 1%}
+            <a class="nav-link active" id='testcase:{{forloop.counter}}-tab' data-toggle="tab" href='#testcase{{forloop.counter}}' role="tab" aria-controls='testcase-{{forloop.counter}}' aria-selected="true">
+          {% else %}
+            <a class="nav-link" id='testcase:{{forloop.counter}}-tab' data-toggle="tab" href='#testcase{{forloop.counter}}' role="tab" aria-controls="testcase-{{forloop.counter}}" aria-selected="false">
+          {% endif %}
+          {% if testcase_result.correct_ans%}
+            <div style="color:green;">Case {{forloop.counter}}</div>
+          {% else %}
+            <div style="color:red;">Case {{forloop.counter}}</div>
+          {% endif %}
+            </a>
+          </li>
+      {% endfor %}
+    </ul>
+    <div class="tab-content">
+      {% for testcase_result in testcase_results%}
+        {% if forloop.counter == 1%}
+          <div class="tab-pane fade show active" id="testcase{{forloop.counter}}" role="tabpanel" aria-labelledby="testcase:{{forloop.counter}}-tab">
+        {% else %}
+          <div class="tab-pane fade show" id="testcase{{forloop.counter}}" role="tabpanel" aria-labelledby="testcase:{{forloop.counter}}-tab">
+        {% endif %}
+            <h6><b>Input</b></h6>
+            <pre id='input'>{{testcase_result.input}}</pre>
+            <br>
+            <h6><b>Expected Output</b></h6>
+            <pre id='expoutput'>{{testcase_result.expected_output}}</pre>
+            <br>
+            <h6><b>Output</b></h6>
+            <pre id='expoutput'>{{testcase_result.output}}</pre>
+          </div>
+      {% endfor %}
+    </div>
+</div>
