@@ -283,7 +283,7 @@
     });
 
     function getQuestion(qno) {
-        document.getElementById("output").innerHTML = "";
+        // document.getElementById("output").innerHTML = "";
         var xhttp = new XMLHttpRequest();
         var url = window.location.href + "/getQuestion/" + qno;
         xhttp.onreadystatechange = function () {
@@ -306,7 +306,7 @@
                 if (data["qtype"] == "MCQ") {
                     document.getElementById("mcq-options-row").style.display = "flex";
                     document.getElementById("submitcode").style.display = "none";
-                    document.getElementById("coding-eg-ip-op").style.display = "none";
+                    // document.getElementById("coding-eg-ip-op").style.display = "none";
                     document.getElementById("coding-window-container").style.display = "none";
 
                     //remove prev mcq question options
@@ -323,7 +323,7 @@
                 else {
                     document.getElementById("mcq-options-row").style.display = "none";
                     document.getElementById("submitcode").style.display = "block";
-                    document.getElementById("coding-eg-ip-op").style.display = "block";
+                    // document.getElementById("coding-eg-ip-op").style.display = "block";
                     document.getElementById("coding-window-container").style.display = "flex";
                 }
                 getPrevCode();
