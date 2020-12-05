@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.urls import path
-from . import views
+from . import views, admin_views
 from . import ajax_handler
 
 urlpatterns = [
@@ -21,5 +21,7 @@ urlpatterns = [
     path('thankyou', views.thankyou_pg),
     path('error', views.error_page),
     path('deleteContest/<cname>', ajax_handler.delete_contest),
-    path('editContest/<cname>', ajax_handler.edit_contest_pg)
+    path('editContest/<cname>', ajax_handler.edit_contest_pg),
+    path('delete_question/<cname>/<qno>', admin_views.delete_question)
+    
 ]

@@ -71,6 +71,7 @@ def get_prev_question_no(cname):
     return len(contest_questions) + 1
 
 def create_new_question(post_data, cname):
+    print(post_data)
     qtype = post_data.get("qtype")
     contest = Contest.objects.get(cname=cname)
     cq = ContestQuestion(contest=contest)

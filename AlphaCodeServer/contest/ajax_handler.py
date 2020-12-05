@@ -29,8 +29,8 @@ def edit_contest_pg(request, cname):
         contest = Contest.objects.get(cname=cname)
         questions = get_all_contest_questions(cname)
         
-        for q in questions:
-            print(q, questions[q])
+        # for q in questions:
+        #     print(q, questions[q])
         
         template = loader.get_template('editcontest.html')
         context = {"cname": cname, "desc": contest.desc, "hosted_by": contest.hosted_by, "startDate": contest.startTime,
