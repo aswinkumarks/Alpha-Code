@@ -16,7 +16,8 @@ def save_new_contest_info(post_data):
         new_contest = Contest(cname=cname, desc=post_data.get("contest_desc"), startTime=start_time,
                             endTime=end_time, hosted_by=post_data.get("hosted_by", ""), duration=duration)
         new_contest.save()
-    except:
+    except Exception as e:
+        print(e)
         return False
 
     return True
@@ -71,7 +72,6 @@ def get_prev_question_no(cname):
     return len(contest_questions) + 1
 
 def create_new_question(post_data, cname):
-    print(post_data)
     qtype = post_data.get("qtype")
     contest = Contest.objects.get(cname=cname)
     cq = ContestQuestion(contest=contest)
@@ -89,3 +89,32 @@ def create_new_question(post_data, cname):
         return False
 
     return True
+
+
+def update_result(participant, cname):
+    if ContestResult.objects.filter(participant=participant, contest_name=cname).exists():
+        print("Error: Rank already calculated")
+        return False
+
+    contest = Contest.objects.get(cname=cname)
+    results = ContestResult.objects.filter(contest_name=cname).order_by("rank")
+    rank = -1
+    for result in results:
+        if result.participant.score < participant.score:
+            rank = result.rank
+            break
+        elif result.participant.score == participant.score and \
+             result.participant.submition_time > participant.submition_time:
+            rank = result.rank
+            break
+    
+    if rank == -1:
+        ContestResult(participant=participant, contest_name=contest, rank=len(results)+1).save()
+        return True
+
+    for result in reversed(results):
+        if result.rank >= rank:
+            result.rank += 1
+            result.save()
+
+    ContestResult(participant=participant, contest_name=contest, rank=rank).save()

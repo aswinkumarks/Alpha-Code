@@ -126,53 +126,6 @@ def show_contests(request, msg=""):
 
 @csrf_exempt
 @login_required(login_url='/accounts/login')
-def saveCode(request):
-    content = request.body.decode('utf-8')
-    data = json.loads(content)
-    res = TempCodeCache.objects.filter(participant__user=request.user, qno=int(
-        data["qno"]), language=data["lang"]).exists()
-    if res:
-        tmp_code = TempCodeCache.objects.get(participant__user=request.user, qno=int(data["qno"]),
-                                             language=data["lang"])
-        tmp_code.answer = data["code"]
-        tmp_code.save()
-    else:
-        try:
-            participant = Participant.objects.get(user=request.user, contest__cname=data["cname"])
-            tmp_code = TempCodeCache(participant=participant, qno=int(data["qno"]))
-            tmp_code.language = data["lang"]
-            tmp_code.answer = data["code"]
-            tmp_code.save()
-        except:
-            return HttpResponse("DB error")
-
-    return HttpResponse("Saved Code")
-
-
-@csrf_exempt
-@login_required(login_url='/accounts/login')
-def getCode(request):
-    content = request.body.decode('utf-8')
-    data = json.loads(content)
-    res = TempCodeCache.objects.filter(participant__user=request.user, qno=int(data["qno"]),
-                                         language=data["lang"]).exists()
-    info = {"code": ""}
-    if res:
-        tmp_code = TempCodeCache.objects.get(participant__user=request.user, qno=int(data["qno"]),
-                                         language=data["lang"])
-        info["code"] = tmp_code.answer
-
-    return HttpResponse(json.dumps(info))
-
-
-def remainingTime(request, cname):
-    contest = Contest.objects.get(cname=cname)
-    rem_time = contest.endTime - datetime.now(dt.timezone.utc)
-    return HttpResponse(str(rem_time.total_seconds()))
-
-
-@csrf_exempt
-@login_required(login_url='/accounts/login')
 def submitResponse(request):
     content = request.body.decode('utf-8')
     data = json.loads(content)
@@ -203,16 +156,18 @@ def final_submit(request, cname):
     participant.submition_time = datetime.now(dt.timezone.utc)
     participant.score = getParticipantScore(participant)
     participant.save()
+    update_result(participant, cname)
     return HttpResponseRedirect("/%s/results"%(cname))
 
 
 @login_required(login_url='/accounts/login')
 def result_pg(request, cname):
-    participant = Participant.objects.get(user__username=request.user.username, contest__cname=cname)
-    score = getParticipantScore(participant)
+    # participant = Participant.objects.get(user__username=request.user.username, contest__cname=cname)
+    # score = getParticipantScore(participant)
+    results = ContestResult.objects.filter(contest_name=cname).order_by("rank")
     # return HttpResponse(str(score))
     template = loader.get_template('results.html')
-    context = {"participant":participant}
+    context = {"results":results}
     return HttpResponse(template.render(context,request))
 
 

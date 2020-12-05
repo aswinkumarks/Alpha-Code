@@ -33,6 +33,21 @@ class Participant(models.Model):
         return self.contest.cname+": "+self.user.username
 
 
+class ContestResult(models.Model):
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    contest_name = models.ForeignKey(Contest, to_field="cname",on_delete=models.CASCADE)
+    rank = models.IntegerField()
+
+    class Meta:
+        # constraints = [
+        #     models.UniqueConstraint(fields=['contest_name', 'rank'], name='Unique rank for contest')
+        # ]
+        unique_together = ('contest_name', 'rank',)
+
+    def __str__(self):
+        return self.participant.contest.cname + ": " + self.participant.user.username
+
+
 class ContestQuestion(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     qno = models.IntegerField()

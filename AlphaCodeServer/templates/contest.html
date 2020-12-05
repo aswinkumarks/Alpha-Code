@@ -335,8 +335,6 @@
 
     function submitResponse() {
         var xhttp = new XMLHttpRequest();
-        // var input = document.getElementById("input").innerHTML;
-        document.getElementById("output").innerHTML = "";
         var qno = document.getElementById("ques_no").value;
         var lang = document.getElementById('lang').value;
         var url = "/submitResponse"
@@ -345,9 +343,10 @@
         if (qtype == "MCQ") {
             // var options = document.getElementsByName('optradio');
             var options = document.getElementsByName('optcheckbox');
+            var code = ""
             for (i = 0; i < options.length; i++) {
                 if (options[i].checked)
-                    var code = options[i].value;
+                    code += ("(~$)"+options[i].value);
             }
         }
         else {
@@ -356,7 +355,7 @@
         //console.log(code);
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("output").innerHTML = this.responseText;
+                // document.getElementById("output").innerHTML = this.responseText;
             }
         };
         xhttp.open("POST", url, true);

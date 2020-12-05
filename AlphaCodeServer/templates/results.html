@@ -1,10 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<title>Code Platform</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Code Platform</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -13,13 +14,13 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %} ">
 </head>
 
-<body style="background:dodgerblue ">
-    
+<body style="background:rgb(0, 192, 218) ">
+
     <nav>
         <h1 style="width: fit-content;
             font-size: 1.75rem;
             padding: 10px;">
-            CODE PLATFORM XYZ  
+            CODE PLATFORM XYZ
         </h1>
         <ul id="navelements">
             <div class="loginsignup">
@@ -27,42 +28,63 @@
                 <input id="user_name" type="hidden" value='{{ user.username }}'>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             </div>
-        </ul>				
+        </ul>
     </nav>
     <br><br><br>
 
-    <div class="container-fluid">
-  
-                <div id="result-box">
-                        <h5>Contest {{participant.contest}} Results</h5>
-                        <hr/>
-                        <h6>Name : {{participant.user.username}}</h6>
-                        <h6>Score : {{participant.score}}</h6>
-                        <h6>Rank : {{participant.rank}}</h6>
-                        <hr/>
-                        <p style="margin-bottom: 0;">Starting Time : <span class="utcToLocal">{{participant.start_time.isoformat}}</span>
-                            <br>
-                        Time of Submition :<span class="utcToLocal">{{participant.submition_time.isoformat}}</span></p>
-                        <!-- <hr/> -->
-                        <a id="finish-btn" type="submit" class="btn" onclick="finishContest()" >Finish</a>
-                </div>
-            </div>
-            
+    <!-- <div class="container-fluid">
+        <div id="result-box">
+            <h5>Contest {{participant.contest}} Results</h5>
+            <hr />
+            <h6>Name : {{participant.user.username}}</h6>
+            <h6>Score : {{participant.score}}</h6>
+            <h6>Rank : {{participant.rank}}</h6>
+            <hr />
+            <p style="margin-bottom: 0;">Starting Time : <span
+                    class="utcToLocal">{{participant.start_time.isoformat}}</span>
+                <br>
+                Time of Submition :<span class="utcToLocal">{{participant.submition_time.isoformat}}</span></p>
+            <a id="finish-btn" type="submit" class="btn" onclick="finishContest()">Finish</a>
+        </div>
+    </div> -->
+    <div style="background: azure;padding: 20px; border-radius: 1rem;border:2rem;margin-left: 1rem;margin-right: 1rem">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Submission Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results%}
+                <tr>
+                    <th scope="row">{{result.rank}}</th>
+                    <td>{{result.participant.user.username}}</td>
+                    <td>{{result.participant.score}}</td>
+                    <td>{{result.participant.submition_time}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 
 </body>
 
 <script>
 
-    function finishContest(){
+    function finishContest() {
         var url = "/";
-        url = url+"thankyou";
+        url = url + "thankyou";
         location.href = url;
     }
 
     document.querySelectorAll(".utcToLocal").forEach(
         function (i) {
             i.innerText = new Date(i.innerText).toLocaleString({},
-            {day:"2-digit","month":"short","year":"numeric",hour12:true,hour:'numeric',minute:'numeric'});
+                { day: "2-digit", "month": "short", "year": "numeric", hour12: true, hour: 'numeric', minute: 'numeric' });
         }
     );
 

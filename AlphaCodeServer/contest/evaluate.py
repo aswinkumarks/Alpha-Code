@@ -10,14 +10,18 @@ def evaluateSubmission(uname, cname, qno):
 	if cq.qtype == "MCQ":
 		question = McqQuestion.objects.get(cq=cq)
 		correct_options = Option.objects.filter(question=question,correct_option=True)
-		for option in correct_options:
-			if submitted_ans.user_answer == option.option:
-				response = "Correct"
-				break
+		selected_options = submitted_ans.user_answer.split("(~$)")
+		selected_options = [option for option in selected_options if len(option) > 0]
+		no_correct_options = 0
+		for selected_option in selected_options:
+			for correct_option in correct_options:
+				if selected_option == correct_option.option:
+					no_correct_options += 1
+					break
 
-		if response == "Correct":
+		if no_correct_options == len(correct_options):
 			score += question.score
-
+			response = "correct"
 	else:
 		question = CodingQuestion.objects.get(cq=cq)
 		testcases = TestCase.objects.filter(question=question)
@@ -57,7 +61,6 @@ def evaluateSubmission(uname, cname, qno):
 
 	submitted_ans.score = score
 	submitted_ans.save()
-
 	return response
 
 
