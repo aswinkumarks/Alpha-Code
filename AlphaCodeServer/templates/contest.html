@@ -10,6 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
     <link rel="stylesheet" href="{% static 'css/main.css' %} ">
 </head>
@@ -42,60 +43,75 @@
     <div class="container-fluid">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-10">
-                    <ul id="qbody">
-                        <li>
-                            <input id="qtype" type="hidden" value={{qtype}}>
-                            <div id='question'>
-                                {{qno}}. {{question}}
+                <div class="col-md-9" id="question-container" style="background: white; border: 2px solid black; padding: 15px; border-radius: 1rem;">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <ul id="qbody">
+                                <li>
+                                    <input id="qtype" type="hidden" value={{qtype}}>
+                                    <pre><h5><div id='question'>{{qno}}. {{question}}</div></h5> </pre>
+                                    <div style="display: none;">
+                                        type : {{qtype}}
+                                    </div>
+                                    {% if desc %}
+                                    <pre><h6><div id="desc">{{desc}}</div></h6></pre>
+                                    {% endif %}
+                                    <br>
+                                    <!-- <input type="text" id="answer" name="answer" placeholder="Type your response" value=""> -->
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row" id="mcq-options-row">
+                        <div class="col-md-10" id="mcq_options_div">
+                            <!-- <form action="" method="POST"> -->
+                            {% for option in options %}
+                            <div class="form-check">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="form-check-input custom-control-input" id="{{option}}"
+                                        name="optcheckbox" value="{{option}}">
+                                    <label class="custom-control-label" for="{{option}}">{{option}}</label>
+                                </div>
+                                <!-- <input type="radio" class="form-check-input" id="{{option}}" name="optradio" value="{{option}}">{{option}} -->
                             </div>
-
-                            <div style="display: none;">
-                                type : {{qtype}}
-                            </div>
-
-                            <div id="desc">
-                                {% if desc %}
-                                {{desc}}
-                                {% endif %}
-                                <br>
-                            </div>
-                            <!-- <input type="text" id="answer" name="answer" placeholder="Type your response" value=""> -->
-                        </li>
-                    </ul>
+                            {% endfor %}
+                            
+                            <!-- </form> -->
+                        </div>
+                    </div>
                 </div>
-
+                <div class="col-md-1"></div>
                 <div class="col-md-2"
                     style="background: white; border: 2px solid black; padding: 15px; border-radius: 1rem;">
-                    <h5 style="padding-bottom: 15px; border-bottom: 2px solid black;">Question Palet</h5>
-                    {% for qno in num_of_q %}
-                    <div class="btn-group" id="qpallet">
-                        <input type="button" class="btn" value={{qno}} onclick='getQuestion({{qno}})'>
+                    <div class="row">
+                        <h5 class="col-md" style="padding-bottom: 15px; border-bottom: 2px solid black;">Question Palet</h5>
                     </div>
-                    {% endfor %}
+                    <div class="row" style="padding-bottom: 30px;">
+                        {% for qno in num_of_q %}
+                            <div class="btn-group col-md-2" id="qpallet">
+                                {% if qno in submitted_questions %}
+                                <input type="button" class="btn qno-btn" value={{qno}} onclick='getQuestion({{qno}})' style="background-color:rgb(83, 255, 83)">
+                                {% else %}
+                                <input type="button" class="btn qno-btn" value={{qno}} onclick='getQuestion({{qno}})'>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <input id="ques_no" type="hidden" value="1">
+                    <div class="row" style="border-top: 2px solid black;">
+                        <div class="col-md">
+                        <button id="submitmcq" type="submit" class="btn btn-primary" onclick="submitResponse()">Submit</button>
+                        </div>
+                        <div class="col-md">
+                            <input type="button" class="btn" value="Final Submit" style="background-color:dodgerblue; "
+                        onclick='finalSubmit()'>
+                        </div>
+                    </div>
                 </div>
             </div>
             <br>
-
-            <div class="row" id="mcq-options-row">
-                <div class="col-md-10" id="mcq_options_div">
-                    <!-- <form action="" method="POST"> -->
-                    {% for option in options %}
-                    <div class="form-check">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="form-check-input custom-control-input" id="{{option}}"
-                                name="optcheckbox" value="{{option}}">
-                            <label class="custom-control-label" for="{{option}}">{{option}}</label>
-                        </div>
-                        <!-- <input type="radio" class="form-check-input" id="{{option}}" name="optradio" value="{{option}}">{{option}} -->
-                    </div>
-                    {% endfor %}
-                    
-                    <!-- </form> -->
-                </div>
-            </div>
-            <button id="submitmcq" type="submit" class="btn btn-primary"
-                        onclick="submitResponse()">Submit</button>
+            <!-- <button id="submitmcq" type="submit" class="btn btn-primary"
+                        onclick="submitResponse()">Submit</button> -->
             <br>
 
             <!-- Or let Bootstrap automatically handle the layout -->
@@ -113,24 +129,26 @@
                     <pre id="editor"></pre>
 
 
-                    <input type="button" class="btn" value="Run Code" onclick='getOutput()'><br>
+                    <!-- <input type="button" class="btn" value="Run Code" onclick='getOutput()'><br> -->
+                    <button class="btn btn-primary" id="run-code-button" type="button" onclick='getOutput()'>
+                        <span class="spinner-border spinner-border-sm" role="status" id="run-code-spinner" style="display:none"></span>
+                        Run Code
+                    </button>
 
                 </div> 
             </div>
-
-            <div class="col-md-2">
-                <div id="save">
-                    <input id="ques_no" type="hidden" value="1">
-                    <input id="submitcode" type="button" class="btn" value="Submit" style="float:left;"
-                        onclick='submitResponse()'>
-                    <input type="button" class="btn" value="Final Submit" style="background-color:dodgerblue; "
-                        onclick='finalSubmit()'>
-                </div>
-            </div>
-            <br><br><br><br>
+            <br><br>
             <div id="testcase-result-container"></div>
             <br>
         </div>
+    </div>
+    <div role="alert" id="myToast" aria-live="assertive" aria-atomic="true" class="toast" style="position: fixed;bottom: 0;right: 0;">
+        <div class="toast-header">
+          <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="toast-body" id="toast-body"> </div>
     </div>
 
 </body>
@@ -148,14 +166,18 @@
         enableLiveAutocompletion: true
     });
 
+    function show_toast(msg){
+        $('.toast').toast({"delay":800})
+        document.getElementById("toast-body").innerHTML = msg;
+        $("#myToast").toast('show');
+    }
+
     function disp_mcq_options() {
         var qtype = document.getElementById("qtype").value;
         if (qtype == "Coding") {
             document.getElementById("mcq-options-row").style.display = "none";
-            document.getElementById("submitcode").style.display = "block";
         }
         else {
-            document.getElementById("submitcode").style.display = "none";
             document.getElementById("coding-window-container").style.display = "none";
         }
     }
@@ -226,7 +248,6 @@
             if (this.readyState == 4 && this.status == 200) {
                 data = JSON.parse(this.responseText);
                 var code = data["code"];
-                //document.getElementById("answer").value = data["ans"];
                 if (code == "" && lang == "c")
                     editor.setValue("//The return type of main function must be int");
                 else
@@ -283,30 +304,22 @@
     });
 
     function getQuestion(qno) {
-        // document.getElementById("output").innerHTML = "";
+        document.getElementById("testcase-result-container").innerHTML = "";
+        document.getElementById("question-container").style.visibility = "hidden";
         var xhttp = new XMLHttpRequest();
         var url = window.location.href + "/getQuestion/" + qno;
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 data = JSON.parse(this.responseText);
-                // data = this.responseText;
-                // console.log("data : " + data)
-                // console.log("data : " + data["options"])
-                // console.log("data : " + data["qno"])
                 document.getElementById("question").innerHTML = qno + ". " + data["question"];
                 document.getElementById("desc").innerHTML = data["desc"];
                 document.getElementById("qtype").value = data["qtype"];
-                // document.getElementById("input").innerHTML = data["input"];
-                // document.getElementById("expoutput").innerHTML = data["expOutput"];
+                document.getElementById("question-container").style.visibility = "visible";
                 document.getElementById("ques_no").value = qno;
-                //console.log(data);
-                // getPrevCode()
 
                 //diable or enable options
                 if (data["qtype"] == "MCQ") {
                     document.getElementById("mcq-options-row").style.display = "flex";
-                    document.getElementById("submitcode").style.display = "none";
-                    // document.getElementById("coding-eg-ip-op").style.display = "none";
                     document.getElementById("coding-window-container").style.display = "none";
 
                     //remove prev mcq question options
@@ -322,8 +335,6 @@
                 }
                 else {
                     document.getElementById("mcq-options-row").style.display = "none";
-                    document.getElementById("submitcode").style.display = "block";
-                    // document.getElementById("coding-eg-ip-op").style.display = "block";
                     document.getElementById("coding-window-container").style.display = "flex";
                 }
                 getPrevCode();
@@ -352,15 +363,23 @@
         else {
             var code = editor.getValue();
         }
-        //console.log(code);
+
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                // document.getElementById("output").innerHTML = this.responseText;
+                if (this.responseText == "Saved Response"){
+                    document.querySelectorAll(".qno-btn").forEach(
+                        function (i) {
+                            if(i.value ==qno){
+                                i.style="background-color:rgb(83, 255, 83)";
+                            }
+                        }
+                    );
+                }
+                show_toast(this.responseText);
             }
         };
         xhttp.open("POST", url, true);
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        // xhttp.send(JSON.stringify({ "code":code, "input":input }));
         xhttp.send(JSON.stringify({
             "qno": qno,
             "code": code, "lang": lang, "cname": cname
@@ -370,18 +389,19 @@
     //local
     function getOutput() {
         var xhttp = new XMLHttpRequest();
-        //var url = "run/";
-        // var input = document.getElementById("input").innerHTML;
-        // document.getElementById("output").innerHTML = "";
+        document.getElementById("testcase-result-container").innerHTML = "";
+        document.getElementById("run-code-spinner").style.display = "inline-block";
+        document.getElementById("run-code-button").disabled = true;
         var qno = document.getElementById("ques_no").value;
         var url = "/task/run/";
         var cname = decodeURI(window.location.pathname.split("/").pop());
         var lang = document.getElementById('lang').value;
         var code = editor.getValue();
-        // console.log(code);
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("testcase-result-container").innerHTML = this.responseText;
+                document.getElementById("run-code-spinner").style.display = "none";
+                document.getElementById("run-code-button").disabled = false;
             }
         };
         xhttp.open("POST", url, true);

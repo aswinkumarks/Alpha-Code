@@ -65,9 +65,12 @@ def disp_contest_pg(request, cname):
             return HttpResponse("Contest Over")
 
         template = loader.get_template('contest.html')
+        qno = request.GET.get('qno', 1)
         qlen = len(ContestQuestion.objects.filter(contest__cname=cname))
-        qobj = ContestQuestion.objects.get(qno=1, contest__cname=cname)
-
+        qobj = ContestQuestion.objects.get(qno=qno, contest__cname=cname)
+        participant = Participant.objects.get(user=request.user, contest__cname=cname)
+        submissions = Submission.objects.filter(participant=participant)
+        submitted_questions = [submission.qno for submission in submissions]
         if qobj.qtype == 'MCQ':
             options_set = Option.objects.filter(question=qobj.mcqquestion)
             options = [op.option for op in options_set]
@@ -78,7 +81,7 @@ def disp_contest_pg(request, cname):
             context = {"qno": qobj.qno, "question": qobj.codingquestion.question,
                        "desc": qobj.codingquestion.description,
                        "num_of_q": list(range(1, qlen+1)), "qtype": qobj.qtype, "cname": cname}
-
+        context["submitted_questions"] = submitted_questions
         return HttpResponse(template.render(context, request))
     else:
         return HttpResponseRedirect('/')
@@ -147,7 +150,7 @@ def submitResponse(request):
         return HttpResponse("DB error")
 
     res = evaluateSubmission(request.user.username, data["cname"], int(data["qno"]))
-    return HttpResponse(res)
+    return HttpResponse("Saved Response")
 
 
 @login_required(login_url='/accounts/login')
