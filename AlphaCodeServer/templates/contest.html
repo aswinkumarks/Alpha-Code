@@ -27,7 +27,7 @@
         <h1  style="width: fit-content;
             font-size: 1.75rem;
             padding: 10px;">
-            Contest : {{cname}}
+            Contest : <span id="contest-name">{{cname}}</span>
         </h1>
         <ul id="navelements">
             <div class="loginsignup">
@@ -53,9 +53,10 @@
                                     <div style="display: none;">
                                         type : {{qtype}}
                                     </div>
-                                    {% if desc %}
+                                    <!-- {% if desc %}
                                     <pre><h6><div id="desc">{{desc}}</div></h6></pre>
-                                    {% endif %}
+                                    {% endif %} -->
+                                    <pre><h6><div id="desc">{{desc}}</div></h6></pre>
                                     <br>
                                     <!-- <input type="text" id="answer" name="answer" placeholder="Type your response" value=""> -->
                                 </li>
@@ -80,8 +81,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-2"
+                <div class="col-md-2 offset-md-1"
                     style="background: white; border: 2px solid black; padding: 15px; border-radius: 1rem;">
                     <div class="row">
                         <h5 class="col-md" style="padding-bottom: 15px; border-bottom: 2px solid black;">Question Palet</h5>
@@ -186,7 +186,7 @@
 
     function getRemTime() {
         var xhttp = new XMLHttpRequest();
-        var cname = window.location.href.split("/").slice(-1)[0];
+        var cname = document.getElementById("contest-name").innerHTML;
         var url = "/getRemTime/" + cname;
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
@@ -205,7 +205,7 @@
         var xhttp = new XMLHttpRequest();
         if (confirm("Are you sure ?\n\nConfirm to end the exam. !") == true) {
             var url = "/final_submit";
-            var cname = window.location.href.split("/").slice(-1)[0];
+            var cname = document.getElementById("contest-name").innerHTML;
             url = url + "/" + cname;
             xhttp.open("GET", url, true);
             xhttp.send();
@@ -241,7 +241,7 @@
     function getPrevCode() {
         var qno = document.getElementById("ques_no").value;
         var lang = document.getElementById('lang').value;
-        var cname = decodeURI(window.location.pathname.split("/").pop());
+        var cname = document.getElementById("contest-name").innerHTML;
         var url = "/getCode";
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -283,7 +283,7 @@
         var code = editor.getValue();
         var lang = document.getElementById('lang').value;
         var url = "/saveCode"
-        var cname = decodeURI(window.location.pathname.split("/").pop());
+        var cname = document.getElementById("contest-name").innerHTML;
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 console.log(this.responseText);
@@ -306,8 +306,10 @@
     function getQuestion(qno) {
         document.getElementById("testcase-result-container").innerHTML = "";
         document.getElementById("question-container").style.visibility = "hidden";
+        document.getElementById("coding-window-container").style.display = "none";
         var xhttp = new XMLHttpRequest();
-        var url = window.location.href + "/getQuestion/" + qno;
+        var cname = document.getElementById("contest-name").innerHTML;
+        var url = "/getQuestion/" + cname + "/" + qno;
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 data = JSON.parse(this.responseText);
@@ -349,7 +351,7 @@
         var qno = document.getElementById("ques_no").value;
         var lang = document.getElementById('lang').value;
         var url = "/submitResponse"
-        var cname = decodeURI(window.location.pathname.split("/").pop());
+        var cname = document.getElementById("contest-name").innerHTML;
         var qtype = document.getElementById("qtype").value;
         if (qtype == "MCQ") {
             // var options = document.getElementsByName('optradio');
@@ -394,7 +396,7 @@
         document.getElementById("run-code-button").disabled = true;
         var qno = document.getElementById("ques_no").value;
         var url = "/task/run/";
-        var cname = decodeURI(window.location.pathname.split("/").pop());
+        var cname = document.getElementById("contest-name").innerHTML;
         var lang = document.getElementById('lang').value;
         var code = editor.getValue();
         xhttp.onreadystatechange = function () {
