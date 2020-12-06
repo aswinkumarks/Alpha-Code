@@ -11,7 +11,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
-  <link rel="stylesheet" href="{% static 'css/main.css' %} ">
+  <link  rel="stylesheet" href="{% static 'css/main.css' %} ">
+  <link rel="stylesheet" href="{% static 'css/custom.css' %} ">
 </head>
 
 <body style="background:rgb(0, 192, 218) ">
@@ -48,25 +49,23 @@
             }
           </style>
 
-          <form class="quiz-data-box" method="POST" action="" name="ContestForm">
+          <form class="quiz-data-box" method="POST" action="/saveContestEdit" name="ContestForm">
             {% csrf_token %}
             <div class="form-row">
               <div class="form-group col-md-3">
                 <label>Contest Name</label>
-                <input type="text" class="form-control" id="cname" name="cname" placeholder="" value="{{cname}}"
-                  required>
+                <input type="text" class="form-control" placeholder="" value="{{cname}}" disabled style="cursor: no-drop;">
+                  <input type="hidden" id="cname" name="cname" value="{{cname}}">
               </div>
               <div class="form-group col-md-3">
                 <label>Start Date:</label>
-                <input type="date" class="form-control" id="start-date" name="start-date"
-                  value="{{startDate.isoformat}}" required>
+                <input type="date" class="form-control" id="start-date" name="start-date" value="{{startDate.isoformat}}" required>
                 <label>Time:</label>
                 <input type="time" class="form-control" id="start-time" name="start-time" required>
               </div>
               <div class="form-group col-md-3">
                 <label>End Date:</label>
-                <input type="date" class="form-control" id="end-date" name="end-date" value="{{endDate.isoformat}}"
-                  required>
+                <input type="date" class="form-control" id="end-date" name="end-date" value="{{endDate.isoformat}}" required>
                 <label>Time:</label>
                 <input type="time" class="form-control" id="end-time" name="end-time" required>
               </div>
@@ -123,6 +122,13 @@
               {% endif %}
               <form method="POST" action="" name="ContestForm">
               <div class="col-md">
+                
+                <div class="form-row" style="justify-content: flex-end">
+                  <a class="btn btn-primary" style="background:red; color:white" href="/delete_question/{{cname}}/{{qno}}">Delete Q</a>
+                  <span>&nbsp;&nbsp;</span>
+                  <input type="submit" class="btn btn-primary" value="Save">
+                </div>
+
                 <div class="form-row">
                   <div class="form-group col-md">
                     <label>Question</label>
@@ -141,12 +147,13 @@
                     {% for tc in qinfo.testcases %}
                       <li class="nav-item">
                         <a class="nav-link" id="home-tab" data-toggle="tab" href="#q{{qno}}-tc-{{forloop.counter}}" role="tab"
-                          aria-controls="home" aria-selected="true">Test Case {{forloop.counter}}</a>
+                          aria-controls="home" aria-selected="true">Test Case {{forloop.counter}}</a> 
+                          <!-- <span>[X]</span> -->
                       </li>
                     {% endfor %}
+                    
                     <!-- <li class="nav-item">
-                      <a class="nav-link" id="home-tab" data-toggle="tab" href="#" role="tab"
-                        aria-controls="home" aria-selected="true" onclick='add_new_testcase()'><b>+ Test Case</b></a>
+                      <a class="add-testcase nav-link" id="home-tab" data-toggle="tab" href="#" role="tab" aria-controls="home" aria-selected="true" ><b>+ Test Case</b></a>
                     </li> -->
                   </ul>
                 
@@ -229,14 +236,10 @@
                       </div>
                     </div>
                   {% endfor %}
-                  <div class="form-row">
+                  <!-- <div class="form-row">
                     <button class="form-group add_form_field_mcq">Add new Option</button>
-                  </div>
+                  </div> -->
                 {% endif %}
-              </div>
-              <div class="form-row" style="justify-content: flex-end">
-                <a class="btn btn-primary" style="background:red; color:white" href="/delete_question/{{cname}}/{{qno}}">Delete Q</a>
-                <input type="submit" class="btn btn-primary" value="Save">
               </div>
             </form>
             </div>
@@ -249,6 +252,30 @@
 </body>
 
 <script>
+
+//add remove test case 
+// $(".nav-tabs").on("click", "a", function (e) {
+//         e.preventDefault();
+//         if (!$(this).hasClass('add-contact')) {
+//             $(this).tab('show');
+//         }
+//     })
+//     .on("click", "span", function () {
+//         var anchor = $(this).siblings('a');
+//         $(anchor.attr('href')).remove();
+//         $(this).parent().remove();
+//         $(".nav-tabs li").children('a').first().click();
+//     });
+
+// $('.add-testcase').click(function (e) {
+//     e.preventDefault();
+//     var id = $(".nav-tabs").children().length; //think about it ;)
+//     var tabId = 'Test Case' + id;
+//     $(this).closest('li').before('<li><a href="#testcase_' + id + '">Test Case '+id+'</a> <span> x </span></li>');
+//     $('.tab-content').append('<div class="tab-pane" id="' + tabId + '">Contact Form: New Contact ' + id + '</div>');
+//    $('.nav-tabs li:nth-child(' + id + ') a').click();
+// });
+
 
 //add new test case
 // $(document).ready(function() {
@@ -267,18 +294,18 @@
 //         }
 //     });
 
+  
 
-
-  var sd = document.getElementById("sdate").value
-  var ed = document.getElementById("edate").value
-  console.log(sd)
-  console.log(ed)
-  document.getElementById("start-time").value = sd.match(/\d\d:\d\d/)[0];
-  document.getElementById("end-time").value = ed.match(/\d\d:\d\d/)[0];
-  sd = new Date(sd);
-  ed = new Date(ed);
-  document.getElementById("start-date").value = sd.getFullYear() + '-' + (sd.getMonth() + 1) + '-' + sd.getDate();
-  document.getElementById("end-date").value = ed.getFullYear() + '-' + (ed.getMonth() + 1) + '-' + ed.getDate();
+  var start_date_time = document.getElementById("sdate").value
+  var end_date_time = document.getElementById("edate").value
+  sd = new Date(start_date_time).toLocaleDateString("en-CA")//.split("/").reverse().join("-");
+  ed = new Date(end_date_time).toLocaleDateString("en-CA")//.split("/").reverse().join("-");
+  st = new Date(start_date_time).toLocaleTimeString({hour: '2-​digit', minute:'2-digit'});
+  et = new Date(end_date_time).toLocaleTimeString({hour: '2-​digit', minute:'2-digit'});
+  document.getElementById("start-time").value = st
+  document.getElementById("end-time").value = et
+  document.getElementById("start-date").value = sd
+  document.getElementById("end-date").value = ed
 
   function setTimezoneOffset() {
     offset = new Date().getTimezoneOffset();

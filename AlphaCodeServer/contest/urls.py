@@ -22,6 +22,7 @@ urlpatterns = [
     path('error', views.error_page),
     path('deleteContest/<cname>', ajax_handler.delete_contest),
     path('editContest/<cname>', ajax_handler.edit_contest_pg),
-    path('delete_question/<cname>/<qno>', admin_views.delete_question)
+    path('delete_question/<cname>/<qno>', admin_views.delete_question),
+    path('saveContestEdit', admin_views.saveContestEdit)
     
 ]

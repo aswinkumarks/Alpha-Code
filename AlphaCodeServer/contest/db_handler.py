@@ -11,10 +11,17 @@ def save_new_contest_info(post_data):
                                                 int(post_data.get("time_zone_offset")))
         if Contest.objects.filter(cname=cname):
             return False
-
-        duration = post_data.get("duration", (end_time - start_time).total_seconds() // 60)
-        new_contest = Contest(cname=cname, desc=post_data.get("contest_desc"), startTime=start_time,
-                            endTime=end_time, hosted_by=post_data.get("hosted_by", ""), duration=duration)
+        
+        if post_data.get("contest_desc") == "":
+            desc = ""
+        else:
+            desc = post_data.get("contest_desc")
+        
+        if post_data.get("duration") == "":
+            duration = (end_time - start_time).total_seconds() // 60
+        else:
+            duration = post_data.get("duration")
+        new_contest = Contest(cname=cname, desc=desc, startTime=start_time, endTime=end_time, hosted_by=post_data.get("hosted_by", ""), duration=duration)
         new_contest.save()
     except Exception as e:
         print(e)
@@ -26,7 +33,7 @@ def save_new_contest_info(post_data):
 def save_new_mcq_question(cq_obj, post_data):
     question = post_data.get("question")
     score = post_data.get("score")
-    mcq_question = McqQuestion(cq=cq_obj, question=question)
+    mcq_question = McqQuestion(cq=cq_obj, question=question, score=score)
     mcq_question.save()
     no = 1 
     while True:
