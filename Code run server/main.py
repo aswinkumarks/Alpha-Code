@@ -3,7 +3,7 @@ from container import DockerContainer
 import signal
 import argparse
 
-def interrut_handler(sig, frame):
+def interrupt_handler(sig, frame):
     print('Stoping containers')
     net.server_flag = False
     docker_container.stop_all()
@@ -17,7 +17,7 @@ if __name__ == '__main__':
 		docker_container = DockerContainer()
 		docker_container.create_containers(5)
 		docker_container.start_all()
-		signal.signal(signal.SIGINT, interrut_handler)
+		signal.signal(signal.SIGINT, interrupt_handler)
 		net = Network(container = docker_container)
 	else:
 		net = Network(execution_mode="normal")
