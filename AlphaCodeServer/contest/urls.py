@@ -1,7 +1,11 @@
 from django.conf.urls import url
-from django.urls import path
+from django.urls import path, include
 from . import views, admin_views
 from . import ajax_handler
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'contests', views.ContestView, "contest")
 
 urlpatterns = [
     path('contest/<cname>',views.disp_contest_pg),
@@ -23,6 +27,7 @@ urlpatterns = [
     path('deleteContest/<cname>', ajax_handler.delete_contest),
     path('editContest/<cname>', ajax_handler.edit_contest_pg),
     path('delete_question/<cname>/<qno>', admin_views.delete_question),
-    path('saveContestEdit', admin_views.saveContestEdit)
+    path('saveContestEdit', admin_views.saveContestEdit),
+    path('api/', include(router.urls))
     
 ]

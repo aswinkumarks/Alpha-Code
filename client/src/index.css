@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Open+Sans:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+/* body {
+  background-image: linear-gradient(to right, var(--gradient-color-stops));
+  --gradient-from-color: #81e6d9;
+  --gradient-color-stops: var(--gradient-from-color), var(--gradient-to-color, rgba(129, 230, 217, 0));
+  --gradient-to-color: #4299e1;
+} */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Lato', sans-serif;
+}

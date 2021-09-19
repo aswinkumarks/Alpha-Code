@@ -26,6 +26,8 @@ urlpatterns = [
     path('',RedirectView.as_view(url='/contests/')),
     # url(r'^',include('accounts.urls')),
     url(r'^',include('contest.urls')),
-    path('task/',include('AlphaCodeTasks.urls'))
+    path('task/',include('AlphaCodeTasks.urls')),
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/registration/', include('rest_auth.registration.urls'))
 ]
 start_background_tasks()
