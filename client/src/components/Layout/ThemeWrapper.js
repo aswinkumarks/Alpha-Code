@@ -1,10 +1,11 @@
-import { useState, createContext, useMemo } from "react";
+import { useState, createContext, useMemo, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 export const ThemeWrapper = (props) => {
-  const [mode, setMode] = useState("dark");
+  const initialTheme = localStorage.getItem("theme");
+  const [mode, setMode] = useState(initialTheme?initialTheme:"light");
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
@@ -13,6 +14,10 @@ export const ThemeWrapper = (props) => {
     }),
     []
   );
+
+  useEffect(() => {
+    localStorage.setItem("theme", mode);
+  }, [mode]);
 
   const theme = useMemo(
     () =>

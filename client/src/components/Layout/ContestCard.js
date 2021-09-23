@@ -1,8 +1,10 @@
 import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
 import CardHeader from "@mui/material/CardHeader";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -10,12 +12,25 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Backdrop from "@mui/material/Backdrop";
+import { NoEncryption } from "@mui/icons-material";
 
 function ContestCard(props) {
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleToggle = () => {
+    setOpen(!open);
+  };
+
+  const calcDuration = () => {
+  };
+
   const theme = useTheme();
 
   return (
-    <Card sx={{borderRadius: 6 }}>
+    <Card sx={{ borderRadius: 6, }}>
       <CardHeader
         action={
           <Box>
@@ -54,7 +69,47 @@ function ContestCard(props) {
               )}
             </b>
           </Typography>
-          <Button variant="text">View Details</Button>
+          <Button variant="text" onClick={handleToggle}>
+            View Details
+          </Button>
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={open}
+            onClick={handleClose}
+          >
+            <Card sx={{ minWidth: 275 }}>
+              <CardContent>
+                <Typography
+                  sx={{ fontSize: 14 }}
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  Contest Details
+                </Typography>
+                <Typography variant="h5" component="div">
+                  {props.cInfo.cname}
+                </Typography>
+                <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                  Hosted by : {props.cInfo.hosted_by}
+                </Typography>
+                <Typography variant="body2">
+                  Duration : {props.cInfo.duration} [add unit]
+                  {/* {calcDuration} */}
+                  <br />
+                  Start Time : {props.cInfo.startTime}
+                  <br />
+                  End Time : {props.cInfo.endTime}
+                  <br/><br/>
+                  Description : <br/>
+                  {props.cInfo.desc}
+                </Typography>
+              </CardContent>
+              {/* <CardActions>
+                <Button size="small">Learn More</Button>
+              </CardActions> */}
+            </Card>
+          </Backdrop>
+
           <Button variant="outlined">Start</Button>
         </Stack>
       </CardContent>

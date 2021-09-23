@@ -3,9 +3,10 @@ import axios from "axios";
 
 import NavBar from "../components/Layout/NavBar";
 import ContestList from "../components/Contest/ContestList";
+import CreateContest from './CreateContest';
 
 const DashboardPage = () => {
-  document.body.style = "background: rgb(18,18,18);";
+  // document.body.style = "background: rgb(18,18,18);";
   const [isLoading, setIsLoading] = useState(true);
   const [loadedContests, setLoadedContests] = useState([]);
   useEffect(() => {
@@ -14,6 +15,7 @@ const DashboardPage = () => {
       .get("/api/contests/")
       .then(function (response) {
         setIsLoading(false);
+        console.log(response.data);
         setLoadedContests(response.data);
       })
       .catch(function (error) {
@@ -32,7 +34,8 @@ const DashboardPage = () => {
   return (
     <section>
       <NavBar />
-      <ContestList contests={loadedContests} />
+      <CreateContest/>
+      {/* <ContestList contests={loadedContests} /> */}
     </section>
   );
 };
