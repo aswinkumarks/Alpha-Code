@@ -5,18 +5,24 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/Dashboard";
 import AuthContext from "./store/Auth-Context";
+import CreateContestPage from "./pages/CreateContest";
 
 function App() {
   const authCtx = useContext(AuthContext);
   if (authCtx.isLoggedIn) {
     return (
       <Switch>
-        <Route path="/">
+        <Route path="/" exact>
           <DashboardPage />
         </Route>
+        <Route path="/create_contest">
+          <CreateContestPage/>
+        </Route>
+        
         <Route path="*">
           <Redirect to="/" />
         </Route>
+
       </Switch>
     );
   } else {
