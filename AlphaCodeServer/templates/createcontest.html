@@ -113,7 +113,7 @@
 
   // validation check
   function validateForm() {
-      var today = new Date();
+      var today = new Date().toLocaleDateString();
       var dd = today.getDate();
       var mm = today.getMonth() + 1;
       var yyyy = today.getFullYear();
@@ -124,9 +124,9 @@
       h = checkTime(h);
       dd = checkTime(dd);
       var today_time = h + ":" + m;
-      today = yyyy + '-' + mm + '-' + dd;
-      var sd = document.forms["ContestForm"]["start-date"].value;
-      var ed = document.forms["ContestForm"]["end-date"].value;
+      // today = yyyy + '-' + mm + '-' + dd;
+      var sd = new Date(document.forms["ContestForm"]["start-date"].value).toLocaleDateString();
+      var ed = new Date(document.forms["ContestForm"]["end-date"].value).toLocaleDateString();
       var st = document.forms["ContestForm"]["start-time"].value;
       var et = document.forms["ContestForm"]["end-time"].value;
 

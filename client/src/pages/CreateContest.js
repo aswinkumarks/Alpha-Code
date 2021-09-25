@@ -5,18 +5,10 @@ import axios from "axios";
 const CreateContestPage = () => {
   function addNewContestHandler(contestData) {
     console.log(contestData);
-    const contest_data = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(contestData),
-    };
 
     //add rest api call to add to db
-    // axios
-    //   .post("/api/create_contest/", JSON.stringify(contestData), {
-    //     headers: { "content-Type": "application/json" },
-    //   })
-      fetch("/api/create_contest/", contest_data)
+    axios
+      .post("/api/contests/", contestData)
       .then(function (response) {
         console.log("data sent !");
         console.log(response);

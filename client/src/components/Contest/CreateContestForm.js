@@ -4,16 +4,19 @@ import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-
-import { useRef } from "react";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import { useRef, useState } from "react";
 
 const CreateContestForm = (props) => {
+  const [sdvalue, setsdValue] = useState(new Date());
+  const [edvalue, setedValue] = useState(new Date());
+
   const contestNameRef = useRef();
   const hostNameRef = useRef();
-  const startDateRef = useRef();
-  const endDateRef = useRef();
-  const startTimeRef = useRef();
-  const endTimeRef = useRef();
+  // const startTimeRef = useRef();
+  // const endTimeRef = useRef();
   const durationRef = useRef();
   const descriptionRef = useRef();
 
@@ -21,24 +24,18 @@ const CreateContestForm = (props) => {
     event.preventDefault();
     const contestname = contestNameRef.current.value;
     const hostname = hostNameRef.current.value;
-    const startdate = startDateRef.current.value;
-    const enddate = endDateRef.current.value;
-    const starttime = startTimeRef.current.value;
-    const endtime = endTimeRef.current.value;
     const duration = durationRef.current.value;
     const description = descriptionRef.current.value;
 
     const contestData = {
-      contestname: contestname,
-      hostname: hostname,
-      startdate: startdate,
-      enddate: enddate,
-      starttime: starttime,
-      endtime: endtime,
+      cname: contestname,
+      hosted_by: hostname,
+      startTime: sdvalue.toISOString(),
+      endTime: edvalue.toISOString(),
       duration: duration,
-      description: description,
+      desc: description,
     };
-
+    
     props.onCreateNewContest(contestData);
   }
 
@@ -67,6 +64,20 @@ const CreateContestForm = (props) => {
               />
             </Grid>
 
+            <Grid item xs={6} md={6}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DateTimePicker
+                  renderInput={(params) => <TextField {...params} />}
+                  label="Start date and time"
+                  value={sdvalue}
+                  onChange={(newValue) => {
+                    setsdValue(newValue);
+                  }}
+                  minDateTime={new Date()}
+                />
+              </LocalizationProvider>
+            </Grid>
+
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
@@ -78,78 +89,22 @@ const CreateContestForm = (props) => {
             </Grid>
 
             <Grid item xs={6} md={6}>
-              <TextField
-                id="date"
-                label="Start Date"
-                type="date"
-                defaultValue="2017-05-24"
-                sx={{ width: 220 }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{ ref: startDateRef }}
-              />
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DateTimePicker
+                  renderInput={(params) => <TextField {...params} />}
+                  label="End time in each day"
+                  value={edvalue}
+                  onChange={(newValue) => {
+                    setedValue(newValue);
+                  }}
+                  minDate={new Date("2020-02-14")}
+                  minTime={new Date(0, 0, 0, 8)}
+                  maxTime={new Date(0, 0, 0, 18, 45)}
+                />
+              </LocalizationProvider>
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <TextField
-                id="st"
-                label="Start Time"
-                type="time"
-                defaultValue="00:00"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  step: 300, // 5 min
-                }}
-                sx={{ width: 150 }}
-                inputProps={{ ref: startTimeRef }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="date"
-                label="End Date"
-                type="date"
-                defaultValue="2017-05-24"
-                sx={{ width: 220 }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{ ref: endDateRef }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="st"
-                label="End Time"
-                type="time"
-                defaultValue="00:00"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  step: 300, // 5 min
-                }}
-                sx={{ width: 150 }}
-                inputProps={{ ref: endTimeRef }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <TextField
-                id="standard-number"
-                label="Duration"
-                type="number"
-                variant="outlined"
-                inputProps={{ ref: durationRef }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={8}>
               <TextField
                 fullWidth
                 id="outlined-textarea"
@@ -157,6 +112,16 @@ const CreateContestForm = (props) => {
                 placeholder="Description"
                 multiline
                 inputProps={{ ref: descriptionRef }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                id="standard-number"
+                label="Duration"
+                type="number"
+                variant="outlined"
+                inputProps={{ ref: durationRef }}
               />
             </Grid>
 

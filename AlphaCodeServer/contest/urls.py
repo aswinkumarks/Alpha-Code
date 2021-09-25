@@ -6,7 +6,7 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'contests', reactviews.ContestView, "contest")
-router.register(r'create_contest', reactviews.CreateContest, "create_contest")
+# router.register(r'create_contest', reactviews.CreateContest, "create_contest")
 
 urlpatterns = [
     path('contest/<cname>',views.disp_contest_pg),
