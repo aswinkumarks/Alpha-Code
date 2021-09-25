@@ -34,7 +34,8 @@ def clear_tasks():
 
 def start_background_tasks():
 
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(is_active_server, 'interval', seconds=20, id='background_system_check', replace_existing=True)
-    scheduler.add_job(clear_tasks, 'interval', seconds=60, id='task_clear', replace_existing=True)
-    scheduler.start()
+    pass
+    # scheduler = BackgroundScheduler()
+    # scheduler.add_job(is_active_server, 'interval', seconds=20, id='background_system_check', replace_existing=True)
+    # scheduler.add_job(clear_tasks, 'interval', seconds=60, id='task_clear', replace_existing=True)
+    # scheduler.start()

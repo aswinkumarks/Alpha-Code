@@ -47,18 +47,10 @@ function NavBar() {
           <IconButton size="large" onClick={handleMenu} color="inherit">
             <Avatar>{username[0]}</Avatar>
           </IconButton>
-          <Menu
+          <Menu sx={{ mt : 1,}}
             id="menu-appbar"
             anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
             keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
             open={Boolean(anchorEl)}
             onClose={handleClose}>
             <Box sx={{ p: 1, }}>

@@ -11,10 +11,6 @@ from .evaluate import evaluateSubmission
 from .evaluate import getParticipantScore
 from .extra_scripts import *
 from .db_handler import *
-from rest_framework import viewsets
-from .serializers import ContestSerializer
-from rest_framework.permissions import IsAuthenticated
-
 
 @csrf_exempt
 def create_contest(request):
@@ -129,11 +125,6 @@ def getQuestion(request, cname, qno):
 def show_contests(request, msg=""):
     contests = Contest.objects.all()
     return render(request, 'contestsDashboard.html', {"contests": contests, "server_msg": msg})
-
-class ContestView(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ContestSerializer
-    queryset = Contest.objects.all()
 
 @csrf_exempt
 @login_required(login_url='/accounts/login')

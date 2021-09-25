@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
+import Paper from "@mui/material/Paper";
 
 import "./index.css";
 import App from "./App";
@@ -24,7 +25,11 @@ ReactDOM.render(
   <AuthContextProvider>
     <BrowserRouter>
       <ThemeWrapper>
-        <App />
+        <Paper>
+          <div style={{height: '100vh'}}>
+            <App />
+          </div>
+        </Paper>
       </ThemeWrapper>
     </BrowserRouter>
   </AuthContextProvider>,

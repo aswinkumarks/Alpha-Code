@@ -1,11 +1,12 @@
 from django.conf.urls import url
 from django.urls import path, include
-from . import views, admin_views
+from . import views, admin_views, reactviews
 from . import ajax_handler
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'contests', views.ContestView, "contest")
+router.register(r'contests', reactviews.ContestView, "contest")
+# router.register(r'create_contest', reactviews.CreateContest, "create_contest")
 
 urlpatterns = [
     path('contest/<cname>',views.disp_contest_pg),
