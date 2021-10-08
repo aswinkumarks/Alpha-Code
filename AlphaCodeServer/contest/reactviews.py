@@ -18,7 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 
 
 class ContestView(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = ContestSerializer
     queryset = Contest.objects.all()
     

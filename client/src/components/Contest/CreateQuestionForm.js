@@ -29,14 +29,39 @@ const CreateQuestionForm = (props) => {
     setQtype(event.target.value);
   }
 
+  const [tcinfo, changeTCinfo] = useState([]);
+
+  function addTestCase() {
+    changeTCinfo(
+      tcinfo.concat({
+        id: tcinfo.length+1,
+        question: "",
+        testCaseType: "",
+        pgmInput: "",
+        OutoutType: "",
+        pgmOutoutOrEvalCode: "",
+        score: "",
+      })
+    );
+  }
+
+  function delTestCase(pos) {
+    // let a = tcinfo.splice(pos, 1)
+    changeTCinfo(tcinfo.filter((item, index) => index !== pos-1));
+  }
+
+  const qTypeRef = useRef();
+  const questionRef = useRef();
+  const descriptionRef = useRef();
+
   return (
     <Container fixed sx={{ mt: 5 }}>
+      {console.log(tcinfo)}
+
       <Box sx={{ border: 1, p: 4, borderRadius: 2 }}>
-        <form
-        // onSubmit={onSubmitHandler}
-        >
+        <form>
           <Typography gutterBottom variant="h4" color="text.secondary">
-            Contest : [add contest name here]
+            Contest : {props.cname}
           </Typography>
 
           <Grid
@@ -62,6 +87,7 @@ const CreateQuestionForm = (props) => {
                 label="Type"
                 value={qtype}
                 onChange={changeQtype}
+                inputProps={{ ref: qTypeRef }}
               >
                 {qtypes.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
@@ -77,7 +103,7 @@ const CreateQuestionForm = (props) => {
                 id="outlined-textarea"
                 label="Question"
                 multiline
-                // inputProps={{ ref: descriptionRef }}
+                inputProps={{ ref: questionRef }}
               />
             </Grid>
 
@@ -87,19 +113,36 @@ const CreateQuestionForm = (props) => {
                 id="outlined-textarea"
                 label="Description"
                 multiline
-                // inputProps={{ ref: descriptionRef }}
+                inputProps={{ ref: descriptionRef }}
               />
             </Grid>
 
             <Grid item xs={12} md={12}>
               <p>Test Cases :</p>
-              <Button variant="outlined">+</Button>
+              <Button variant="outlined" onClick={addTestCase}>
+                +
+              </Button>
             </Grid>
 
             <Grid item xs={12} md={11}>
-              <CreateTestCaseForm />
+              {tcinfo.map((tc, index) => (
+                <CreateTestCaseForm
+                  delTChandler={delTestCase}
+                  tcinfo={tc}
+                  index={index+1}
+                />
+              ))}
             </Grid>
-            
+            <Grid item>
+              <Button type="button" variant="contained">
+                Next
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button type="button" variant="contained">
+                Finish
+              </Button>
+            </Grid>
           </Grid>
         </form>
       </Box>

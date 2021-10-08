@@ -29,6 +29,10 @@ function ContestCard(props) {
 
   const theme = useTheme();
 
+  const delContest = () => {
+    props.delContest(props.cInfo.cId)
+  };
+
   return (
     <Card sx={{ borderRadius: 6, }}>
       <CardHeader
@@ -37,7 +41,7 @@ function ContestCard(props) {
             <IconButton aria-label="edit">
               <EditIcon />
             </IconButton>
-            <IconButton aria-label="delete">
+            <IconButton aria-label="delete" onClick={delContest}>
               <DeleteIcon />
             </IconButton>
           </Box>

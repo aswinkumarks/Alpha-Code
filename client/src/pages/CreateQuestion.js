@@ -3,12 +3,11 @@ import NavBar from "../components/Layout/NavBar";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
-const CreateQuestionPage = () => {
+const CreateQuestionPage = (props) => {
 
   return (
     <div>
-      <NavBar />
-      <CreateQuestionForm 
+      <CreateQuestionForm cname={props.cname}
     //   onCreateNewQuestion={addNewQuestionHandler}
        />
     </div>
