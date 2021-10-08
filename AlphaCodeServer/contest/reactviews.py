@@ -12,7 +12,7 @@ from .evaluate import getParticipantScore
 from .extra_scripts import *
 from .db_handler import *
 from rest_framework import viewsets
-from .serializers import ContestSerializer
+from .serializers import CodingQuestionSerializer, ContestSerializer, McqQuestionSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -21,4 +21,16 @@ class ContestView(viewsets.ModelViewSet):
     # permission_classes = (IsAuthenticated,)
     serializer_class = ContestSerializer
     queryset = Contest.objects.all()
+
+
+class McqQuestionView(viewsets.ModelViewSet):
+    # permission_classes = (IsAuthenticated,)
+    serializer_class = McqQuestionSerializer
+    queryset = McqQuestion.objects.all()
+
+
+class CodingQuestionView(viewsets.ModelViewSet):
+    # permission_classes = (IsAuthenticated,)
+    serializer_class = CodingQuestionSerializer
+    queryset = CodingQuestion.objects.all()
     
