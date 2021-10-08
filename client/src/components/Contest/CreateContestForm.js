@@ -108,8 +108,7 @@ const CreateContestForm = (props) => {
               <TextField
                 fullWidth
                 id="outlined-textarea"
-                label="Multiline Placeholder"
-                placeholder="Description"
+                label="Description"
                 multiline
                 inputProps={{ ref: descriptionRef }}
               />

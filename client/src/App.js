@@ -6,6 +6,7 @@ import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/Dashboard";
 import AuthContext from "./store/Auth-Context";
 import CreateContestPage from "./pages/CreateContest";
+import CreateQuestionPage from "./pages/CreateQuestion";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -17,6 +18,10 @@ function App() {
         </Route>
         <Route path="/create_contest">
           <CreateContestPage/>
+        </Route>
+
+        <Route path="/create_question">
+          <CreateQuestionPage/>
         </Route>
         
         <Route path="*">
