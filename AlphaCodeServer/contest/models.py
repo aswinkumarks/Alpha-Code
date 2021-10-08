@@ -75,7 +75,7 @@ class McqQuestion(models.Model):
         
 
 class Option(models.Model):
-    question = models.ForeignKey(McqQuestion, on_delete=models.CASCADE)
+    question = models.ForeignKey(McqQuestion, related_name='options', on_delete=models.CASCADE)
     option = models.CharField(max_length=250)
     correct_option = models.BooleanField(default=False)
 
@@ -90,7 +90,7 @@ class CodingQuestion(models.Model):
 
 
 class TestCase(models.Model):
-    question = models.ForeignKey(CodingQuestion,on_delete=models.CASCADE)
+    question = models.ForeignKey(CodingQuestion, related_name='testcases', on_delete=models.CASCADE)
     testCaseType = models.CharField(max_length=30,choices=(('Hidden','Output and Input will be hidden from user'),
                                         ('Visible','Output and Input will be shown to user')))
     pgmInput = models.TextField(default = "")
