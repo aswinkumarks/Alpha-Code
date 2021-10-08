@@ -15,8 +15,6 @@ const CreateContestForm = (props) => {
 
   const contestNameRef = useRef();
   const hostNameRef = useRef();
-  // const startTimeRef = useRef();
-  // const endTimeRef = useRef();
   const durationRef = useRef();
   const descriptionRef = useRef();
 
