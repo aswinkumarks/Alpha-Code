@@ -39,58 +39,37 @@ class ContestResult(models.Model):
     rank = models.IntegerField()
 
     class Meta:
-        # constraints = [
-        #     models.UniqueConstraint(fields=['contest_name', 'rank'], name='Unique rank for contest')
-        # ]
         unique_together = ('contest_name', 'rank',)
 
     def __str__(self):
         return self.participant.contest.cname + ": " + self.participant.user.username
 
 
-class ContestQuestion(models.Model):
-    contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
+class Question(models.Model):
+    contest = models.ForeignKey(Contest, to_field="cname", on_delete=models.CASCADE)
     qno = models.IntegerField()
     qtype = models.CharField(max_length=50,choices=(('MCQ','Multiple Choice Question'),
                         ('Coding','Coding Question')))
-    # mcqQues = models.OneToOneField(McqQuestion, null=True, blank=True, on_delete=models.CASCADE)
-    # codingQues = models.OneToOneField(CodingQuestion, null=True, blank=True, on_delete=models.CASCADE)
+    question = models.TextField()
+    description = models.TextField(blank=True)
+    score = models.IntegerField(default=0)
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['contest', 'qno'], name='name of constraint')
-        ]
-
+        unique_together = ['contest', 'qno']
+        ordering = ['qno']
+    
     def __str__(self):
         return str(self.qno)+'. '+self.qtype
-
-
-class McqQuestion(models.Model):
-    cq = models.OneToOneField(ContestQuestion, on_delete=models.CASCADE)
-    question = models.TextField()
-    score = models.IntegerField(default=1)
-
-    def __str__(self):
-        return self.question[:30]
         
 
 class Option(models.Model):
-    question = models.ForeignKey(McqQuestion, related_name='options', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='options', on_delete=models.CASCADE)
     option = models.CharField(max_length=250)
     correct_option = models.BooleanField(default=False)
 
 
-class CodingQuestion(models.Model):
-    cq = models.OneToOneField(ContestQuestion, on_delete=models.CASCADE)
-    question = models.TextField()
-    description = models.TextField()
-
-    def __str__(self):
-        return self.question[:30]
-
-
 class TestCase(models.Model):
-    question = models.ForeignKey(CodingQuestion, related_name='testcases', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='testcases', on_delete=models.CASCADE)
     testCaseType = models.CharField(max_length=30,choices=(('Hidden','Output and Input will be hidden from user'),
                                         ('Visible','Output and Input will be shown to user')))
     pgmInput = models.TextField(default = "")

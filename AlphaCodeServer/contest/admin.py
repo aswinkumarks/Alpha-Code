@@ -3,10 +3,8 @@ from .models import *
 
 # Register your models here.
 admin.site.register(Contest)
-admin.site.register(ContestQuestion)
-admin.site.register(CodingQuestion)
+admin.site.register(Question)
 admin.site.register(TestCase)
-admin.site.register(McqQuestion)
 admin.site.register(Option)
 admin.site.register(Participant)
 admin.site.register(TempCodeCache)

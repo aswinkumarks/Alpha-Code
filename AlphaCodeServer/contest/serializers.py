@@ -8,25 +8,10 @@ class ContestSerializer(serializers.ModelSerializer):
         fields = ("cId", "cname", "desc", "hosted_by", "duration", "startTime", "endTime")
 
 
-class QuestionSerializer(serializers.ModelSerializer):
-    contest = ContestSerializer()
-    class Meta:
-        model = ContestQuestion
-        fields = ("qno", "qtype", "contest")
-
-
-class McqOptionSerializer(serializers.ModelSerializer):
+class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
         fields = ("option", "correct_option")
-
-
-class McqQuestionSerializer(serializers.ModelSerializer):
-    cq = serializers.PrimaryKeyRelatedField(queryset=Contest.objects.all())
-    options = McqOptionSerializer(many=True)
-    class Meta:
-        model = McqQuestion
-        fields = ("question", "score", "cq", "options")
 
 
 class TestCaseSerializer(serializers.ModelSerializer):
@@ -35,9 +20,24 @@ class TestCaseSerializer(serializers.ModelSerializer):
         fields = ("testCaseType", "pgmInput", "OutputType", "pgmOutputOrEvalCode", "score")
 
 
-class CodingQuestionSerializer(serializers.ModelSerializer):
-    cq = serializers.PrimaryKeyRelatedField(queryset=Contest.objects.all())
+class QuestionSerializer(serializers.ModelSerializer):
+    contest = serializers.PrimaryKeyRelatedField(queryset=Contest.objects.all())
     testcases = TestCaseSerializer(many=True)
+    options = OptionSerializer(many=True)
+
     class Meta:
-        model = CodingQuestion
-        fields = ("question", "description", "cq", "testcases")
+        model = Question
+        fields = ("qno", "qtype", "question", "description", "score",  "contest", "testcases", "options")
+
+    def create(self, validated_data):
+        testcases_data = validated_data.pop('testcases')
+        options_data = validated_data.pop('options')
+        contest_id = validated_data.pop('contest')
+        question = Question.objects.create(contest=contest_id, **validated_data)
+        if validated_data['qtype'] == 'MCQ':
+            for option_data in options_data:
+                Option.objects.create(question=question, **option_data)
+        else:
+            for testcase_data in testcases_data:
+                TestCase.objects.create(question=question, **testcase_data)
+        return question
