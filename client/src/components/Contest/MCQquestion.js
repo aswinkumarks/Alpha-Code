@@ -39,7 +39,7 @@ const MCQquestion = (props) => {
       spacing={3}
       sx={{ mt: 1 }}
     >
-      {/* {console.log(mcqOptions)} */}
+      {console.log(mcqOptions)}
 
       <Grid item md={12}>
         <p>MCQ Options :</p>

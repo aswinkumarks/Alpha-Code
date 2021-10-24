@@ -7,8 +7,8 @@ import Select from "@mui/material/Select";
 import { useRef, useState, useEffect } from "react";
 
 const CreateTestCaseForm = (props) => {
-  const [tc_type, setTCtype] = useState("Static");
-  const [tc_visibilty, setTCvisibilty] = useState("Hidden");
+  const [tc_type, setTCtype] = useState(props.tcinfo.pgmOutoutOrEvalCode);
+  const [tc_visibilty, setTCvisibilty] = useState(props.tcinfo.testCaseType);
 
   useEffect(() => {
     updateTcOptionValue();
@@ -49,6 +49,7 @@ const CreateTestCaseForm = (props) => {
       spacing={1}
       sx={{ mt: 1 }}
     >
+
       <Grid item xs={2} md={3}>
         <TextField
           disabled

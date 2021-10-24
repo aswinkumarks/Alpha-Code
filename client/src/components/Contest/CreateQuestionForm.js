@@ -21,12 +21,6 @@ const CreateQuestionForm = (props) => {
   let mcqOptions = [];
   let testCases = [];
 
-  let questionData = {
-    qno: qno,
-    question: questionRef.value,
-    description: descriptionRef.value,
-  };
-
   function changeQtype(event) {
     setQtype(event.target.value);
   }
@@ -42,6 +36,11 @@ const CreateQuestionForm = (props) => {
   }
 
   function createQuestionHandler() {
+    let questionData = {
+      qno: qno,
+      question: questionRef.current.value,
+      description: descriptionRef.current.value,
+    };
     if (qtype === "Coding") questionData["testcases"] = testCases;
     else questionData["options"] = mcqOptions;
 

@@ -14,10 +14,10 @@ const CodingQuestion = (props) => {
     changeTCinfo(
       tcinfos.concat({
         // id: tcinfos.length + 1,
-        testCaseType: "",
+        testCaseType: "Hidden",
         pgmInput: "",
         OutoutType: "",
-        pgmOutoutOrEvalCode: "",
+        pgmOutoutOrEvalCode: "Static",
         score: "",
       })
     );
@@ -33,7 +33,7 @@ const CodingQuestion = (props) => {
 
   return (
     <div>
-      {/* {console.log(tcinfos)} */}
+      {console.log(tcinfos)}
       
 
       <Grid item xs={12} md={12}>
