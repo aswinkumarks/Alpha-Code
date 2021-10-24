@@ -4,12 +4,12 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 const CreateQuestionPage = (props) => {
-
   return (
     <div>
-      <CreateQuestionForm cname={props.cname}
-    //   onCreateNewQuestion={addNewQuestionHandler}
-       />
+      <CreateQuestionForm
+        cname={props.cname}
+        //   onCreateNewQuestion={addNewQuestionHandler}
+      />
     </div>
   );
 };

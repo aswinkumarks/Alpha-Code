@@ -1,14 +1,9 @@
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
 
 import { useRef, useState } from "react";
-
-import MenuItem from "@mui/material/MenuItem";
-import Stack from "@mui/material/Stack";
 
 const CreateTestCaseForm = (props) => {
   const tc_visibilties = [
@@ -108,8 +103,6 @@ const CreateTestCaseForm = (props) => {
           ))}
         </TextField>
       </Grid>
-
-      
 
       <Grid item xs={12} md={10}>
         <TextField

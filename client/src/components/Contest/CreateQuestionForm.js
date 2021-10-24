@@ -8,10 +8,13 @@ import Button from "@mui/material/Button";
 import { useRef, useState } from "react";
 
 import MenuItem from "@mui/material/MenuItem";
-import Stack from "@mui/material/Stack";
-import CreateTestCaseForm from "./CreateTestCaseForm";
+import CodingQuestion from "./CodingQuestion";
+import MCQquestion from "./MCQquestion"
 
 const CreateQuestionForm = (props) => {
+
+  const [qno, changeQno] = useState(1);
+
   const qtypes = [
     {
       value: "Coding",
@@ -29,34 +32,24 @@ const CreateQuestionForm = (props) => {
     setQtype(event.target.value);
   }
 
-  const [tcinfo, changeTCinfo] = useState([]);
-
-  function addTestCase() {
-    changeTCinfo(
-      tcinfo.concat({
-        id: tcinfo.length+1,
-        question: "",
-        testCaseType: "",
-        pgmInput: "",
-        OutoutType: "",
-        pgmOutoutOrEvalCode: "",
-        score: "",
-      })
-    );
-  }
-
-  function delTestCase(pos) {
-    // let a = tcinfo.splice(pos, 1)
-    changeTCinfo(tcinfo.filter((item, index) => index !== pos-1));
-  }
 
   const qTypeRef = useRef();
   const questionRef = useRef();
-  const descriptionRef = useRef();
+
+  function createQuestionHandler() {
+    // const qtype = qTypeRef.current.value;
+    // const question = questionRef.current.value;
+
+    // const questionData = {
+    //   qtype: qtype,
+    //   question: question,
+    // };
+
+    changeQno(qno+1);
+  }
 
   return (
     <Container fixed sx={{ mt: 5 }}>
-      {console.log(tcinfo)}
 
       <Box sx={{ border: 1, p: 4, borderRadius: 2 }}>
         <form>
@@ -76,7 +69,7 @@ const CreateQuestionForm = (props) => {
                 disabled
                 id="outlined-disabled"
                 label="Question number"
-                defaultValue="[add counter here]"
+                defaultValue={qno}
               />
             </Grid>
 
@@ -107,34 +100,15 @@ const CreateQuestionForm = (props) => {
               />
             </Grid>
 
+              
             <Grid item xs={12} md={12}>
-              <TextField
-                fullWidth
-                id="outlined-textarea"
-                label="Description"
-                multiline
-                inputProps={{ ref: descriptionRef }}
-              />
+              {qtype==="Coding"&&<CodingQuestion/>}
+              {qtype==="MCQ"&&<MCQquestion/>}
             </Grid>
 
-            <Grid item xs={12} md={12}>
-              <p>Test Cases :</p>
-              <Button variant="outlined" onClick={addTestCase}>
-                +
-              </Button>
-            </Grid>
-
-            <Grid item xs={12} md={11}>
-              {tcinfo.map((tc, index) => (
-                <CreateTestCaseForm
-                  delTChandler={delTestCase}
-                  tcinfo={tc}
-                  index={index+1}
-                />
-              ))}
-            </Grid>
+            
             <Grid item>
-              <Button type="button" variant="contained">
+              <Button type="button" variant="contained" onClick={createQuestionHandler}>
                 Next
               </Button>
             </Grid>
