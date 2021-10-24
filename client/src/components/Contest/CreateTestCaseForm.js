@@ -2,34 +2,23 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const CreateTestCaseForm = (props) => {
-  const tc_visibilties = [
-    {
-      value: "Hidden",
-      label: "Hidden",
-    },
-    {
-      value: "Visible",
-      label: "Visible",
-    },
-  ];
-
-  const tc_types = [
-    {
-      value: "Static",
-      label: "Static",
-    },
-    {
-      value: "Dynamic",
-      label: "Dynamic",
-    },
-  ];
-
   const [tc_type, setTCtype] = useState("Static");
   const [tc_visibilty, setTCvisibilty] = useState("Hidden");
+
+  useEffect(() => {
+    updateTcOptionValue();
+  }, [tc_type, tc_visibilty]);
+
+  const inputRef = useRef();
+  const outputRef = useRef();
+  const scoreRef = useRef();
+  const tc_typeRef = useRef();
+  const tc_visRef = useRef();
 
   function changeTCtype(event) {
     setTCtype(event.target.value);
@@ -39,8 +28,17 @@ const CreateTestCaseForm = (props) => {
     setTCvisibilty(event.target.value);
   }
 
-  function delTC(){
+  function delTC() {
     props.delTChandler(props.index);
+  }
+
+  function updateTcOptionValue() {
+    props.tcinfo.testCaseType = tc_visRef.current.value;
+    props.tcinfo.pgmInput = inputRef.current.value;
+    props.tcinfo.OutoutType = outputRef.current.value;
+    props.tcinfo.pgmOutoutOrEvalCode = tc_typeRef.current.value;
+    props.tcinfo.score = scoreRef.current.value;
+    // console.log(props.tcinfo);
   }
 
   return (
@@ -74,7 +72,7 @@ const CreateTestCaseForm = (props) => {
           label="Input"
           variant="outlined"
           multiline
-          // inputProps={{ ref: contestNameRef }}
+          inputProps={{ ref: inputRef }}
         />
       </Grid>
 
@@ -84,24 +82,22 @@ const CreateTestCaseForm = (props) => {
           label="Score"
           type="number"
           variant="outlined"
-          // inputProps={{ ref: durationRef }}
+          inputProps={{ ref: scoreRef }}
         />
       </Grid>
 
       <Grid item xs={12} md={2}>
-        <TextField
-          id="tc_visibilty"
-          select
+        <Select
+          id="demo-simple-select"
           label="Visibilty"
           value={tc_visibilty}
           onChange={changeTCvisibilty}
+          inputProps={{ ref: tc_visRef }}
         >
-          {tc_visibilties.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+          <MenuItem value={"Hidden"}>Hidden</MenuItem>
+
+          <MenuItem value={"Visible"}>Visible</MenuItem>
+        </Select>
       </Grid>
 
       <Grid item xs={12} md={10}>
@@ -111,26 +107,23 @@ const CreateTestCaseForm = (props) => {
           label="Output"
           variant="outlined"
           multiline
-          // inputProps={{ ref: contestNameRef }}
+          inputProps={{ ref: outputRef }}
         />
       </Grid>
 
       <Grid item xs={12} md={2}>
-        <TextField
-          id="tc_type"
-          select
+        <Select
+          id="demo-simple-select"
           label="Testcase Type"
           value={tc_type}
           onChange={changeTCtype}
+          inputProps={{ ref: tc_typeRef }}
         >
-          {tc_types.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-      </Grid>
+          <MenuItem value={"Static"}>Static</MenuItem>
 
+          <MenuItem value={"Dynamic"}>Dynamic</MenuItem>
+        </Select>
+      </Grid>
     </Grid>
   );
 };

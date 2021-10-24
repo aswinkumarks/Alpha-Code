@@ -9,48 +9,48 @@ import { useRef, useState } from "react";
 
 import MenuItem from "@mui/material/MenuItem";
 import CodingQuestion from "./CodingQuestion";
-import MCQquestion from "./MCQquestion"
+import MCQquestion from "./MCQquestion";
 
 const CreateQuestionForm = (props) => {
-
   const [qno, changeQno] = useState(1);
-
-  const qtypes = [
-    {
-      value: "Coding",
-      label: "Coding",
-    },
-    {
-      value: "MCQ",
-      label: "MCQ",
-    },
-  ];
-
   const [qtype, setQtype] = useState("Coding");
+
+  const questionRef = useRef();
+  const descriptionRef = useRef();
+
+  let mcqOptions = [];
+  let testCases = [];
+
+  let questionData = {
+    qno: qno,
+    question: questionRef.value,
+    description: descriptionRef.value,
+  };
 
   function changeQtype(event) {
     setQtype(event.target.value);
   }
 
+  function setMcqOptions(mcqdata) {
+    mcqOptions = mcqdata;
+    console.log(mcqOptions);
+  }
 
-  const qTypeRef = useRef();
-  const questionRef = useRef();
+  function setTestCases(tcdata) {
+    testCases = tcdata;
+    console.log(testCases);
+  }
 
   function createQuestionHandler() {
-    // const qtype = qTypeRef.current.value;
-    // const question = questionRef.current.value;
+    if (qtype === "Coding") questionData["testcases"] = testCases;
+    else questionData["options"] = mcqOptions;
 
-    // const questionData = {
-    //   qtype: qtype,
-    //   question: question,
-    // };
-
-    changeQno(qno+1);
+    props.questionListHandler(questionData);
+    // changeQno(qno + 1);
   }
 
   return (
     <Container fixed sx={{ mt: 5 }}>
-
       <Box sx={{ border: 1, p: 4, borderRadius: 2 }}>
         <form>
           <Typography gutterBottom variant="h4" color="text.secondary">
@@ -80,13 +80,9 @@ const CreateQuestionForm = (props) => {
                 label="Type"
                 value={qtype}
                 onChange={changeQtype}
-                inputProps={{ ref: qTypeRef }}
               >
-                {qtypes.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+                <MenuItem value={"Coding"}>Coding</MenuItem>
+                <MenuItem value={"MCQ"}>MCQ</MenuItem>
               </TextField>
             </Grid>
 
@@ -100,15 +96,29 @@ const CreateQuestionForm = (props) => {
               />
             </Grid>
 
-              
             <Grid item xs={12} md={12}>
-              {qtype==="Coding"&&<CodingQuestion/>}
-              {qtype==="MCQ"&&<MCQquestion/>}
+              <TextField
+                fullWidth
+                id="outlined-textarea"
+                label="Description"
+                multiline
+                inputProps={{ ref: descriptionRef }}
+              />
             </Grid>
 
-            
+            <Grid item xs={12} md={12}>
+              {qtype === "Coding" && (
+                <CodingQuestion settestcasehandler={setTestCases} />
+              )}
+              {qtype === "MCQ" && <MCQquestion setmcqhandler={setMcqOptions} />}
+            </Grid>
+
             <Grid item>
-              <Button type="button" variant="contained" onClick={createQuestionHandler}>
+              <Button
+                type="button"
+                variant="contained"
+                onClick={createQuestionHandler}
+              >
                 Next
               </Button>
             </Grid>

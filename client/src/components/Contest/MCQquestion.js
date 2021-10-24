@@ -6,21 +6,27 @@ import MCQquestionForm from "./MCQquestionForm";
 
 import { useRef, useState } from "react";
 
-const MCQquestion = () => {
+const MCQquestion = (props) => {
   const [mcqOptions, changeMCQoptions] = useState([]);
+  const [rerender, setRerender] = useState(false);
 
   function addMCQoption() {
     changeMCQoptions(
       mcqOptions.concat({
-        id: mcqOptions.length + 1,
-        option: "",
-        correct_option: "",
+        // id: mcqOptions.length + 1,
+        option_text: "",
+        correct_option: "Wrong",
       })
     );
+
+    props.setmcqhandler(mcqOptions);
   }
 
   function delMCQoption(pos) {
-    changeMCQoptions(mcqOptions.filter((item, index) => index !== pos - 1));
+    changeMCQoptions(mcqOptions.filter((item, index) => index !== pos));
+    props.setmcqhandler(mcqOptions);
+    setRerender(true);
+    setTimeout( () => {setRerender(false)}, 1000);
   }
 
   return (
@@ -33,7 +39,7 @@ const MCQquestion = () => {
       spacing={3}
       sx={{ mt: 1 }}
     >
-      {console.log(mcqOptions)}
+      {/* {console.log(mcqOptions)} */}
 
       <Grid item md={12}>
         <p>MCQ Options :</p>
@@ -43,13 +49,23 @@ const MCQquestion = () => {
       </Grid>
 
       <Grid item md={12}>
-        {mcqOptions.map((option, index) => (
-          <MCQquestionForm
-            delOptionHandler={delMCQoption}
-            mcqOption={option}
-            index={index + 1}
-          />
-        ))}
+        {rerender &&
+          mcqOptions.map((option, index) => (
+            <MCQquestionForm
+              delOptionHandler={delMCQoption}
+              mcqOption={option}
+              index={index}
+            />
+          ))}
+
+        {!rerender &&
+          mcqOptions.map((option, index) => (
+            <MCQquestionForm
+              delOptionHandler={delMCQoption}
+              mcqOption={option}
+              index={index}
+            />
+          ))}
       </Grid>
     </Grid>
   );
