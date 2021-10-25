@@ -18,8 +18,6 @@ const MCQquestion = (props) => {
         correct_option: "Wrong",
       })
     );
-
-    props.setmcqhandler(mcqOptions);
   }
 
   function delMCQoption(pos) {
@@ -67,6 +65,7 @@ const MCQquestion = (props) => {
             />
           ))}
       </Grid>
+      {props.setmcqhandler(mcqOptions)}
     </Grid>
   );
 };

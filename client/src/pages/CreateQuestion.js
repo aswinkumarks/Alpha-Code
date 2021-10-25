@@ -4,11 +4,11 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 const CreateQuestionPage = (props) => {
-  //list of dicts
-  let questionsList = [];
+  //dict of dicts {qno:{qdata}}
+  let questionsList = {};
 
-  function add2QuestionList(questionData) {
-    questionsList.push(questionData);
+  function add2QuestionList(questionData,qno) {
+    questionsList[qno]=questionData;
     console.log(
       "createquestion.js : questiolist : " + JSON.stringify(questionsList)
     );

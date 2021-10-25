@@ -15,8 +15,8 @@ const MCQquestionForm = (props) => {
     updateOptionValue();
   }, [mcq_correct_option]);
 
-  const option = useRef();
-  const correct_wrong = useRef();
+  const optionRef = useRef();
+  const correct_wrongRef = useRef();
 
   function delOption() {
     props.delOptionHandler(props.index);
@@ -27,8 +27,8 @@ const MCQquestionForm = (props) => {
   }
 
   function updateOptionValue() {
-    props.mcqOption.option_text = option.current.value;
-    props.mcqOption.correct_option = correct_wrong.current.value;
+    props.mcqOption.option_text = optionRef.current.value;
+    props.mcqOption.correct_option = correct_wrongRef.current.value;
     // console.log(props.mcqOption);
   }
 
@@ -49,7 +49,7 @@ const MCQquestionForm = (props) => {
           variant="outlined"
           multiline
           defaultValue={props.mcqOption.option_text}
-          inputProps={{ ref: option }}
+          inputProps={{ ref: optionRef }}
           onChange={updateOptionValue}
         >
           {props.mcqOption.option_text}
@@ -62,7 +62,7 @@ const MCQquestionForm = (props) => {
           value={mcq_correct_option}
           label="✔/x"
           onChange={changeCorrectWrong}
-          inputProps={{ ref: correct_wrong }}
+          inputProps={{ ref: correct_wrongRef }}
         >
           <MenuItem value={"Wrong"}>Wrong</MenuItem>
 

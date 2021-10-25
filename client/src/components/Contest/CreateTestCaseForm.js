@@ -7,7 +7,7 @@ import Select from "@mui/material/Select";
 import { useRef, useState, useEffect } from "react";
 
 const CreateTestCaseForm = (props) => {
-  const [tc_type, setTCtype] = useState(props.tcinfo.pgmOutoutOrEvalCode);
+  const [tc_type, setTCtype] = useState(props.tcinfo.OutputType);
   const [tc_visibilty, setTCvisibilty] = useState(props.tcinfo.testCaseType);
 
   useEffect(() => {
@@ -35,8 +35,8 @@ const CreateTestCaseForm = (props) => {
   function updateTcOptionValue() {
     props.tcinfo.testCaseType = tc_visRef.current.value;
     props.tcinfo.pgmInput = inputRef.current.value;
-    props.tcinfo.OutoutType = outputRef.current.value;
-    props.tcinfo.pgmOutoutOrEvalCode = tc_typeRef.current.value;
+    props.tcinfo.OutputType = tc_typeRef.current.value;
+    props.tcinfo.pgmOutputOrEvalCode = outputRef.current.value;
     props.tcinfo.score = scoreRef.current.value;
     // console.log(props.tcinfo);
   }
@@ -55,8 +55,8 @@ const CreateTestCaseForm = (props) => {
           disabled
           id="outlined-disabled"
           label="Test Case number"
-          defaultValue="0"
-          value={props.index}
+          defaultValue="1"
+          value={props.index+1}
         />
       </Grid>
 
@@ -73,6 +73,8 @@ const CreateTestCaseForm = (props) => {
           label="Input"
           variant="outlined"
           multiline
+          onChange={updateTcOptionValue}
+          defaultValue={props.tcinfo.pgmInput}
           inputProps={{ ref: inputRef }}
         />
       </Grid>
@@ -83,6 +85,8 @@ const CreateTestCaseForm = (props) => {
           label="Score"
           type="number"
           variant="outlined"
+          onChange={updateTcOptionValue}
+          defaultValue={props.tcinfo.score}
           inputProps={{ ref: scoreRef }}
         />
       </Grid>
@@ -108,6 +112,8 @@ const CreateTestCaseForm = (props) => {
           label="Output"
           variant="outlined"
           multiline
+          onChange={updateTcOptionValue}
+          defaultValue={props.tcinfo.pgmOutputOrEvalCode}
           inputProps={{ ref: outputRef }}
         />
       </Grid>

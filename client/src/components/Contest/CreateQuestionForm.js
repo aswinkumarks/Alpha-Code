@@ -44,7 +44,7 @@ const CreateQuestionForm = (props) => {
     if (qtype === "Coding") questionData["testcases"] = testCases;
     else questionData["options"] = mcqOptions;
 
-    props.questionListHandler(questionData);
+    props.questionListHandler(questionData,qno);
     // changeQno(qno + 1);
   }
 

@@ -16,25 +16,25 @@ const CodingQuestion = (props) => {
         // id: tcinfos.length + 1,
         testCaseType: "Hidden",
         pgmInput: "",
-        OutoutType: "",
-        pgmOutoutOrEvalCode: "Static",
+        OutputType: "Static",
+        pgmOutputOrEvalCode: "",
         score: "",
       })
     );
-    props.settestcasehandler(tcinfos);
   }
 
   function delTestCase(pos) {
     changeTCinfo(tcinfos.filter((item, index) => index !== pos));
     props.settestcasehandler(tcinfos);
     setRerender(true);
-    setTimeout( () => {setRerender(false)}, 1000);
+    setTimeout(() => {
+      setRerender(false);
+    }, 1000);
   }
 
   return (
     <div>
       {console.log(tcinfos)}
-      
 
       <Grid item xs={12} md={12}>
         <p>Test Cases :</p>
@@ -44,21 +44,24 @@ const CodingQuestion = (props) => {
       </Grid>
 
       <Grid item xs={12} md={11}>
-        {rerender && tcinfos.map((tc, index) => (
-          <CreateTestCaseForm
-            delTChandler={delTestCase}
-            tcinfo={tc}
-            index={index}
-          />
-        ))}
-        {!rerender && tcinfos.map((tc, index) => (
-          <CreateTestCaseForm
-            delTChandler={delTestCase}
-            tcinfo={tc}
-            index={index}
-          />
-        ))}
+        {rerender &&
+          tcinfos.map((tc, index) => (
+            <CreateTestCaseForm
+              delTChandler={delTestCase}
+              tcinfo={tc}
+              index={index}
+            />
+          ))}
+        {!rerender &&
+          tcinfos.map((tc, index) => (
+            <CreateTestCaseForm
+              delTChandler={delTestCase}
+              tcinfo={tc}
+              index={index}
+            />
+          ))}
       </Grid>
+      {props.settestcasehandler(tcinfos)}
     </div>
   );
 };
