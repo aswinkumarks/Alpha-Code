@@ -5,13 +5,31 @@ import { useHistory } from "react-router-dom";
 
 const CreateQuestionPage = (props) => {
   //dict of dicts {qno:{qdata}}
-  let questionsList = {};
+  let questionsDict = {};
+  let questionsList = [];
 
-  function add2QuestionList(questionData,qno) {
-    questionsList[qno]=questionData;
+  function add2QuestionList(questionData, qno, qtype) {
+    questionsDict[qno] = questionData;
     console.log(
-      "createquestion.js : questiolist : " + JSON.stringify(questionsList)
+      "createquestion.js : questionDict : " + JSON.stringify(questionsDict)
     );
+
+    for(let qno in questionsDict){
+      postQuestion(questionsDict[qno]);
+    }
+  }
+
+  function postQuestion(qData) {
+    axios
+      .post("/api/question/", qData)
+      .then(function (response) {
+        console.log("question data sent !");
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log("error");
+        console.log(error);
+      });
   }
 
   return (

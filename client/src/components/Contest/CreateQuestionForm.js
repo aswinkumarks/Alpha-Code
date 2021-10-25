@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
 import { useRef, useState } from "react";
+import { useHistory } from "react-router";
 
 import MenuItem from "@mui/material/MenuItem";
 import CodingQuestion from "./CodingQuestion";
@@ -17,6 +18,8 @@ const CreateQuestionForm = (props) => {
 
   const questionRef = useRef();
   const descriptionRef = useRef();
+  const routerHistory = useHistory();
+  const scoreRef = useRef();
 
   let mcqOptions = [];
   let testCases = [];
@@ -27,25 +30,31 @@ const CreateQuestionForm = (props) => {
 
   function setMcqOptions(mcqdata) {
     mcqOptions = mcqdata;
-    console.log(mcqOptions);
+    // console.log(mcqOptions);
   }
 
   function setTestCases(tcdata) {
     testCases = tcdata;
-    console.log(testCases);
+    // console.log(testCases);
   }
 
   function createQuestionHandler() {
     let questionData = {
       qno: qno,
+      qtype: qtype,
       question: questionRef.current.value,
       description: descriptionRef.current.value,
+      score: scoreRef.current.value,
+      contest: props.cname,
+      testcases: testCases,
+      options: mcqOptions,
     };
-    if (qtype === "Coding") questionData["testcases"] = testCases;
-    else questionData["options"] = mcqOptions;
+    // if (qtype === "Coding") questionData["testcases"] = testCases;
+    // else questionData["options"] = mcqOptions;
 
-    props.questionListHandler(questionData,qno);
-    // changeQno(qno + 1);
+    props.questionListHandler(questionData, qno, qtype);
+    changeQno(qno + 1);
+    routerHistory.push("/create_contest");
   }
 
   return (
@@ -68,7 +77,7 @@ const CreateQuestionForm = (props) => {
                 disabled
                 id="outlined-disabled"
                 label="Question number"
-                defaultValue={qno}
+                value={qno}
               />
             </Grid>
 
@@ -95,13 +104,23 @@ const CreateQuestionForm = (props) => {
               />
             </Grid>
 
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={10}>
               <TextField
                 fullWidth
                 id="outlined-textarea"
                 label="Description"
                 multiline
                 inputProps={{ ref: descriptionRef }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={2}>
+              <TextField
+                id="standard-number"
+                label="Score"
+                type="number"
+                variant="outlined"
+                inputProps={{ ref: scoreRef }}
               />
             </Grid>
 
