@@ -38,23 +38,31 @@ const CreateQuestionForm = (props) => {
     // console.log(testCases);
   }
 
-  function createQuestionHandler() {
-    let questionData = {
-      qno: qno,
-      qtype: qtype,
-      question: questionRef.current.value,
-      description: descriptionRef.current.value,
-      score: scoreRef.current.value,
-      contest: props.cname,
-      testcases: testCases,
-      options: mcqOptions,
-    };
-    // if (qtype === "Coding") questionData["testcases"] = testCases;
-    // else questionData["options"] = mcqOptions;
+function appendQuestion(){
+  let questionData = {
+    qno: qno,
+    qtype: qtype,
+    question: questionRef.current.value,
+    description: descriptionRef.current.value,
+    score: scoreRef.current.value,
+    contest: props.cname,
+    testcases: testCases,
+    options: mcqOptions,
+  };
 
-    props.questionListHandler(questionData, qno, qtype);
+  props.questionListHandler(questionData, qno, qtype);
+}
+
+  function createQuestionHandler() {
+    appendQuestion();
     changeQno(qno + 1);
     routerHistory.push("/create_contest");
+  }
+
+  function submitQuestionHandler(){
+    appendQuestion();
+    props.submitAllQuestionsHandler();
+
   }
 
   return (
@@ -141,7 +149,11 @@ const CreateQuestionForm = (props) => {
               </Button>
             </Grid>
             <Grid item>
-              <Button type="button" variant="contained">
+              <Button
+                type="button"
+                variant="contained"
+                onClick={submitQuestionHandler}
+              >
                 Finish
               </Button>
             </Grid>

@@ -10,16 +10,20 @@ const CreateQuestionPage = (props) => {
 
   function add2QuestionList(questionData, qno, qtype) {
     questionsDict[qno] = questionData;
-    console.log(
-      "createquestion.js : questionDict : " + JSON.stringify(questionsDict)
-    );
+    // console.log(
+    //   "createquestion.js : questionDict : " + JSON.stringify(questionsDict)
+    // );
+  }
 
-    for(let qno in questionsDict){
+  function submitAllQuestions() {
+    console.log(questionsDict)
+    for (let qno in questionsDict) {
       postQuestion(questionsDict[qno]);
     }
   }
 
   function postQuestion(qData) {
+    console.log("posting question : "+ JSON.stringify(qData));
     axios
       .post("/api/question/", qData)
       .then(function (response) {
@@ -37,6 +41,7 @@ const CreateQuestionPage = (props) => {
       <CreateQuestionForm
         cname={props.cname}
         questionListHandler={add2QuestionList}
+        submitAllQuestionsHandler={submitAllQuestions}
         //   onCreateNewQuestion={addNewQuestionHandler}
       />
     </div>
