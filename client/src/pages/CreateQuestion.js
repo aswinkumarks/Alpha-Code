@@ -1,18 +1,15 @@
 import CreateQuestionForm from "../components/Contest/CreateQuestionForm";
 import NavBar from "../components/Layout/NavBar";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router";
 
 const CreateQuestionPage = (props) => {
   //dict of dicts {qno:{qdata}}
   let questionsDict = {};
-  let questionsList = [];
+  const routerHistory = useHistory();
 
   function add2QuestionList(questionData, qno, qtype) {
     questionsDict[qno] = questionData;
-    // console.log(
-    //   "createquestion.js : questionDict : " + JSON.stringify(questionsDict)
-    // );
   }
 
   function submitAllQuestions() {
@@ -20,6 +17,7 @@ const CreateQuestionPage = (props) => {
     for (let qno in questionsDict) {
       postQuestion(questionsDict[qno]);
     }
+    routerHistory.push("/");
   }
 
   function postQuestion(qData) {
@@ -42,7 +40,6 @@ const CreateQuestionPage = (props) => {
         cname={props.cname}
         questionListHandler={add2QuestionList}
         submitAllQuestionsHandler={submitAllQuestions}
-        //   onCreateNewQuestion={addNewQuestionHandler}
       />
     </div>
   );

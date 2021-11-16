@@ -27,7 +27,7 @@ const MCQquestionForm = (props) => {
   }
 
   function updateOptionValue() {
-    props.mcqOption.option_text = optionRef.current.value;
+    props.mcqOption.option = optionRef.current.value;
     props.mcqOption.correct_option = correct_wrongRef.current.value;
     // console.log(props.mcqOption);
   }
@@ -48,11 +48,11 @@ const MCQquestionForm = (props) => {
           label="Option"
           variant="outlined"
           multiline
-          defaultValue={props.mcqOption.option_text}
+          defaultValue={props.mcqOption.option}
           inputProps={{ ref: optionRef }}
           onChange={updateOptionValue}
         >
-          {props.mcqOption.option_text}
+          {props.mcqOption.option}
         </TextField>
       </Grid>
 
@@ -62,11 +62,12 @@ const MCQquestionForm = (props) => {
           value={mcq_correct_option}
           label="✔/x"
           onChange={changeCorrectWrong}
+          defaultValue={"Wrong"}
           inputProps={{ ref: correct_wrongRef }}
         >
-          <MenuItem value={"Wrong"}>Wrong</MenuItem>
+          <MenuItem value={false}>Wrong</MenuItem>
 
-          <MenuItem value={"Correct"}>Correct</MenuItem>
+          <MenuItem value={true}>Correct</MenuItem>
         </Select>
       </Grid>
 

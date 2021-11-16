@@ -22,7 +22,7 @@ class TestCaseSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    contest = serializers.PrimaryKeyRelatedField(queryset=Contest.objects.all())
+    contest = serializers.SlugRelatedField(slug_field="cname", queryset=Contest.objects.all())
     testcases = TestCaseSerializer(many=True)
     options = OptionSerializer(many=True)
 
@@ -33,8 +33,9 @@ class QuestionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         testcases_data = validated_data.pop('testcases')
         options_data = validated_data.pop('options')
-        contest_id = validated_data.pop('contest')
-        question = Question.objects.create(contest=contest_id, **validated_data)
+        contest_cname = validated_data.pop('contest')
+        contest = Contest.objects.get(cname=contest_cname)
+        question = Question.objects.create(contest=contest, **validated_data)
         if validated_data['qtype'] == 'MCQ':
             for option_data in options_data:
                 Option.objects.create(question=question, **option_data)
