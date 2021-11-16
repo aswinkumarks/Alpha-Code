@@ -300,8 +300,8 @@
   var end_date_time = document.getElementById("edate").value
   sd = new Date(start_date_time).toLocaleDateString("en-CA")//.split("/").reverse().join("-");
   ed = new Date(end_date_time).toLocaleDateString("en-CA")//.split("/").reverse().join("-");
-  st = new Date(start_date_time).toLocaleTimeString({hour: '2-​digit', minute:'2-digit'});
-  et = new Date(end_date_time).toLocaleTimeString({hour: '2-​digit', minute:'2-digit'});
+  st = new Date(start_date_time).toLocaleTimeString({hour: '2-​digit', minute:'2-digit'}).replace(/:00\b/, "");
+  et = new Date(end_date_time).toLocaleTimeString({hour: '2-​digit', minute:'2-digit'}).replace(/:00\b/, "");
   document.getElementById("start-time").value = st
   document.getElementById("end-time").value = et
   document.getElementById("start-date").value = sd
