@@ -15,7 +15,7 @@ const MCQquestion = (props) => {
       mcqOptions.concat({
         // id: mcqOptions.length + 1,
         option: "",
-        correct_option: "Wrong",
+        correct_option: false,
       })
     );
   }

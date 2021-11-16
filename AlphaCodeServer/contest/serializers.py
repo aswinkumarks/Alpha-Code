@@ -28,7 +28,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ("qno", "qtype", "question", "description", "score",  "contest", "testcases", "options")
+        fields = ("id", "qno", "qtype", "question", "description", "score",  "contest", "testcases", "options")
 
     def create(self, validated_data):
         testcases_data = validated_data.pop('testcases')
@@ -43,3 +43,24 @@ class QuestionSerializer(serializers.ModelSerializer):
             for testcase_data in testcases_data:
                 TestCase.objects.create(question=question, **testcase_data)
         return question
+
+    def update(self, instance, validated_data):
+        testcases_data = validated_data.get('testcases')
+        options_data = validated_data.get('options')
+        instance.qtype = validated_data.get('qtype', instance.qtype)
+        instance.question = validated_data.get('question', instance.question)
+        instance.description = validated_data.get('description', instance.description)
+        instance.score = validated_data.get('score', instance.score)
+        if validated_data['qtype'] == 'MCQ' and options_data:
+            prev_options = Option.objects.filter(question=instance)
+            prev_options.delete()
+            for option_data in options_data:
+                Option.objects.create(question=instance, **option_data)
+        elif validated_data['qtype'] == 'Coding' and testcases_data:
+            prev_testcases = TestCase.objects.filter(question=instance)
+            prev_testcases.delete()
+            for testcase_data in testcases_data:
+                TestCase.objects.create(question=instance, **testcase_data)
+        
+        instance.save()
+        return instance
