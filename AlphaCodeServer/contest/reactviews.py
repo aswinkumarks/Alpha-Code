@@ -26,5 +26,11 @@ class ContestView(viewsets.ModelViewSet):
 class QuestionView(viewsets.ModelViewSet):
     # permission_classes = (IsAuthenticated,)
     serializer_class = QuestionSerializer
-    queryset = Question.objects.all()
+
+    def get_queryset(self):
+        queryset = Question.objects.all()
+        contest_name = self.request.query_params.get('cname')
+        if contest_name is not None:
+            queryset = queryset.filter(contest__cname=contest_name)
+        return queryset
     
