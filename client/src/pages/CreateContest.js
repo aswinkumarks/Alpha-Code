@@ -9,9 +9,17 @@ import { createBrowserHistory } from "history";
 import CreateQuestion from "./CreateQuestion";
 
 const CreateContestPage = () => {
-  const [contestCreated, setContest] = useState('');
-
+  const [contestCreated, setContest] = useState("");
   const history = createBrowserHistory();
+
+  let cInfo = {
+    startTime: new Date(),
+    endTime: new Date(),
+    cname: "",
+    hosted_by: "",
+    duration: "",
+    desc: "",
+  };
 
   useEffect(() => {
     const filterParams = history.location.search.substr(1);
@@ -46,14 +54,17 @@ const CreateContestPage = () => {
     return (
       <div>
         <NavBar />
-        <CreateContestForm onCreateNewContest={addNewContestHandler} />;
+        <CreateContestForm
+          onCreateNewContest={addNewContestHandler}
+          cInfo={cInfo}
+        />
       </div>
     );
   else
     return (
       <div>
-        <NavBar />
-        <CreateQuestion cname={contestCreated}/>
+        <NavBar/>
+        <CreateQuestion cname={contestCreated} />
       </div>
     );
 };
