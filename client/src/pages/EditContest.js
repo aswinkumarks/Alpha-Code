@@ -4,6 +4,7 @@ import NavBar from "../components/Layout/NavBar";
 import qs from "qs";
 import { createBrowserHistory } from "history";
 import CreateContestForm from "../components/Contest/CreateContestForm";
+import CreateQuestion from "./CreateQuestion";
 
 function EditContestPage(props) {
   const [isLoading, setIsLoading] = useState(true);
@@ -12,6 +13,7 @@ function EditContestPage(props) {
   const history = createBrowserHistory();
   const filterParams = history.location.search.substr(1);
   const filtersFromParams = qs.parse(filterParams);
+  let proceedToQ = false;
 
   useEffect(() => {
     setIsLoading(true);
@@ -49,13 +51,14 @@ function EditContestPage(props) {
       .then(function (response) {
         console.log(response);
         setLoadedContests(contestData.cname);
+        proceedToQ=true;
       })
       .catch(function (error) {
         console.log(error);
       });
   }
 
-  if (loadedContests) {
+  if (loadedContests && !proceedToQ) {
     return (
       <div>
         <NavBar />
@@ -65,7 +68,14 @@ function EditContestPage(props) {
         />
       </div>
     );
-  } else {
+  } 
+  else if(proceedToQ){
+      return(<div>
+        <NavBar />
+        <CreateQuestion cname={loadedContests['cname']} />
+      </div>);
+  }
+  else {
     return <div>add loading animation</div>;
   }
 }
