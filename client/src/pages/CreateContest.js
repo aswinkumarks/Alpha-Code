@@ -1,12 +1,29 @@
 import CreateContestForm from "../components/Contest/CreateContestForm";
 import NavBar from "../components/Layout/NavBar";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useHistory } from "react-router";
+import qs from "qs";
+import { createBrowserHistory } from "history";
 
 import CreateQuestion from "./CreateQuestion";
 
 const CreateContestPage = () => {
-  const [contestCreated, changeContestCreate] = useState('');
+  const [contestCreated, setContest] = useState('');
+
+  const history = createBrowserHistory();
+
+  useEffect(() => {
+    const filterParams = history.location.search.substr(1);
+    const filtersFromParams = qs.parse(filterParams);
+    if (filtersFromParams.cname) {
+      setContest(filtersFromParams.cname);
+    }
+  }, []);
+
+  useEffect(() => {
+    history.push(`?cname=${contestCreated}`);
+  }, [contestCreated]);
 
   function addNewContestHandler(contestData) {
     console.log(contestData);
@@ -17,7 +34,7 @@ const CreateContestPage = () => {
       .then(function (response) {
         console.log("data sent !");
         console.log(response);
-        changeContestCreate(contestData.cname);
+        setContest(contestData.cname);
       })
       .catch(function (error) {
         console.log("error");
