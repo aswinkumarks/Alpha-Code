@@ -10,13 +10,15 @@ import DateTimePicker from "@mui/lab/DateTimePicker";
 import { useRef, useState } from "react";
 
 const CreateContestForm = (props) => {
-  const [sdvalue, setsdValue] = useState(new Date());
-  const [edvalue, setedValue] = useState(new Date());
+  const [sdvalue, setsdValue] = useState(new Date(props.cInfo["startTime"]));
+  const [edvalue, setedValue] = useState(new Date(props.cInfo["endTime"]));
 
   const contestNameRef = useRef();
   const hostNameRef = useRef();
   const durationRef = useRef();
   const descriptionRef = useRef();
+
+  const editMode = props.cInfo["cname"] === "" ? false : true;
 
   function onSubmitHandler(event) {
     event.preventDefault();
@@ -33,8 +35,10 @@ const CreateContestForm = (props) => {
       duration: duration,
       desc: description,
     };
-    
-    props.onCreateNewContest(contestData);
+
+    editMode
+      ? props.onEditContest(contestData)
+      : props.onCreateNewContest(contestData);
   }
 
   return (
@@ -58,6 +62,7 @@ const CreateContestForm = (props) => {
                 id="standard-basic"
                 label="Contest Name"
                 variant="outlined"
+                defaultValue={props.cInfo["cname"]}
                 inputProps={{ ref: contestNameRef }}
               />
             </Grid>
@@ -82,6 +87,7 @@ const CreateContestForm = (props) => {
                 id="standard-basic"
                 label="Host Name"
                 variant="outlined"
+                defaultValue={props.cInfo["hosted_by"]}
                 inputProps={{ ref: hostNameRef }}
               />
             </Grid>
@@ -107,6 +113,7 @@ const CreateContestForm = (props) => {
                 fullWidth
                 id="outlined-textarea"
                 label="Description"
+                defaultValue={props.cInfo["desc"]}
                 multiline
                 inputProps={{ ref: descriptionRef }}
               />
@@ -118,6 +125,7 @@ const CreateContestForm = (props) => {
                 label="Duration"
                 type="number"
                 variant="outlined"
+                defaultValue={props.cInfo["duration"]}
                 inputProps={{ ref: durationRef }}
               />
             </Grid>
@@ -125,12 +133,24 @@ const CreateContestForm = (props) => {
             {/* <Grid item s={10} lg={10} xl={10} md={10}>
               <span></span>
             </Grid> */}
-
-            <Grid item>
-              <Button type="submit" variant="contained">
-                Create
-              </Button>
-            </Grid>
+            {(() => {
+              if (!editMode) {
+                return (
+                  <Grid item>
+                    <Button type="submit" variant="contained">
+                      Create
+                    </Button>
+                  </Grid>
+                );
+              }
+              return (
+                <Grid item>
+                  <Button type="submit" variant="contained">
+                    Proceed to edit Questions
+                  </Button>
+                </Grid>
+              );
+            })()}
           </Grid>
 
           {/* <br/>

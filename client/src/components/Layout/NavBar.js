@@ -12,6 +12,7 @@ import Avatar from "@mui/material/Avatar";
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Stack from "@mui/material/Stack";
+import { Link } from "react-router-dom";
 
 import AuthContext from "../../store/Auth-Context";
 import ColorModeContext from "./ThemeWrapper";
@@ -42,7 +43,7 @@ function NavBar() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-            Alpha Code
+          <Link to="/">Alpha Code</Link>
           </Typography>
           <IconButton size="large" onClick={handleMenu} color="inherit">
             <Avatar>{username[0]}</Avatar>

@@ -14,9 +14,13 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Backdrop from "@mui/material/Backdrop";
 import { NoEncryption } from "@mui/icons-material";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router";
 
 function ContestCard(props) {
   const [open, setOpen] = useState(false);
+  const routerHistory = useHistory();
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -33,12 +37,16 @@ function ContestCard(props) {
     props.delContest(props.cInfo.cId)
   };
 
+const goToEditPg = () => {
+  routerHistory.push('/edit_contest/?cId='+props.cInfo.cId);
+};
+
   return (
     <Card sx={{ borderRadius: 6, }}>
       <CardHeader
         action={
           <Box>
-            <IconButton aria-label="edit">
+            <IconButton aria-label="edit" onClick={goToEditPg}>
               <EditIcon />
             </IconButton>
             <IconButton aria-label="delete" onClick={delContest}>
