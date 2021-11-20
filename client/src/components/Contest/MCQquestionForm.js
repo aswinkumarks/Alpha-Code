@@ -73,7 +73,7 @@ const MCQquestionForm = (props) => {
 
       <Grid item>
         <Button variant="outlined" color="error" onClick={delOption}>
-          -
+          <b>-</b>&nbsp;Remove
         </Button>
       </Grid>
     </Grid>
