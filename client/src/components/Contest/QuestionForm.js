@@ -17,10 +17,10 @@ const QuestionForm = (props) => {
 
   const questionRef = useRef();
   const descriptionRef = useRef();
-  const routerHistory = useHistory();
   const scoreRef = useRef();
 
   let questionData = props.qData;
+  questionData.qno = props.qno;
   let mcqOptions = [];
   let testCases = [];
 

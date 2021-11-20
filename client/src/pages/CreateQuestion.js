@@ -52,7 +52,7 @@ const CreateQuestionPage = (props) => {
   };
 
   let questionData = {
-    qno: qno,
+    qno: "",
     qtype: "",
     question: "",
     description: "",
@@ -113,18 +113,15 @@ const CreateQuestionPage = (props) => {
           aria-label="Vertical tabs example"
           sx={{ borderRight: 1, borderColor: "divider" }}
         >
-          {Array(qno)
-            .fill(1)
-            .map((e, i) => (
-              <Tab label={i + 1} {...a11yProps(i + 1)} />
+          {[...Array(qno).keys()].map((_, i) => (
+              <Tab label={i + 1} {...a11yProps(i)} />
             ))}
         </Tabs>
 
-        {Array(qno)
-          .fill(1)
-          .map((e, i) => (
-            <TabPanel value={value} index={i+1}>
+        {[...Array(qno).keys()].map((_, i) => (
+            <TabPanel value={value} index={i}>
               <QuestionForm
+                qno={i+1}
                 qData={questionData}
                 postQuestion={postQuestion}
                 submitAllQuestions={submitAllQuestions}
