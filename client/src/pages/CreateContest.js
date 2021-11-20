@@ -1,12 +1,11 @@
-import CreateContestForm from "../components/Contest/CreateContestForm";
-import NavBar from "../components/Layout/NavBar";
+import ContestForm from "../components/Contest/ContestForm";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import qs from "qs";
 import { createBrowserHistory } from "history";
 
-import CreateQuestion from "./CreateQuestion";
+import CreateQuestionPage from "./CreateQuestion";
 
 const CreateContestPage = () => {
   const [contestCreated, setContest] = useState("");
@@ -53,8 +52,7 @@ const CreateContestPage = () => {
   if (!contestCreated)
     return (
       <div>
-        <NavBar />
-        <CreateContestForm
+        <ContestForm
           onCreateNewContest={addNewContestHandler}
           cInfo={cInfo}
         />
@@ -63,8 +61,7 @@ const CreateContestPage = () => {
   else
     return (
       <div>
-        <NavBar/>
-        <CreateQuestion cname={contestCreated} />
+        <CreateQuestionPage cname={contestCreated} />
       </div>
     );
 };

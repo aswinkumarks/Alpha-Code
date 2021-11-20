@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import CodingQuestion from "./CodingQuestion";
 import MCQquestion from "./MCQquestion";
 
-const CreateQuestionForm = (props) => {
+const QuestionForm = (props) => {
   const [qno, changeQno] = useState(1);
   const [qtype, setQtype] = useState("Coding");
 
@@ -164,4 +164,4 @@ function appendQuestion(){
   );
 };
 
-export default CreateQuestionForm;
+export default QuestionForm;

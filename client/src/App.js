@@ -7,29 +7,33 @@ import DashboardPage from "./pages/Dashboard";
 import AuthContext from "./store/Auth-Context";
 import CreateContestPage from "./pages/CreateContest";
 import CreateQuestionPage from "./pages/CreateQuestion";
+import NavBar from "./components/Layout/NavBar";
 import EditContestPage from "./pages/EditContest";
 
 function App() {
   const authCtx = useContext(AuthContext);
   if (authCtx.isLoggedIn) {
     return (
-      <Switch>
-        <Route path="/" exact>
-          <DashboardPage />
-        </Route>
-        <Route path="/create_contest">
-          <CreateContestPage/>
-        </Route>
+      <div>
+        <NavBar />
+        <Switch>
+          <Route path="/" exact>
+            <DashboardPage />
+          </Route>
+          <Route path="/create_contest">
+            <CreateContestPage/>
+          </Route>
 
-        <Route path="/edit_contest/*">
-          <EditContestPage/>
-        </Route>
-        
-        <Route path="*">
-          <Redirect to="/" />
-        </Route>
+          <Route path="/edit_contest/*">
+            <EditContestPage/>
+          </Route>
+          
+          <Route path="*">
+            <Redirect to="/" />
+          </Route>
 
-      </Switch>
+        </Switch>
+      </div>
     );
   } else {
     return (

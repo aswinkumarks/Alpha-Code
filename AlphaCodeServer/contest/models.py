@@ -46,7 +46,7 @@ class ContestResult(models.Model):
 
 
 class Question(models.Model):
-    contest = models.ForeignKey(Contest, to_field="cname", on_delete=models.CASCADE)
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     qno = models.IntegerField()
     qtype = models.CharField(max_length=50,choices=(('MCQ','Multiple Choice Question'),
                         ('Coding','Coding Question')))

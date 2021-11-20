@@ -9,7 +9,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { useRef, useState } from "react";
 
-const CreateContestForm = (props) => {
+const ContestForm = (props) => {
   const [sdvalue, setsdValue] = useState(new Date(props.cInfo["startTime"]));
   const [edvalue, setedValue] = useState(new Date(props.cInfo["endTime"]));
 
@@ -161,4 +161,4 @@ const CreateContestForm = (props) => {
   );
 };
 
-export default CreateContestForm;
+export default ContestForm;

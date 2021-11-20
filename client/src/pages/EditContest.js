@@ -1,81 +1,75 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import NavBar from "../components/Layout/NavBar";
 import qs from "qs";
 import { createBrowserHistory } from "history";
-import CreateContestForm from "../components/Contest/CreateContestForm";
+import ContestForm from "../components/Contest/ContestForm";
 import CreateQuestion from "./CreateQuestion";
 
 function EditContestPage(props) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadedContests, setLoadedContests] = useState();
-  const [loadedQuestions, setLoadedQuestions] = useState([]);
+  const [contest, setContest] = useState(false);
+  const [questions, setQuestions] = useState(false);
+  const [activePage, setActivePage] = useState("contest");
   const history = createBrowserHistory();
   const filterParams = history.location.search.substr(1);
   const filtersFromParams = qs.parse(filterParams);
-  let proceedToQ = false;
 
   useEffect(() => {
-    setIsLoading(true);
+    console.log(filtersFromParams);
+    if (filtersFromParams.activePage) {
+      setActivePage(filtersFromParams.activePage);
+    }
+  }, []);
+
+  const fetchContest = () => {
     axios
-      .get("/api/contests/" + filtersFromParams.cId)
+      .get(`/api/contests/${filtersFromParams.cId}`)
       .then(function (response) {
-        // setIsLoading(false);
-        console.log(response.data);
-        setLoadedContests(response.data);
+        setContest(response.data);
       })
       .catch(function (error) {
         console.log("Fetch Contests Data Failed!");
         console.log(error);
       });
+  };
 
-    //  filter q based on cname
-    // axios
-    //   .get("/api/question/")
-    //   .then(function (response) {
-    //     // setIsLoading(false);
-    //     console.log(response.data);
-    //     setLoadedQuestions(response.data);
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Fetch Questions Data Failed!");
-    //     console.log(error);
-    //   });
-    setIsLoading(false);
-  }, []);
+  const fetchQuestions = () => {
+    axios
+      .get(`/api/question/?cname=${contest["cname"]}`)
+      .then(function (response) {
+        setQuestions(response.data);
+      })
+      .catch(function (error) {
+        console.log("Fetch Question Data Failed!");
+        console.log(error);
+      });
+  };
 
   function editContestHandler(contestData) {
     console.log(contestData);
     axios
-      .patch("/api/contests/" + filtersFromParams.cId+"/", contestData)
+      .put(`/api/contests/${filtersFromParams.cId}/`, contestData)
       .then(function (response) {
         console.log(response);
-        setLoadedContests(contestData.cname);
-        proceedToQ=true;
+        setActivePage("question");
+        history.replace({
+          search: qs.stringify({...filtersFromParams, activePage:"question"})
+       })
       })
       .catch(function (error) {
         console.log(error);
       });
   }
 
-  if (loadedContests && !proceedToQ) {
-    return (
-      <div>
-        <NavBar />
-        <CreateContestForm
-          onEditContest={editContestHandler}
-          cInfo={loadedContests}
-        />
-      </div>
-    );
-  } 
-  else if(proceedToQ){
-      return(<div>
-        <NavBar />
-        <CreateQuestion cname={loadedContests['cname']} />
-      </div>);
-  }
-  else {
+  if(activePage == "contest")
+    fetchContest()
+  else
+    fetchQuestions()
+
+  if (activePage == "contest" && contest) {
+    return <ContestForm onEditContest={editContestHandler} cInfo={contest} />;
+  } else if (activePage == "question" && questions) {
+    return <CreateQuestion cname={contest["cname"]} />;
+  } else {
     return <div>add loading animation</div>;
   }
 }

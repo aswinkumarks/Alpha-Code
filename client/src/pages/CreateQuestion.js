@@ -1,5 +1,4 @@
-import CreateQuestionForm from "../components/Contest/CreateQuestionForm";
-import NavBar from "../components/Layout/NavBar";
+import QuestionForm from "../components/Contest/QuestionForm";
 import axios from "axios";
 import { useHistory } from "react-router";
 
@@ -36,7 +35,7 @@ const CreateQuestionPage = (props) => {
 
   return (
     <div>
-      <CreateQuestionForm
+      <QuestionForm
         cname={props.cname}
         questionListHandler={add2QuestionList}
         submitAllQuestionsHandler={submitAllQuestions}
