@@ -34,7 +34,6 @@ const CodingQuestion = (props) => {
 
   return (
     <div>
-      {/* {console.log(tcinfos)} */}
 
       <Grid item xs={12} md={12}>
         <p>Test Cases :</p>

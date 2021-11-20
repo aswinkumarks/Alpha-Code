@@ -13,7 +13,6 @@ import CodingQuestion from "./CodingQuestion";
 import MCQquestion from "./MCQquestion";
 
 const QuestionForm = (props) => {
-  const [qno, changeQno] = useState(1);
   const [qtype, setQtype] = useState("Coding");
 
   const questionRef = useRef();
@@ -21,6 +20,7 @@ const QuestionForm = (props) => {
   const routerHistory = useHistory();
   const scoreRef = useRef();
 
+  let questionData = props.qData;
   let mcqOptions = [];
   let testCases = [];
 
@@ -38,129 +38,104 @@ const QuestionForm = (props) => {
     // console.log(testCases);
   }
 
-function appendQuestion(){
-  let questionData = {
-    qno: qno,
-    qtype: qtype,
-    question: questionRef.current.value,
-    description: descriptionRef.current.value,
-    score: scoreRef.current.value,
-    contest: props.cname,
-    testcases: testCases,
-    options: mcqOptions,
-  };
+  function saveQuestion() {
+    questionData.qtype = qtype;
+    questionData.question = questionRef.current.value;
+    questionData.description = descriptionRef.current.value;
+    questionData.score = scoreRef.current.value;
+    questionData.testcases = testCases;
+    questionData.options = mcqOptions;
 
-  props.questionListHandler(questionData, qno, qtype);
-}
-
-  function createQuestionHandler() {
-    appendQuestion();
-    changeQno(qno + 1);
-    routerHistory.push("/create_contest");
-  }
-
-  function submitQuestionHandler(){
-    appendQuestion();
-    props.submitAllQuestionsHandler();
-
+    props.postQuestion(questionData);
   }
 
   return (
-    <Container fixed sx={{ mt: 5 }}>
-      <Box sx={{ border: 1, p: 4, borderRadius: 2 }}>
-        <form>
-          <Typography gutterBottom variant="h4" color="text.secondary">
-            Contest : {props.cname}
-          </Typography>
-
-          <Grid
-            container
-            justify="space-between"
-            rowSpacing={6}
-            spacing={3}
-            sx={{ mt: 1 }}
-          >
-            <Grid item xs={12} md={12}>
-              <TextField
-                disabled
-                id="outlined-disabled"
-                label="Question number"
-                value={qno}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={2}>
-              <TextField
-                id="qtype"
-                select
-                label="Type"
-                value={qtype}
-                onChange={changeQtype}
-              >
-                <MenuItem value={"Coding"}>Coding</MenuItem>
-                <MenuItem value={"MCQ"}>MCQ</MenuItem>
-              </TextField>
-            </Grid>
-
-            <Grid item xs={12} md={10}>
-              <TextField
-                fullWidth
-                id="outlined-textarea"
-                label="Question"
-                multiline
-                inputProps={{ ref: questionRef }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={10}>
-              <TextField
-                fullWidth
-                id="outlined-textarea"
-                label="Description"
-                multiline
-                inputProps={{ ref: descriptionRef }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={2}>
-              <TextField
-                id="standard-number"
-                label="Score"
-                type="number"
-                variant="outlined"
-                inputProps={{ ref: scoreRef }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={12}>
-              {qtype === "Coding" && (
-                <CodingQuestion settestcasehandler={setTestCases} />
-              )}
-              {qtype === "MCQ" && <MCQquestion setmcqhandler={setMcqOptions} />}
-            </Grid>
-
-            <Grid item>
-              <Button
-                type="button"
-                variant="contained"
-                onClick={createQuestionHandler}
-              >
-                Next
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                type="button"
-                variant="contained"
-                onClick={submitQuestionHandler}
-              >
-                Finish
-              </Button>
-            </Grid>
+    <Box sx={{ border: 1, p: 4, borderRadius: 2 }}>
+      <form>
+        <Grid
+          container
+          justify="space-between"
+          rowSpacing={6}
+          spacing={3}
+          // sx={{ mt: 1 }}
+        >
+          <Grid item xs={12} md={12}>
+            <TextField
+              disabled
+              id="outlined-disabled"
+              label="Question number"
+              value={questionData.qno}
+            />
           </Grid>
-        </form>
-      </Box>
-    </Container>
+
+          <Grid item xs={12} md={2}>
+            <TextField
+              id="qtype"
+              select
+              label="Type"
+              value={qtype}
+              onChange={changeQtype}
+            >
+              <MenuItem value={"Coding"}>Coding</MenuItem>
+              <MenuItem value={"MCQ"}>MCQ</MenuItem>
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12} md={10}>
+            <TextField
+              fullWidth
+              id="outlined-textarea"
+              label="Question"
+              multiline
+              inputProps={{ ref: questionRef }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={10}>
+            <TextField
+              fullWidth
+              id="outlined-textarea"
+              label="Description"
+              multiline
+              inputProps={{ ref: descriptionRef }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={2}>
+            <TextField
+              id="standard-number"
+              label="Score"
+              type="number"
+              variant="outlined"
+              inputProps={{ ref: scoreRef }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={12}>
+            {qtype === "Coding" && (
+              <CodingQuestion settestcasehandler={setTestCases} />
+            )}
+            {qtype === "MCQ" && <MCQquestion setmcqhandler={setMcqOptions} />}
+          </Grid>
+
+          <Grid item>
+            <Button type="button" variant="contained" onClick={saveQuestion}>
+              Save
+            </Button>
+          </Grid>
+
+          <Grid item>
+            <Button
+              type="button"
+              variant="contained"
+              onClick={props.submitAllQuestions}
+            >
+              Finish
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </Box>
   );
 };
 
