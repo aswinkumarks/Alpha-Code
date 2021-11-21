@@ -20,6 +20,11 @@ function EditContestPage(props) {
     }
   }, []);
 
+  useEffect(() => {
+    if (activePage == "contest") fetchContest();
+    else fetchQuestions();
+  }, [activePage]);
+
   const fetchContest = () => {
     axios
       .get(`/api/contests/${filtersFromParams.cId}`)
@@ -52,18 +57,16 @@ function EditContestPage(props) {
         console.log(response);
         setActivePage("question");
         history.replace({
-          search: qs.stringify({...filtersFromParams, activePage:"question"})
-       })
+          search: qs.stringify({
+            ...filtersFromParams,
+            activePage: "question",
+          }),
+        });
       })
       .catch(function (error) {
         console.log(error);
       });
   }
-
-  if(activePage == "contest")
-    fetchContest()
-  else
-    fetchQuestions()
 
   if (activePage == "contest" && contest) {
     return <ContestForm onEditContest={editContestHandler} cInfo={contest} />;

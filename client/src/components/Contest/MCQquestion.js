@@ -40,9 +40,9 @@ const MCQquestion = (props) => {
       {/* {console.log(mcqOptions)} */}
 
       <Grid item md={12}>
-        <p>MCQ Options :</p>
+        
         <Button variant="outlined" onClick={addMCQoption}>
-          +
+        <b>+</b>&nbsp;MCQ Options
         </Button>
       </Grid>
 

@@ -62,7 +62,7 @@ const CreateTestCaseForm = (props) => {
 
       <Grid item xs={12} md={2}>
         <Button variant="outlined" color="error" onClick={delTC}>
-          -
+          <b>- </b>&nbsp;Remove
         </Button>
       </Grid>
 
