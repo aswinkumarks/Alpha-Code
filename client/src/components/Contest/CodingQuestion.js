@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
+import AddIcon from '@mui/icons-material/Add';
 
 import { useState } from "react";
 
@@ -50,13 +51,13 @@ const CodingQuestion = (props) => {
     setValue(newValue);
   };
 
-  const [tcinfos, changeTCinfo] = useState([]);
+  const [testcases, setTestcases] = useState(props.testCases);
   const [rerender, setRerender] = useState(false);
 
   function addTestCase() {
-    changeTCinfo(
-      tcinfos.concat({
-        // id: tcinfos.length + 1,
+    setTestcases(
+      testcases.concat({
+        // id: testcases.length + 1,
         testCaseType: "Hidden",
         pgmInput: "",
         OutputType: "Static",
@@ -68,8 +69,8 @@ const CodingQuestion = (props) => {
 
   function delTestCase(pos) {
     setValue(0);
-    changeTCinfo(tcinfos.filter((item, index) => index !== pos));
-    props.settestcasehandler(tcinfos);
+    setTestcases(testcases.filter((item, index) => index !== pos));
+    props.settestcasehandler(testcases);
     setRerender(true);
     setTimeout(() => {
       setRerender(false);
@@ -78,49 +79,32 @@ const CodingQuestion = (props) => {
 
   return (
     <div>
-      <Grid item xs={12} md={12}>
-        <Button variant="outlined" onClick={addTestCase}>
-          <b>+</b>&nbsp;Test Case
-        </Button>
-      </Grid>
-
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        {tcinfos.length > 0 && (
+      <Box sx={{ borderBottom: 1, borderColor: "divider", width:800}}>
           <Tabs
             value={value}
             onChange={handleChange}
+            variant="scrollable"
+            scrollButtons="auto"
             aria-label="basic tabs example"
           >
-            {tcinfos.map((tc, index) => (
+            {testcases.map((_, index) => (
               <Tab label={index + 1} {...a11yProps(index)} />
             ))}
+            <Tab icon={<AddIcon />} iconPosition="end" label="Test Case" onClick={addTestCase} sx={{width:100}}/>
           </Tabs>
-        )}
       </Box>
 
       <Grid item xs={12} md={11}>
-        {rerender &&
-          tcinfos.map((tc, index) => (
+          {testcases.map((tc, index) => (
             <TabPanel value={value} index={index}>
               <CreateTestCaseForm
                 delTChandler={delTestCase}
                 tcinfo={tc}
                 index={index}
               />
-            </TabPanel>
-          ))}
-        {!rerender &&
-          tcinfos.map((tc, index) => (
-            <TabPanel value={value} index={index}>
-              <CreateTestCaseForm
-                delTChandler={delTestCase}
-                tcinfo={tc}
-                index={index}
-              />
-            </TabPanel>
-          ))}
+            </TabPanel>))}
       </Grid>
-      {props.settestcasehandler(tcinfos)}
+      {props.settestcasehandler(testcases)}
     </div>
   );
 };

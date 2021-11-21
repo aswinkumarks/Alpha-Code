@@ -1,7 +1,8 @@
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Select from "@mui/material/Select";
 
 import { useRef, useState, useEffect } from "react";
@@ -72,9 +73,9 @@ const MCQquestionForm = (props) => {
       </Grid>
 
       <Grid item>
-        <Button variant="outlined" color="error" onClick={delOption}>
-          <b>-</b>&nbsp;Remove
-        </Button>
+      <IconButton aria-label="delete" color="error" onClick={delOption}>
+        <DeleteIcon />
+      </IconButton>
       </Grid>
     </Grid>
   );

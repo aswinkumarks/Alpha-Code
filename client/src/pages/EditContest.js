@@ -7,7 +7,6 @@ import CreateQuestion from "./CreateQuestion";
 
 function EditContestPage(props) {
   const [contest, setContest] = useState(false);
-  const [questions, setQuestions] = useState(false);
   const [activePage, setActivePage] = useState("contest");
   const history = createBrowserHistory();
   const filterParams = history.location.search.substr(1);
@@ -21,9 +20,8 @@ function EditContestPage(props) {
   }, []);
 
   useEffect(() => {
-    if (activePage == "contest") fetchContest();
-    else fetchQuestions();
-  }, [activePage]);
+    fetchContest();
+  }, []);
 
   const fetchContest = () => {
     axios
@@ -33,18 +31,6 @@ function EditContestPage(props) {
       })
       .catch(function (error) {
         console.log("Fetch Contests Data Failed!");
-        console.log(error);
-      });
-  };
-
-  const fetchQuestions = () => {
-    axios
-      .get(`/api/question/?cname=${contest["cname"]}`)
-      .then(function (response) {
-        setQuestions(response.data);
-      })
-      .catch(function (error) {
-        console.log("Fetch Question Data Failed!");
         console.log(error);
       });
   };
@@ -70,7 +56,7 @@ function EditContestPage(props) {
 
   if (activePage == "contest" && contest) {
     return <ContestForm onEditContest={editContestHandler} cInfo={contest} />;
-  } else if (activePage == "question" && questions) {
+  } else if (activePage == "question" && contest) {
     return <CreateQuestion cname={contest["cname"]} />;
   } else {
     return <div>add loading animation</div>;

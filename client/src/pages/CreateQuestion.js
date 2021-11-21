@@ -7,9 +7,10 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import AddIcon from '@mui/icons-material/Add';
 import axios from "axios";
 import { useHistory } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -47,13 +48,32 @@ function a11yProps(index) {
 const CreateQuestionPage = (props) => {
   const [qno, changeQno] = useState(1);
   const [value, setValue] = useState(0);
+  const [questions, setQuestions] = useState([]);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const fetchQuestions = () => {
+    axios
+      .get(`/api/question/?cname=${props.cname}`)
+      .then(function (response) {
+        setQuestions(response.data);
+        console.log(response.data)
+      })
+      .catch(function (error) {
+        console.log("Fetch Question Data Failed!");
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
   let questionData = {
     qno: "",
-    qtype: "",
+    qtype: "MCQ",
     question: "",
     description: "",
     score: "",
@@ -70,7 +90,9 @@ const CreateQuestionPage = (props) => {
 
   function addNewQuestion() {
     changeQno(qno + 1);
-    routerHistory.push("/create_contest");
+    setQuestions((prevQuestions) => {
+      return prevQuestions.concat(questionData);
+    });
   }
 
   function postQuestion(qData) {
@@ -96,33 +118,28 @@ const CreateQuestionPage = (props) => {
         sx={{
           flexGrow: 1,
           bgcolor: "background.paper",
-          display: "flex",
-          height: 224,
+          display: "flex"
         }}
       >
-        <Grid item>
-          <Button type="button" variant="contained" onClick={addNewQuestion}>
-            Next
-          </Button>
-        </Grid>
         <Tabs
           orientation="vertical"
           variant="scrollable"
           value={value}
           onChange={handleChange}
           aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: "divider" }}
+          sx={{ borderRight: 1, borderColor: "divider" , width: 300}}
         >
-          {[...Array(qno).keys()].map((_, i) => (
+          {questions.map((_, i) => (
               <Tab label={i + 1} {...a11yProps(i)} />
             ))}
+          <Tab icon={<AddIcon />} onClick={addNewQuestion}/>
         </Tabs>
 
-        {[...Array(qno).keys()].map((_, i) => (
-            <TabPanel value={value} index={i}>
+        {questions.map((question, index) => (
+            <TabPanel value={value} index={index}>
               <QuestionForm
-                qno={i+1}
-                qData={questionData}
+                qno={index + 1}
+                qData={question}
                 postQuestion={postQuestion}
                 submitAllQuestions={submitAllQuestions}
               />

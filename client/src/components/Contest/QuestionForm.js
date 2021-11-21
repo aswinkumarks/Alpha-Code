@@ -13,7 +13,7 @@ import CodingQuestion from "./CodingQuestion";
 import MCQquestion from "./MCQquestion";
 
 const QuestionForm = (props) => {
-  const [qtype, setQtype] = useState("Coding");
+  const [qtype, setQtype] = useState(props.qData.qtype);
 
   const questionRef = useRef();
   const descriptionRef = useRef();
@@ -50,7 +50,6 @@ const QuestionForm = (props) => {
   }
 
   return (
-    <Box sx={{ border: 1, p: 4, borderRadius: 2 }}>
       <form>
         <Grid
           container
@@ -86,6 +85,7 @@ const QuestionForm = (props) => {
               fullWidth
               id="outlined-textarea"
               label="Question"
+              defaultValue={questionData.question}
               multiline
               inputProps={{ ref: questionRef }}
             />
@@ -96,6 +96,7 @@ const QuestionForm = (props) => {
               fullWidth
               id="outlined-textarea"
               label="Description"
+              defaultValue={questionData.description}
               multiline
               inputProps={{ ref: descriptionRef }}
             />
@@ -107,15 +108,16 @@ const QuestionForm = (props) => {
               label="Score"
               type="number"
               variant="outlined"
+              defaultValue={questionData.score}
               inputProps={{ ref: scoreRef }}
             />
           </Grid>
 
           <Grid item xs={12} md={12}>
             {qtype === "Coding" && (
-              <CodingQuestion settestcasehandler={setTestCases} />
+              <CodingQuestion testCases={questionData.testcases} settestcasehandler={setTestCases} />
             )}
-            {qtype === "MCQ" && <MCQquestion setmcqhandler={setMcqOptions} />}
+            {qtype === "MCQ" && <MCQquestion options={questionData.options} setmcqhandler={setMcqOptions} />}
           </Grid>
 
           <Grid item>
@@ -135,7 +137,6 @@ const QuestionForm = (props) => {
           </Grid>
         </Grid>
       </form>
-    </Box>
   );
 };
 
