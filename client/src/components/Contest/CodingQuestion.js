@@ -63,14 +63,15 @@ const CodingQuestion = (props) => {
   }
 
   function delTestCase(pos) {
-    setValue(0);
+    if (pos==0) setValue(1);
+    else if (pos+1 == testcases.length) setValue(pos-1);
     setTestcases(testcases.filter((item, index) => index !== pos));
     props.settestcasehandler(testcases);
   }
 
   return (
     <div>
-      <Box sx={{ borderBottom: 1, borderColor: "divider", width: 800 }}>
+      <Box sx={{ border: 1, borderColor: "divider", width: 900 }}>
         <Tabs
           value={value}
           onChange={handleChange}

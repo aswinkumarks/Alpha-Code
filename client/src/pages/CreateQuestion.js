@@ -72,7 +72,8 @@ const CreateQuestionPage = (props) => {
       .get(`/api/question/?cname=${props.cname}`)
       .then(function (response) {
         setQuestions(response.data);
-        console.log(response.data);
+        console.log('questions : ',response.data);
+        changeQno(response.data.length + 1);
       })
       .catch(function (error) {
         console.log("Fetch Question Data Failed!");
@@ -94,6 +95,12 @@ const CreateQuestionPage = (props) => {
     setQuestions((prevQuestions) => {
       return prevQuestions.concat(questionData);
     });
+  }
+
+  function delQuestion(q_idx) {
+    if (q_idx==0) setValue(1);
+    else if (q_idx+1 == questions.length) setValue(q_idx-1);
+    setQuestions(questions.filter((_, index) => index !== q_idx));
   }
 
   function postQuestion(qData) {
@@ -143,7 +150,6 @@ const CreateQuestionPage = (props) => {
           ) : (
             <Tab icon={<AddIcon />} onClick={addNewQuestion} />
           )}
-          
         </Tabs>
 
         {questions.map((question, index) => (
@@ -152,6 +158,7 @@ const CreateQuestionPage = (props) => {
               qno={index + 1}
               qData={question}
               postQuestion={postQuestion}
+              delQuestion={delQuestion}
               submitAllQuestions={submitAllQuestions}
             />
           </TabPanel>

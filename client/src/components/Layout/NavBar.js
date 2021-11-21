@@ -43,7 +43,7 @@ function NavBar() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-          <Link to="/">Alpha Code</Link>
+          <Link to="/" style={{textDecoration: 'none', color: '#FFF' }}>Alpha Code</Link>
           </Typography>
           <IconButton size="large" onClick={handleMenu} color="inherit">
             <Avatar>{username[0]}</Avatar>

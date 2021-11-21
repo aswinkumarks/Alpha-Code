@@ -3,7 +3,8 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useRef, useState, useEffect } from "react";
 
 const CreateTestCaseForm = (props) => {
@@ -50,7 +51,7 @@ const CreateTestCaseForm = (props) => {
       sx={{ mt: 1 }}
     >
 
-      <Grid item xs={2} md={3}>
+      <Grid item xs={11} md={11}>
         <TextField
           disabled
           id="outlined-disabled"
@@ -60,10 +61,10 @@ const CreateTestCaseForm = (props) => {
         />
       </Grid>
 
-      <Grid item xs={12} md={2}>
-        <Button variant="outlined" color="error" onClick={delTC}>
-          <b>- </b>&nbsp;Remove
-        </Button>
+      <Grid item xs={1} md={1}>
+        <IconButton aria-label="delete" color="error" onClick={delTC}>
+        <DeleteIcon />
+      </IconButton>
       </Grid>
 
       <Grid item xs={12} md={8}>
