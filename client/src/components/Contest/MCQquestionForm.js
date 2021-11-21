@@ -30,14 +30,13 @@ const MCQquestionForm = (props) => {
   function updateOptionValue() {
     props.mcqOption.option = optionRef.current.value;
     props.mcqOption.correct_option = correct_wrongRef.current.value;
-    // console.log(props.mcqOption);
   }
 
   return (
     <Grid
       container
       justify="space-between"
-      rowSpacing={1}
+      rowSpacing={2}
       spacing={2}
       sx={{ mt: 1 }}
     >

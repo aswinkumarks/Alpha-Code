@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import { useHistory } from "react-router";
 import { useState, useEffect } from "react";
@@ -46,31 +46,6 @@ function a11yProps(index) {
 }
 
 const CreateQuestionPage = (props) => {
-  const [qno, changeQno] = useState(1);
-  const [value, setValue] = useState(0);
-  const [questions, setQuestions] = useState([]);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const fetchQuestions = () => {
-    axios
-      .get(`/api/question/?cname=${props.cname}`)
-      .then(function (response) {
-        setQuestions(response.data);
-        console.log(response.data)
-      })
-      .catch(function (error) {
-        console.log("Fetch Question Data Failed!");
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    fetchQuestions();
-  }, []);
-
   let questionData = {
     qno: "",
     qtype: "MCQ",
@@ -82,7 +57,33 @@ const CreateQuestionPage = (props) => {
     options: [],
   };
 
+  const [qno, changeQno] = useState(1);
+  const [value, setValue] = useState(0);
+  const [questions, setQuestions] = useState([]);
+
   const routerHistory = useHistory();
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const fetchQuestions = () => {
+    axios
+      .get(`/api/question/?cname=${props.cname}`)
+      .then(function (response) {
+        setQuestions(response.data);
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log("Fetch Question Data Failed!");
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    if (props.mode == "edit") fetchQuestions();
+    else setQuestions(questions.concat(questionData));
+  }, []);
 
   function submitAllQuestions() {
     routerHistory.push("/");
@@ -118,7 +119,7 @@ const CreateQuestionPage = (props) => {
         sx={{
           flexGrow: 1,
           bgcolor: "background.paper",
-          display: "flex"
+          display: "flex",
         }}
       >
         <Tabs
@@ -127,24 +128,34 @@ const CreateQuestionPage = (props) => {
           value={value}
           onChange={handleChange}
           aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: "divider" , width: 300}}
+          sx={{ borderRight: 1, borderColor: "divider", width: 300 }}
         >
           {questions.map((_, i) => (
-              <Tab label={i + 1} {...a11yProps(i)} />
-            ))}
-          <Tab icon={<AddIcon />} onClick={addNewQuestion}/>
+            <Tab label={i + 1} {...a11yProps(i)} />
+          ))}
+
+          {questions.length == 0 ? (
+            <Tab
+              label="Add Question"
+              icon={<AddIcon />}
+              onClick={addNewQuestion}
+            />
+          ) : (
+            <Tab icon={<AddIcon />} onClick={addNewQuestion} />
+          )}
+          
         </Tabs>
 
         {questions.map((question, index) => (
-            <TabPanel value={value} index={index}>
-              <QuestionForm
-                qno={index + 1}
-                qData={question}
-                postQuestion={postQuestion}
-                submitAllQuestions={submitAllQuestions}
-              />
-            </TabPanel>
-          ))}
+          <TabPanel value={value} index={index}>
+            <QuestionForm
+              qno={index + 1}
+              qData={question}
+              postQuestion={postQuestion}
+              submitAllQuestions={submitAllQuestions}
+            />
+          </TabPanel>
+        ))}
       </Box>
     </Container>
   );

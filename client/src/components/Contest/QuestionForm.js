@@ -1,13 +1,7 @@
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-
 import { useRef, useState } from "react";
-import { useHistory } from "react-router";
-
 import MenuItem from "@mui/material/MenuItem";
 import CodingQuestion from "./CodingQuestion";
 import MCQquestion from "./MCQquestion";
@@ -30,12 +24,10 @@ const QuestionForm = (props) => {
 
   function setMcqOptions(mcqdata) {
     mcqOptions = mcqdata;
-    // console.log(mcqOptions);
   }
 
   function setTestCases(tcdata) {
     testCases = tcdata;
-    // console.log(testCases);
   }
 
   function saveQuestion() {

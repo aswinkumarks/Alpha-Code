@@ -130,9 +130,6 @@ const ContestForm = (props) => {
               />
             </Grid>
 
-            {/* <Grid item s={10} lg={10} xl={10} md={10}>
-              <span></span>
-            </Grid> */}
             {(() => {
               if (!editMode) {
                 return (
@@ -153,8 +150,6 @@ const ContestForm = (props) => {
             })()}
           </Grid>
 
-          {/* <br/>
-          <br/> */}
         </form>
       </Box>
     </Container>

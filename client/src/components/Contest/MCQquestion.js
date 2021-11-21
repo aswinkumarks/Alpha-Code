@@ -1,19 +1,15 @@
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import MCQquestionForm from "./MCQquestionForm";
+import Box from "@mui/material/Box";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 const MCQquestion = (props) => {
-  const [mcqOptions, changeMCQoptions] = useState([]);
-  const [rerender, setRerender] = useState(false);
-
+  const [mcqOptions, changeMCQoptions] = useState(props.options);
   function addMCQoption() {
     changeMCQoptions(
       mcqOptions.concat({
-        // id: mcqOptions.length + 1,
         option: "",
         correct_option: false,
       })
@@ -23,32 +19,18 @@ const MCQquestion = (props) => {
   function delMCQoption(pos) {
     changeMCQoptions(mcqOptions.filter((item, index) => index !== pos));
     props.setmcqhandler(mcqOptions);
-    setRerender(true);
-    setTimeout( () => {setRerender(false)}, 1000);
   }
 
   return (
-    // <div>
-
-    <Grid
-      container
-      justify="space-between"
-      rowSpacing={1}
-      spacing={3}
-      sx={{ mt: 1 }}
-    >
-      {/* {console.log(mcqOptions)} */}
-
+    <div>
+      <Box sx={{ borderBottom: 1, borderColor: "divider", width:800}}>
       <Grid item md={12}>
-        
         <Button variant="outlined" onClick={addMCQoption}>
-        <b>+</b>&nbsp;MCQ Options
+        <b>+</b>&nbsp;Option
         </Button>
       </Grid>
 
-      <Grid item md={12}>
-        {rerender &&
-          mcqOptions.map((option, index) => (
+        {mcqOptions.map((option, index) => (
             <MCQquestionForm
               delOptionHandler={delMCQoption}
               mcqOption={option}
@@ -56,17 +38,9 @@ const MCQquestion = (props) => {
             />
           ))}
 
-        {!rerender &&
-          mcqOptions.map((option, index) => (
-            <MCQquestionForm
-              delOptionHandler={delMCQoption}
-              mcqOption={option}
-              index={index}
-            />
-          ))}
-      </Grid>
       {props.setmcqhandler(mcqOptions)}
-    </Grid>
+      </Box>
+    </div>
   );
 };
 

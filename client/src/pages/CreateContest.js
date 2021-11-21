@@ -61,7 +61,7 @@ const CreateContestPage = () => {
   else
     return (
       <div>
-        <CreateQuestionPage cname={contestCreated} />
+        <CreateQuestionPage cname={contestCreated} mode='new'/>
       </div>
     );
 };

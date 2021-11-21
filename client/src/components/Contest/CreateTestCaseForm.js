@@ -45,8 +45,8 @@ const CreateTestCaseForm = (props) => {
     <Grid
       container
       justify="space-between"
-      rowSpacing={1}
-      spacing={1}
+      rowSpacing={2}
+      spacing={2}
       sx={{ mt: 1 }}
     >
 
