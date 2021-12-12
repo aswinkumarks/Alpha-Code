@@ -98,9 +98,29 @@ const CreateQuestionPage = (props) => {
   }
 
   function delQuestion(q_idx) {
-    if (q_idx==0) setValue(1);
-    else if (q_idx+1 == questions.length) setValue(q_idx-1);
-    setQuestions(questions.filter((_, index) => index !== q_idx));
+
+    if (questions[q_idx].id){
+      console.log("deleting question : " + JSON.stringify(questions[q_idx]));
+    axios
+      .delete("/api/question/"+ questions[q_idx].id)
+      .then(function (response) {
+        console.log("question data sent !");
+        console.log(response);
+        if (q_idx==0) setValue(1);
+        else if (q_idx+1 == questions.length) setValue(q_idx-1);
+        setQuestions(questions.filter((_, index) => index !== q_idx));
+      })
+      .catch(function (error) {
+        console.log("error");
+        console.log(error);
+      });
+    }
+    else{
+      if (q_idx==0) setValue(1);
+        else if (q_idx+1 == questions.length) setValue(q_idx-1);
+        setQuestions(questions.filter((_, index) => index !== q_idx));
+      }    
+
   }
 
   function postQuestion(qData) {

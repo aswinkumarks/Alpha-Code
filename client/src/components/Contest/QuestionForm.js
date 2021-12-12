@@ -56,15 +56,6 @@ const QuestionForm = (props) => {
         spacing={3}
         // sx={{ mt: 1 }}
       >
-        {/* <Grid item xs={11} md={11}>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Question number"
-            value={questionData.qno}
-          />
-        </Grid> */}
-
         <Grid item xs={4} md={2}>
           <TextField
             id="qtype"

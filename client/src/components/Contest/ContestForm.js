@@ -58,6 +58,7 @@ const ContestForm = (props) => {
           >
             <Grid item xs={12} md={6}>
               <TextField
+                required
                 fullWidth
                 id="standard-basic"
                 label="Contest Name"
@@ -84,6 +85,7 @@ const ContestForm = (props) => {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
+                required
                 id="standard-basic"
                 label="Host Name"
                 variant="outlined"
@@ -121,6 +123,7 @@ const ContestForm = (props) => {
 
             <Grid item xs={12} md={6}>
               <TextField
+                required
                 id="standard-number"
                 label="Duration"
                 type="number"
