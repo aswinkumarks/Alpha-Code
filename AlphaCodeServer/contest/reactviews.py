@@ -30,9 +30,12 @@ class QuestionView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Question.objects.all()
         contest_name = self.request.query_params.get('cname')
+        contest_id = self.request.query_params.get('cId')
         qno = self.request.query_params.get('qno')
         if contest_name:
             queryset = queryset.filter(contest__cname=contest_name)
+        elif contest_id:
+            queryset = queryset.filter(contest__cId=contest_id)
         if qno:
             queryset = queryset.filter(qno=int(qno))
         return queryset

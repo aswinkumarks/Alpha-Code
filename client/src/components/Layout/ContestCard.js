@@ -38,6 +38,10 @@ const goToEditPg = () => {
   routerHistory.push('/edit_contest/?cId='+props.cInfo.cId);
 };
 
+const startContest = () => {
+  routerHistory.push('/contest/'+props.cInfo.cId+'/');
+}
+
   return (
     <Card sx={{ borderRadius: 6, }}>
       <CardHeader
@@ -119,7 +123,7 @@ const goToEditPg = () => {
             </Card>
           </Backdrop>
 
-          <Button variant="outlined">Start</Button>
+          <Button variant="outlined" onClick={startContest}>Start</Button>
         </Stack>
       </CardContent>
     </Card>

@@ -8,6 +8,7 @@ import AuthContext from "./store/Auth-Context";
 import CreateContestPage from "./pages/CreateContest";
 import NavBar from "./components/Layout/NavBar";
 import EditContestPage from "./pages/EditContest";
+import CodeWindowPage from "./pages/CodeWindow";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -25,6 +26,10 @@ function App() {
 
           <Route path="/edit_contest/*">
             <EditContestPage/>
+          </Route>
+
+          <Route path="/contest/*">
+            <CodeWindowPage/>
           </Route>
           
           <Route path="*">
