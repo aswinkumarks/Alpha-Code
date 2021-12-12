@@ -1,8 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
-import axios from "axios";
-
 import ContestList from "../components/Contest/ContestList";
-
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 

@@ -6,7 +6,6 @@ import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/Dashboard";
 import AuthContext from "./store/Auth-Context";
 import CreateContestPage from "./pages/CreateContest";
-import CreateQuestionPage from "./pages/CreateQuestion";
 import NavBar from "./components/Layout/NavBar";
 import EditContestPage from "./pages/EditContest";
 

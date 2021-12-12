@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
@@ -82,7 +80,7 @@ const CreateQuestionPage = (props) => {
   };
 
   useEffect(() => {
-    if (props.mode == "edit") fetchQuestions();
+    if (props.mode === "edit") fetchQuestions();
     else setQuestions(questions.concat(questionData));
   }, []);
 
@@ -106,8 +104,8 @@ const CreateQuestionPage = (props) => {
       .then(function (response) {
         console.log("question data sent !");
         console.log(response);
-        if (q_idx==0) setValue(1);
-        else if (q_idx+1 == questions.length) setValue(q_idx-1);
+        if (q_idx===0) setValue(1);
+        else if (q_idx+1 === questions.length) setValue(q_idx-1);
         setQuestions(questions.filter((_, index) => index !== q_idx));
       })
       .catch(function (error) {
@@ -116,8 +114,8 @@ const CreateQuestionPage = (props) => {
       });
     }
     else{
-      if (q_idx==0) setValue(1);
-        else if (q_idx+1 == questions.length) setValue(q_idx-1);
+      if (q_idx===0) setValue(1);
+        else if (q_idx+1 === questions.length) setValue(q_idx-1);
         setQuestions(questions.filter((_, index) => index !== q_idx));
       }    
 
@@ -161,7 +159,7 @@ const CreateQuestionPage = (props) => {
             <Tab label={i + 1} {...a11yProps(i)} />
           ))}
 
-          {questions.length == 0 ? (
+          {questions.length === 0 ? (
             <Tab
               label="Add Question"
               icon={<AddIcon />}

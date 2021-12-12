@@ -63,8 +63,8 @@ const CodingQuestion = (props) => {
   }
 
   function delTestCase(pos) {
-    if (pos==0) setValue(1);
-    else if (pos+1 == testcases.length) setValue(pos-1);
+    if (pos===0) setValue(1);
+    else if (pos+1 === testcases.length) setValue(pos-1);
     setTestcases(testcases.filter((item, index) => index !== pos));
     props.settestcasehandler(testcases);
   }

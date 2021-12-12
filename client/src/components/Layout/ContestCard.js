@@ -1,10 +1,9 @@
-import { useTheme } from "@mui/material/styles";
+// import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import CardHeader from "@mui/material/CardHeader";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -13,8 +12,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Backdrop from "@mui/material/Backdrop";
-import { NoEncryption } from "@mui/icons-material";
-import { Link } from "react-router-dom";
 import { useHistory } from "react-router";
 
 function ContestCard(props) {
@@ -31,7 +28,7 @@ function ContestCard(props) {
   const calcDuration = () => {
   };
 
-  const theme = useTheme();
+  // const theme = useTheme();
 
   const delContest = () => {
     props.delContest(props.cInfo.cId)

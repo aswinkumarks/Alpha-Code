@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import qs from "qs";
 import { createBrowserHistory } from "history";
@@ -54,9 +54,9 @@ function EditContestPage(props) {
       });
   }
 
-  if (activePage == "contest" && contest) {
+  if (activePage === "contest" && contest) {
     return <ContestForm onEditContest={editContestHandler} cInfo={contest} />;
-  } else if (activePage == "question" && contest) {
+  } else if (activePage === "question" && contest) {
     return <CreateQuestion cname={contest["cname"]} mode='edit'/>;
   } else {
     return <div>add loading animation</div>;

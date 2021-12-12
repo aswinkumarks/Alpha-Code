@@ -1,7 +1,6 @@
 import ContestForm from "../components/Contest/ContestForm";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useHistory } from "react-router";
 import qs from "qs";
 import { createBrowserHistory } from "history";
 
