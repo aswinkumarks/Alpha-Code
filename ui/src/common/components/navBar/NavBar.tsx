@@ -13,24 +13,19 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Stack from '@mui/material/Stack';
 import { Link } from 'react-router-dom';
-
-import ApiService from '../../../api';
 import { useThemeContext } from '../../../theme';
-import { useGlobalState } from '../../../state';
-import { useHookstate } from '@hookstate/core';
+import { useAuthContext } from '../../../auth';
 
 function NavBar() {
 	const theme = useTheme();
 	const colorMode = useThemeContext();
-	const state = useGlobalState();
-	const isLoggedIn = useHookstate(state.isLoggedIn);
+	const authContext = useAuthContext();
 
-	// const authCtx = useContext(AuthContext);
-	const firstname = localStorage.getItem('name');
+	const firstname = authContext.authDetails.username;
 	const username = firstname ? firstname : '';
 	const [anchorEl, setAnchorEl] = useState(null);
 
-	const handleMenu = (event) => {
+	const handleMenu = (event: any) => {
 		setAnchorEl(event.currentTarget);
 	};
 
@@ -39,8 +34,7 @@ function NavBar() {
 	};
 
 	const handleLogout = () => {
-		ApiService.logout();
-		isLoggedIn.set(false);
+		authContext.logout();
 	};
 
 	return (

@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { useHookstate } from '@hookstate/core';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -19,26 +18,16 @@ import {
 } from '@mui/material';
 
 import { LoginInputs } from './types';
-import ApiService from './../../api';
-import { useGlobalState } from './../../state';
+import { useAuthContext } from '../../auth';
 
 const LoginPage: FC = () => {
 	const theme = useTheme();
-	const state = useGlobalState();
-	const isLoggedIn = useHookstate(state.isLoggedIn);
+	const authContext = useAuthContext();
 
-	const {
-		register,
-		handleSubmit,
-		watch,
-		formState,
-	} = useForm<LoginInputs>();
+	const { register, handleSubmit, watch, formState } = useForm<LoginInputs>();
 
 	const handleOnSubmit: SubmitHandler<LoginInputs> = async (data) => {
-		const status = await ApiService.login(data.username, data.password);
-		if (status) {
-			isLoggedIn.set(true);
-		}
+		await authContext.login(data.username, data.password);
 	};
 
 	return (

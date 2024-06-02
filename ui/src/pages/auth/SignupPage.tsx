@@ -1,6 +1,5 @@
 import { FC, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useHookstate } from '@hookstate/core';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -18,23 +17,26 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import ApiService from './../../api';
 import { SignupInputs } from './types';
-import { useGlobalState } from './../../state';
+import { useAuthContext } from '../../auth';
 
 const SignUpPage: FC = () => {
-	const state = useGlobalState();
-	const isLoggedIn = useHookstate(state.isLoggedIn);
+	const { setAuthDetails } = useAuthContext();
 
 	const { register, handleSubmit, setError, formState } =
 		useForm<SignupInputs>();
 
 	const handleOnSubmit: SubmitHandler<SignupInputs> = async (data) => {
-		const { status, errors } = await ApiService.register(
+		const { status, errors, token } = await ApiService.register(
 			data.username,
 			data.password1,
 			data.password2
 		);
 		if (status) {
-			isLoggedIn.set(true);
+			setAuthDetails({
+				isLoggedIn: true,
+				username: data.username,
+				token: token,
+			});
 		} else {
 			Object.keys(errors).forEach((fieldName: any) => {
 				const error = errors[fieldName]?.[0];
@@ -95,8 +97,10 @@ const SignUpPage: FC = () => {
 								id="username"
 								label="Username"
 								autoComplete="username"
-                error={formState.errors?.username ? true : false}
-                helperText={formState.errors?.username?.message}
+								error={
+									formState.errors?.username ? true : false
+								}
+								helperText={formState.errors?.username?.message}
 								{...register('username')}
 							/>
 						</Grid>
@@ -108,8 +112,12 @@ const SignUpPage: FC = () => {
 								type="password"
 								id="password1"
 								autoComplete="password"
-                error={formState.errors?.password1 ? true : false}
-                helperText={formState.errors?.password1?.message}
+								error={
+									formState.errors?.password1 ? true : false
+								}
+								helperText={
+									formState.errors?.password1?.message
+								}
 								{...register('password1')}
 							/>
 						</Grid>
@@ -121,8 +129,12 @@ const SignUpPage: FC = () => {
 								type="password"
 								id="password2"
 								autoComplete="password"
-                error={formState.errors?.password2 ? true : false}
-                helperText={formState.errors?.password2?.message}
+								error={
+									formState.errors?.password2 ? true : false
+								}
+								helperText={
+									formState.errors?.password2?.message
+								}
 								{...register('password2')}
 							/>
 						</Grid>

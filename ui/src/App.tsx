@@ -1,10 +1,8 @@
 import { FC, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useHookstate } from '@hookstate/core';
 import { Box } from '@mui/material';
 
-import { useGlobalState } from './state';
-import ApiService  from './api'
+import { useAuthContext } from './auth';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
 import DashboardPage from './pages/dashboard/Dashboard';
@@ -14,10 +12,9 @@ import EditContestPage from './pages/contest/EditContest';
 import CodeWindowPage from './pages/codingWindow/CodeWindow';
 
 const App: FC = () => {
-	const state = useGlobalState();
-	const isLoggedIn = useHookstate(state.isLoggedIn);
+	const { authDetails } = useAuthContext();
 
-	if (isLoggedIn.value) {
+	if (authDetails.isLoggedIn) {
 		return (
 			<Box
 				display="flex"

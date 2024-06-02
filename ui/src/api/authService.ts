@@ -1,20 +1,35 @@
 import axios from 'axios';
-import { showToast } from '../common/hooks';
+import { showToast, getLocalStorageValue } from '../common/hooks';
+import { AuthDetailsType, DEFAULT_AUTH_DETAILS } from '../auth';
 
 export class AuthService {
-	private token = '';
-	public username: string | null = '';
+	private authDetails = DEFAULT_AUTH_DETAILS;
 
 	constructor() {
-		const token = localStorage.getItem('token');
-		if (token) {
-			this.token = token;
+		const authDetails = getLocalStorageValue<AuthDetailsType>(
+			'authDetails',
+			DEFAULT_AUTH_DETAILS
+		);
+		if (authDetails.isLoggedIn) {
+			this.authDetails = authDetails;
 		}
-		this.username = localStorage.getItem('username');
 	}
 
 	getHeaders = () => {
-		return { Authorization: `Token ${this.token}` };
+		return { Authorization: `Token ${this.authDetails.token}` };
+	};
+
+	refreshAuthDetails = (authDetails?: AuthDetailsType) => {
+		if (authDetails) {
+			this.authDetails = authDetails;
+		} else {
+			const localStoredAuthDetails =
+				getLocalStorageValue<AuthDetailsType>(
+					'authDetails',
+					DEFAULT_AUTH_DETAILS
+				);
+			this.authDetails = localStoredAuthDetails;
+		}
 	};
 
 	login = async (username: string, password: string) => {
@@ -28,11 +43,7 @@ export class AuthService {
 				{ validateStatus: null }
 			);
 			if (response.status === 200) {
-				this.username = username;
-				this.token = response.data.key;
-				localStorage.setItem('username', username);
-				localStorage.setItem('token', response.data.key);
-				return true;
+				return { status: true, token: response.data.key };
 			} else {
 				showToast({
 					content:
@@ -46,15 +57,14 @@ export class AuthService {
 		} catch (error) {
 			console.error('Login failed', error);
 		}
-		return false;
+		return { status: false, token: '' };
 	};
 
 	logout = async () => {
 		try {
 			const response = await axios.post('/apis/rest-auth/logout/', {});
 			if (response.status === 200) {
-				this.username = '';
-				this.token = '';
+				this.authDetails = DEFAULT_AUTH_DETAILS;
 				localStorage.clear();
 			} else {
 				console.error('Logout failed', response);
@@ -80,11 +90,7 @@ export class AuthService {
 				{ validateStatus: null }
 			);
 			if (response.status === 201) {
-				this.username = username;
-				this.token = response.data.key;
-				localStorage.setItem('username', username);
-				localStorage.setItem('token', response.data.key);
-				return { status: true, errors: {} };
+				return { status: true, errors: {}, token: response.data.key };
 			} else {
 				if (response.data?.non_field_errors) {
 					showToast({
@@ -95,12 +101,12 @@ export class AuthService {
 					});
 				}
 				console.error('Register new user failed', response);
-				return { status: false, errors: response.data };
+				return { status: false, errors: response.data, token: '' };
 			}
 		} catch (error) {
 			console.error('Register new user failed', error);
 		}
-		return { status: false, errors: {} };
+		return { status: false, errors: {}, token: '' };
 	};
 
 	getUserInfo = async () => {

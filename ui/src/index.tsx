@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 
 import App from './App';
 import { ThemeWrapper } from './theme/themeWrapper';
-
+import AuthContextWrapper from './auth';
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 
@@ -13,15 +13,17 @@ root.render(
 	<StrictMode>
 		<BrowserRouter>
 			<ThemeWrapper>
-				<Box
-					position="fixed"
-					height="100%"
-					width="100%"
-					top="0px"
-					left="0px"
-				>
-					<App />
-				</Box>
+				<AuthContextWrapper>
+					<Box
+						position="fixed"
+						height="100%"
+						width="100%"
+						top="0px"
+						left="0px"
+					>
+						<App />
+					</Box>
+				</AuthContextWrapper>
 			</ThemeWrapper>
 		</BrowserRouter>
 	</StrictMode>
