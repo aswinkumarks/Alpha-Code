@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import QuestionTab from './components/QuestionTab';
 import ApiService from '../../api';
 
-const CodeWindowPage = (props) => {
+const CodeWindowPage: FC = () => {
 	let cId = window.location.pathname.split('/')[2];
 	const [questions, setQuestions] = useState([]);
 

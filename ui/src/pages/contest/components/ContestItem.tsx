@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid";
-import ContestCard from "../../../components/Layout/ContestCard";
+import ContestCard from "./ContestCard";
 
 function ContestItem(props) {
 
