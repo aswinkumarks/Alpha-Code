@@ -7,7 +7,7 @@ import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
 import DashboardPage from './pages/dashboard/Dashboard';
 import CreateContestPage from './pages/contest/CreateContest';
-import NavBar from './common/components/navBar/NavBar';
+import NavBar from './components/navBar/NavBar';
 import EditContestPage from './pages/contest/EditContest';
 import CodeWindowPage from './pages/codingWindow/CodeWindow';
 

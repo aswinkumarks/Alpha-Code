@@ -1,12 +1,12 @@
 import Box from '@mui/material/Box';
 import { useRef, useState } from 'react';
-import CodeEditor from '../../../common/components/codeEditor/CodeEditor';
+import CodeEditor from '../../../components/codeEditor/CodeEditor';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { useTheme } from '@mui/material';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { QuestionPanel } from './QuestionPanel';
-import { CodingPanel } from './CodingPanel';
-import { OutputPanel } from './OutputPanel';
+import { QuestionPanel } from '../../../components/panels/QuestionPanel';
+import { CodingPanel } from '../../../components/panels/CodingPanel';
+import { OutputPanel } from '../../../components/panels/OutputPanel';
 
 const QuestionTab = (props) => {
 	console.log('questions : ' + JSON.stringify(props.questions));

@@ -9,7 +9,7 @@ import {
 	FullscreenExitOutlined,
 	CodeOutlined,
 } from '@mui/icons-material';
-import CodeEditor from '../../../common/components/codeEditor/CodeEditor';
+import CodeEditor from '../codeEditor/CodeEditor';
 
 export const CodingPanel: FC = () => {
 	const theme = useTheme();

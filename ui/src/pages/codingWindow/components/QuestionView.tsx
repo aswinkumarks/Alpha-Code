@@ -1,4 +1,4 @@
-import CodeEditor from "../../../common/components/codeEditor/CodeEditor";
+import CodeEditor from "../../../components/codeEditor/CodeEditor";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 

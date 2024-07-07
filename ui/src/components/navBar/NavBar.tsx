@@ -13,8 +13,8 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Stack from '@mui/material/Stack';
 import { Link } from 'react-router-dom';
-import { useThemeContext } from '../../../theme';
-import { useAuthContext } from '../../../auth';
+import { useThemeContext } from '../../theme';
+import { useAuthContext } from '../../auth';
 
 function NavBar() {
 	const theme = useTheme();

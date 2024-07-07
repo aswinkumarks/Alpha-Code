@@ -15,7 +15,7 @@ import {
 	ArticleOutlined,
 } from '@mui/icons-material';
 import MarkdownPreview from '@uiw/react-markdown-preview';
-import { QuestionPanelProps } from './types';
+import { QuestionPanelProps } from '../../pages/codingWindow/components/types';
 
 export const QuestionPanel: FC<QuestionPanelProps> = ({ question }) => {
 	const theme = useTheme();
