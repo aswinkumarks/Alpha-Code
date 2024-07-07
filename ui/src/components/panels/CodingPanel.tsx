@@ -93,9 +93,11 @@ export const CodingPanel: FC = () => {
 					)}
 				</Box>
 			</Box>
-			<Box display="flex" width="auto" height="100%">
-				<CodeEditor />
-			</Box>
+			{!isCollapsed && (
+				<Box display="flex" width="auto" height="100%">
+					<CodeEditor />
+				</Box>
+			)}
 		</Panel>
 	);
 };

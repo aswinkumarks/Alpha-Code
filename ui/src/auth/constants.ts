@@ -1,7 +1,8 @@
-import { AuthDetailsType } from './types';
+import { AuthDetails } from './types';
 
-export const DEFAULT_AUTH_DETAILS: AuthDetailsType = {
+export const DEFAULT_AUTH_DETAILS: AuthDetails = {
 	username: '',
 	isLoggedIn: false,
+	isAdmin: false,
 	token: '',
 };

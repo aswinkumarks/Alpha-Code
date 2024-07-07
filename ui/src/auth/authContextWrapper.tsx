@@ -3,25 +3,14 @@ import { useLocalStorage } from '../common/hooks';
 import { AuthContext } from './authContext';
 import { DEFAULT_AUTH_DETAILS } from './constants';
 import ApiService from './../api';
-import { AuthDetailsType, AuthContextWrapperProps } from './types';
+import { AuthDetails, AuthContextWrapperProps } from './types';
 
 const AuthContextWrapper: FC<AuthContextWrapperProps> = ({ children }) => {
-	const [authDetails, setAuthDetails] = useLocalStorage<AuthDetailsType>(
+	const [authDetails, setAuthDetails] = useLocalStorage<AuthDetails>(
 		'authDetails',
 		DEFAULT_AUTH_DETAILS
 	);
 
-	// const setUserInfo = () => {
-	// 	axios
-	// 		.get('/rest-auth/user/')
-	// 		.then(function (response) {
-	// 			localStorage.setItem('name', response.data.first_name);
-	// 		})
-	// 		.catch(function (error) {
-	// 			console.log('Fetch User info Failed!');
-	// 			console.log(error);
-	// 		});
-	// };
 
 	const loginHandler = async (username: string, password: string) => {
 		const { status, token } = await ApiService.login(username, password);
@@ -30,9 +19,12 @@ const AuthContextWrapper: FC<AuthContextWrapperProps> = ({ children }) => {
 				username: username,
 				isLoggedIn: true,
 				token: token,
+				isAdmin: false,
 			};
-			setAuthDetails(newAuthDetails);
 			ApiService.refreshAuthDetails(newAuthDetails);
+			const userInfo = await ApiService.getUserInfo();
+			newAuthDetails.isAdmin = userInfo?.is_staff || false;
+			setAuthDetails(newAuthDetails);
 		}
 	};
 

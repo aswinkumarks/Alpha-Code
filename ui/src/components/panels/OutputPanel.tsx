@@ -99,12 +99,14 @@ export const OutputPanel: FC = () => {
 					)}
 				</Box>
 			</Box>
-			<Box
-				flexDirection="column"
-				display="flex"
-				width="auto"
-				height="100%"
-			></Box>
+			{!isCollapsed && (
+				<Box
+					flexDirection="column"
+					display="flex"
+					width="auto"
+					height="100%"
+				></Box>
+			)}
 		</Panel>
 	);
 };

@@ -9,7 +9,6 @@ import { CodingPanel } from '../../../components/panels/CodingPanel';
 import { OutputPanel } from '../../../components/panels/OutputPanel';
 
 const QuestionTab = (props) => {
-	console.log('questions : ' + JSON.stringify(props.questions));
 	const [value, setValue] = useState(0);
 	const theme = useTheme();
 

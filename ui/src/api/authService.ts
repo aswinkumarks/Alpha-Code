@@ -111,7 +111,7 @@ export class AuthService {
 
 	getUserInfo = async () => {
 		try {
-			const response = await axios.get('/apis/rest-auth/user/');
+			const response = await axios.get('/api/userInfo');
 			if (response.status === 200) {
 				return response.data;
 			} else {

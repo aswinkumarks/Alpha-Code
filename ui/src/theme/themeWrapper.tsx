@@ -5,13 +5,10 @@ import { PaletteMode } from '@mui/material';
 import { ThemeWrapperProps } from './types';
 import ThemeContext from './themeContext';
 import getTheme from './theme';
-
+import { useLocalStorage } from './../common/hooks';
 
 export const ThemeWrapper: FC<ThemeWrapperProps> = ({ children }) => {
-	const initialTheme = localStorage.getItem('theme') as PaletteMode;
-	const [mode, setMode] = useState<PaletteMode>(
-		initialTheme ? initialTheme : 'light'
-	);
+	const [mode, setMode] = useLocalStorage<PaletteMode>('theme', 'light');
 
 	const colorMode = useMemo(
 		() => ({
@@ -23,10 +20,6 @@ export const ThemeWrapper: FC<ThemeWrapperProps> = ({ children }) => {
 		}),
 		[]
 	);
-
-	useEffect(() => {
-		localStorage.setItem('theme', mode);
-	}, [mode]);
 
 	const theme = useMemo(() => getTheme(mode), [mode]);
 
