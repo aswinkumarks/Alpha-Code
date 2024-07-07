@@ -58,12 +58,17 @@ export const CodingPanel: FC = () => {
 			>
 				<Box display="flex" flexDirection="row" gap="4px">
 					<CodeOutlined sx={{ color: theme.palette.custom.green }} />
-					<Typography> Code</Typography>
+					<Typography color={theme.palette.secondary.contrastText}>
+						Code
+					</Typography>
 				</Box>
 				<Box>
 					<IconButton
 						onClick={toggleFullScreen}
-						sx={{ padding: 'unset' }}
+						sx={{
+							padding: 'unset',
+							color: theme.palette.secondary.contrastText,
+						}}
 					>
 						{fullScreen ? (
 							<FullscreenExitOutlined />
@@ -74,7 +79,10 @@ export const CodingPanel: FC = () => {
 					{!fullScreen && (
 						<IconButton
 							onClick={togglePanelCollapseOrExpand}
-							sx={{ padding: 'unset' }}
+							sx={{
+								padding: 'unset',
+								color: theme.palette.secondary.contrastText,
+							}}
 						>
 							{isCollapsed ? (
 								<KeyboardArrowDownOutlined />

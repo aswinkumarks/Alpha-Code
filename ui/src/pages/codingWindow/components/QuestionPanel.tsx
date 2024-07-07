@@ -43,7 +43,7 @@ export const QuestionPanel: FC<QuestionPanelProps> = ({ question }) => {
 		<Panel
 			ref={panelRef}
 			collapsible={true}
-			collapsedSize={8}
+			collapsedSize={3}
 			minSize={10}
 			onCollapse={() => {
 				setIsCollapsed(true);
@@ -57,23 +57,30 @@ export const QuestionPanel: FC<QuestionPanelProps> = ({ question }) => {
 				display="flex"
 				width="auto"
 				justifyContent="space-between"
-				flexDirection="row"
+				flexDirection={isCollapsed ? 'column' : 'row'}
+				height={isCollapsed ? '100%' : 'fit-content'}
 				bgcolor={theme.palette.secondary.main}
 				alignItems="center"
 				padding="8px"
 			>
-				<Box display="flex" flexDirection="row" gap="4px">
+				<Box display="flex" flexDirection="inherit" gap="4px">
 					<ArticleOutlined
-						sx={{ color: theme.palette.action.active }}
+						sx={{ color: theme.palette.secondary.contrastText }}
 					/>
-					<Typography color={theme.palette.secondary.contrastText}>
+					<Typography
+						color={theme.palette.secondary.contrastText}
+						sx={isCollapsed ? { writingMode: 'vertical-lr' } : {}}
+					>
 						Description
 					</Typography>
 				</Box>
-				<Box>
+				<Box display="flex" flexDirection="inherit">
 					<IconButton
 						onClick={toggleFullScreen}
-						sx={{ padding: 'unset' }}
+						sx={{
+							padding: 'unset',
+							color: theme.palette.secondary.contrastText,
+						}}
 					>
 						{fullScreen ? (
 							<FullscreenExitOutlined />
@@ -84,7 +91,10 @@ export const QuestionPanel: FC<QuestionPanelProps> = ({ question }) => {
 					{!fullScreen && (
 						<IconButton
 							onClick={togglePanelCollapseOrExpand}
-							sx={{ padding: 'unset' }}
+							sx={{
+								padding: 'unset',
+								color: theme.palette.secondary.contrastText,
+							}}
 						>
 							{isCollapsed ? (
 								<KeyboardArrowRightOutlined />
@@ -95,26 +105,28 @@ export const QuestionPanel: FC<QuestionPanelProps> = ({ question }) => {
 					)}
 				</Box>
 			</Box>
-			<Box
-				flexDirection="column"
-				display="flex"
-				width="auto"
-				height="100%"
-				padding="12px"
-			>
-				<Typography variant='h6'>
-					{question.qno}. {question.question}
-				</Typography>
-				<MarkdownPreview
-					source={question.description}
-					wrapperElement={{
-						'data-color-mode': theme.palette.mode,
-					}}
-					style={{
-						backgroundColor: theme.palette.background.default,
-					}}
-				/>
-			</Box>
+			{!isCollapsed && (
+				<Box
+					flexDirection="column"
+					display="flex"
+					width="auto"
+					height="100%"
+					padding="12px"
+				>
+					<Typography variant="h6">
+						{question.qno}. {question.question}
+					</Typography>
+					<MarkdownPreview
+						source={question.description}
+						wrapperElement={{
+							'data-color-mode': theme.palette.mode,
+						}}
+						style={{
+							backgroundColor: theme.palette.background.default,
+						}}
+					/>
+				</Box>
+			)}
 		</Panel>
 	);
 };

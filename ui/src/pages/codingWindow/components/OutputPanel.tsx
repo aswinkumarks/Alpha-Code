@@ -62,14 +62,19 @@ export const OutputPanel: FC = () => {
 			>
 				<Box display="flex" flexDirection="row" gap="4px">
 					<TerminalOutlined
-						sx={{ color: theme.palette.custom.green }} 
+						sx={{ color: theme.palette.custom.green }}
 					/>
-					<Typography> Testcase</Typography>
+					<Typography color={theme.palette.secondary.contrastText}>
+						Testcase
+					</Typography>
 				</Box>
 				<Box>
 					<IconButton
 						onClick={toggleFullScreen}
-						sx={{ padding: 'unset' }}
+						sx={{
+							padding: 'unset',
+							color: theme.palette.secondary.contrastText,
+						}}
 					>
 						{fullScreen ? (
 							<FullscreenExitOutlined />
@@ -80,7 +85,10 @@ export const OutputPanel: FC = () => {
 					{!fullScreen && (
 						<IconButton
 							onClick={togglePanelCollapseOrExpand}
-							sx={{ padding: 'unset' }}
+							sx={{
+								padding: 'unset',
+								color: theme.palette.secondary.contrastText,
+							}}
 						>
 							{isCollapsed ? (
 								<KeyboardArrowUpOutlined />
