@@ -36,7 +36,7 @@ function ContestCard(props) {
 	};
 
 	const goToEditPg = () => {
-		navigate('/edit_contest/?cId=' + props.cInfo.cId);
+		navigate('/contest/' + props.cInfo.cId);
 	};
 
 	const startContest = () => {
@@ -63,7 +63,7 @@ function ContestCard(props) {
 						<></>
 					)
 				}
-				title={props.cInfo.cname}
+				title={props.cInfo.contestName}
 			/>
 			<Divider variant="middle" />
 			<CardContent sx={{ p: 3 }}>
@@ -73,7 +73,7 @@ function ContestCard(props) {
 						variant="body1"
 						color="text.secondary"
 					>
-						<b>Hosted By : {props.cInfo.hosted_by}</b>
+						<b>Hosted By : {props.cInfo.hostedBy}</b>
 					</Typography>
 					<Typography
 						gutterBottom
@@ -129,7 +129,7 @@ function ContestCard(props) {
 									sx={{ mb: 1.5 }}
 									color="text.secondary"
 								>
-									Hosted by : {props.cInfo.hosted_by}
+									Hosted by : {props.cInfo.hostedBy}
 								</Typography>
 								<Typography variant="body2">
 									Duration : {props.cInfo.duration} [add unit]

@@ -1,75 +1,69 @@
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-// import AdapterDateFns from "@mui/lab/AdapterDateFns";
-// import LocalizationProvider from "@mui/lab/LocalizationProvider";
-// import DateTimePicker from "@mui/lab/DateTimePicker";
-import { useRef, useState } from "react";
+import {
+	Box,
+	TextField,
+	Grid,
+	Container,
+	Typography,
+	Button,
+	FormLabel,
+	OutlinedInput,
+} from '@mui/material';
+import { useEffect, FC } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { ContestFormInputs, ContestFormProps } from './types';
 
-const ContestForm = (props) => {
-  const [sdvalue, setsdValue] = useState(new Date(props.cInfo["startTime"]));
-  const [edvalue, setedValue] = useState(new Date(props.cInfo["endTime"]));
+const ContestForm: FC<ContestFormProps> = ({
+	defaultValues = {},
+	editMode = false,
+	onSubmit,
+}) => {
+	const { register, handleSubmit } = useForm<ContestFormInputs>({
+		values: defaultValues as any,
+	});
 
-  const contestNameRef = useRef();
-  const hostNameRef = useRef();
-  const durationRef = useRef();
-  const descriptionRef = useRef();
+	return (
+		<Container fixed sx={{ mt: 5 }}>
+			<Box sx={{ border: 1, p: 4, borderRadius: 2 }}>
+				<Box
+					display="flex"
+					flexDirection="column"
+					component="form"
+					onSubmit={handleSubmit(onSubmit)}
+				>
+					<Typography gutterBottom variant="h5">
+						Contest Details : -
+					</Typography>
 
-  const editMode = props.cInfo["cname"] === "" ? false : true;
+					<Grid
+						container
+						display="flex"
+						justifyContent="space-between"
+						rowSpacing={6}
+						spacing={3}
+						sx={{ mt: 1 }}
+					>
+						<Grid
+							item
+							xs={12}
+							md={6}
+							display="flex"
+							flexDirection="column"
+						>
+							<FormLabel htmlFor="contestName" required>
+								Contest Name
+							</FormLabel>
+							<OutlinedInput
+								id="first-name"
+								type="name"
+								placeholder="John"
+								autoComplete="first name"
+								required
+								{...register('contestName')}
+							/>
+						</Grid>
 
-  function onSubmitHandler(event) {
-    event.preventDefault();
-    const contestname = contestNameRef.current.value;
-    const hostname = hostNameRef.current.value;
-    const duration = durationRef.current.value;
-    const description = descriptionRef.current.value;
-
-    const contestData = {
-      cname: contestname,
-      hosted_by: hostname,
-      startTime: sdvalue.toISOString(),
-      endTime: edvalue.toISOString(),
-      duration: duration,
-      desc: description,
-    };
-
-    editMode
-      ? props.onEditContest(contestData)
-      : props.onCreateNewContest(contestData);
-  }
-
-  return (
-    <Container fixed sx={{ mt: 5 }}>
-      <Box sx={{ border: 1, p: 4, borderRadius: 2 }}>
-        <form onSubmit={onSubmitHandler}>
-          <Typography gutterBottom variant="h5" color="text.secondary">
-            <b>Contest Details : -</b>
-          </Typography>
-
-          <Grid
-            container
-            justify="space-between"
-            rowSpacing={6}
-            spacing={3}
-            sx={{ mt: 1 }}
-          >
-            <Grid item xs={12} md={6}>
-              <TextField
-                required
-                fullWidth
-                id="standard-basic"
-                label="Contest Name"
-                variant="outlined"
-                defaultValue={props.cInfo["cname"]}
-                inputProps={{ ref: contestNameRef }}
-              />
-            </Grid>
-
-            <Grid item xs={6} md={6}>
-              {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+						{/* <Grid item xs={6} md={6}>
+							<LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker
                   renderInput={(params) => <TextField {...params} />}
                   label="Start date and time"
@@ -79,23 +73,22 @@ const ContestForm = (props) => {
                   }}
                   minDateTime={new Date()}
                 />
-              </LocalizationProvider> */}
-            </Grid>
+              </LocalizationProvider>
+						</Grid> */}
 
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                required
-                id="standard-basic"
-                label="Host Name"
-                variant="outlined"
-                defaultValue={props.cInfo["hosted_by"]}
-                inputProps={{ ref: hostNameRef }}
-              />
-            </Grid>
+						<Grid item xs={12} md={6} display="flex">
+							<TextField
+								fullWidth
+								required
+								id="standard-basic"
+								label="Host Name"
+								variant="outlined"
+								{...register('hostedBy')}
+							/>
+						</Grid>
 
-            <Grid item xs={6} md={6}>
-              {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+						{/* <Grid item xs={6} md={6}>
+							<LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker
                   renderInput={(params) => <TextField {...params} />}
                   label="End time in each day"
@@ -107,56 +100,48 @@ const ContestForm = (props) => {
                   minTime={new Date(0, 0, 0, 8)}
                   maxTime={new Date(0, 0, 0, 18, 45)}
                 />
-              </LocalizationProvider> */}
-            </Grid>
+              </LocalizationProvider>
+						</Grid> */}
 
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                id="outlined-textarea"
-                label="Description"
-                defaultValue={props.cInfo["desc"]}
-                multiline
-                inputProps={{ ref: descriptionRef }}
-              />
-            </Grid>
+						<Grid item xs={12} md={6} display="flex">
+							<TextField
+								fullWidth
+								id="outlined-textarea"
+								label="Description"
+								multiline
+								{...register('desc')}
+							/>
+						</Grid>
 
-            <Grid item xs={12} md={6}>
-              <TextField
-                required
-                id="standard-number"
-                label="Duration"
-                type="number"
-                variant="outlined"
-                defaultValue={props.cInfo["duration"]}
-                inputProps={{ ref: durationRef }}
-              />
-            </Grid>
+						<Grid item xs={12} md={6} display="flex">
+							<TextField
+								required
+								id="standard-number"
+								label="Duration"
+								type="number"
+								variant="outlined"
+								{...register('duration')}
+							/>
+						</Grid>
 
-            {(() => {
-              if (!editMode) {
-                return (
-                  <Grid item>
-                    <Button type="submit" variant="contained">
-                      Create
-                    </Button>
-                  </Grid>
-                );
-              }
-              return (
-                <Grid item>
-                  <Button type="submit" variant="contained">
-                    Proceed to edit Questions
-                  </Button>
-                </Grid>
-              );
-            })()}
-          </Grid>
-
-        </form>
-      </Box>
-    </Container>
-  );
+						{!editMode ? (
+							<Grid item display="flex">
+								<Button type="submit" variant="contained">
+									Create
+								</Button>
+							</Grid>
+						) : (
+							<Grid item display="flex">
+								<Button type="submit" variant="contained">
+									Proceed to edit Questions
+								</Button>
+							</Grid>
+						)}
+					</Grid>
+				</Box>
+			</Box>
+		</Container>
+	);
 };
 
 export default ContestForm;

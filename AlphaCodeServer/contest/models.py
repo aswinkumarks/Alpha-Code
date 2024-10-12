@@ -5,24 +5,24 @@ from django.contrib.auth import get_user_model
 
 class Contest(models.Model):
     cId = models.AutoField(primary_key=True)
-    cname = models.CharField(unique=True,max_length=50)
+    contestName = models.CharField(unique=True,max_length=50)
     desc = models.TextField(blank=True)
-    hosted_by = models.CharField(max_length=150, default="")
+    hostedBy = models.CharField(max_length=150, default="")
     duration = models.IntegerField(default=0)
-    startTime = models.DateTimeField()
-    endTime = models.DateTimeField()
+    startTime = models.DateTimeField(null=True)
+    endTime = models.DateTimeField(null=True)
 
     def __str__(self):
-        return self.cname
+        return self.contestName
 
 
 class Participant(models.Model):
     user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
-    start_time = models.DateTimeField(auto_now_add=True)
+    startTime = models.DateTimeField(auto_now_add=True)
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     rank = models.IntegerField(default=9999999)
-    submition_time = models.DateTimeField(null=True, blank=True)
+    submitionTime = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         constraints = [
@@ -30,19 +30,19 @@ class Participant(models.Model):
         ]
 
     def __str__(self):
-        return self.contest.cname+": "+self.user.username
+        return self.contest.contestName+": "+self.user.username
 
 
 class ContestResult(models.Model):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
-    contest_name = models.ForeignKey(Contest, to_field="cname",on_delete=models.CASCADE)
+    contestName = models.ForeignKey(Contest, to_field="contestName",on_delete=models.CASCADE)
     rank = models.IntegerField()
 
     class Meta:
-        unique_together = ('contest_name', 'rank',)
+        unique_together = ('contestName', 'rank',)
 
     def __str__(self):
-        return self.participant.contest.cname + ": " + self.participant.user.username
+        return self.participant.contest.contestName + ": " + self.participant.user.username
 
 
 class Question(models.Model):
@@ -65,7 +65,7 @@ class Question(models.Model):
 class Option(models.Model):
     question = models.ForeignKey(Question, related_name='options', on_delete=models.CASCADE)
     option = models.CharField(max_length=250)
-    correct_option = models.BooleanField(default=False)
+    correctOption = models.BooleanField(default=False)
 
 
 class TestCase(models.Model):
@@ -79,7 +79,7 @@ class TestCase(models.Model):
     score = models.IntegerField(default =0)
 
     def __str__(self):
-        return self.question.cq.contest.cname + ":" + str(self.question.cq.qno)
+        return self.question.cq.contest.contestName + ":" + str(self.question.cq.qno)
 
 
 class Submission(models.Model):
@@ -87,7 +87,7 @@ class Submission(models.Model):
     qno = models.IntegerField()
     language = models.CharField(max_length=50,choices=(('Python','Python pgm'),('C++','C++ pgm'),
                                         ('C','C Program')))
-    user_answer = models.TextField()
+    userAnswer = models.TextField()
     score = models.IntegerField(default = 0)
 
     class Meta:

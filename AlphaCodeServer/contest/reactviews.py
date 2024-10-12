@@ -33,7 +33,7 @@ class QuestionView(viewsets.ModelViewSet):
         contest_id = self.request.query_params.get('cId')
         qno = self.request.query_params.get('qno')
         if contest_name:
-            queryset = queryset.filter(contest__cname=contest_name)
+            queryset = queryset.filter(contest__contestName=contest_name)
         elif contest_id:
             queryset = queryset.filter(contest__cId=contest_id)
         if qno:

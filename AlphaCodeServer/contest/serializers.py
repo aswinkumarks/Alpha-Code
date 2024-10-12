@@ -6,7 +6,7 @@ from .models import Question
 class ContestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contest
-        fields = ("cId", "cname", "desc", "hosted_by", "duration", "startTime", "endTime")
+        fields = "__all__"
 
 
 class OptionSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class TestCaseSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    contest = serializers.SlugRelatedField(slug_field="cname", queryset=Contest.objects.all())
+    contest = serializers.SlugRelatedField(slug_field="contestName", queryset=Contest.objects.all())
     testcases = TestCaseSerializer(many=True)
     options = OptionSerializer(many=True)
 
@@ -33,8 +33,8 @@ class QuestionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         testcases_data = validated_data.pop('testcases')
         options_data = validated_data.pop('options')
-        contest_cname = validated_data.pop('contest')
-        contest = Contest.objects.get(cname=contest_cname)
+        contest_name = validated_data.pop('contest')
+        contest = Contest.objects.get(contestName=contest_name)
         question = Question.objects.create(contest=contest, **validated_data)
         if validated_data['qtype'] == 'MCQ':
             for option_data in options_data:

@@ -15,7 +15,7 @@ const DashboardPage = () => {
 		>
 			<Box display="flex" width="100%" justifyContent="flex-end">
 				<Button variant="contained" sx={{ width: '200px' }}>
-					<Link to="/create_contest">Create Contest</Link>
+					<Link to="/contest">Create Contest</Link>
 				</Button>
 			</Box>
 			<ContestList />
