@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Backdrop from '@mui/material/Backdrop';
 import { useNavigate } from 'react-router';
-import { useAuthContext } from './../../../auth';
+import { useAuthContext } from '../../../auth';
 
 function ContestCard(props) {
 	const [open, setOpen] = useState(false);

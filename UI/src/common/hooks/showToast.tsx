@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 
-import { ThemeWrapper } from './../../theme';
+import { ThemeWrapper } from '../../theme';
 import { ToastDataType } from './types';
 import { Alert, Snackbar } from '@mui/material';
 

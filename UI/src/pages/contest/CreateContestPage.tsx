@@ -6,7 +6,7 @@ import { useState, useEffect, FC } from 'react';
 import ContestForm from './components/ContestForm';
 import { CreateContestPageProps } from './types';
 import { ContestFormInputs } from './components/types';
-import ApiService from './../../api';
+import ApiService from '../../api';
 
 const CreateContestPage: FC<CreateContestPageProps> = () => {
 	const theme = useTheme();

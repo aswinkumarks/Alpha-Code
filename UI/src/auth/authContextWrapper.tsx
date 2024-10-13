@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { useLocalStorage } from '../common/hooks';
 import { AuthContext } from './authContext';
 import { DEFAULT_AUTH_DETAILS } from './constants';
-import ApiService from './../api';
+import ApiService from '../api';
 import { AuthDetails, AuthContextWrapperProps } from './types';
 
 const AuthContextWrapper: FC<AuthContextWrapperProps> = ({ children }) => {

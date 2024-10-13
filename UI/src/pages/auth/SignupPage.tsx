@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import ApiService from './../../api';
+import ApiService from '../../api';
 import { SignupInputs } from './types';
 import { useAuthContext } from '../../auth';
 

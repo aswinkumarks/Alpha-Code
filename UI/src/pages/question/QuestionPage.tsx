@@ -9,7 +9,7 @@ import { CodingPanel } from '../../components/panels/CodingPanel';
 import { OutputPanel } from '../../components/panels/OutputPanel';
 import ApiService from '../../api';
 import NavBar from './components/NavBar';
-import { useQueryParam } from './../../common/hooks';
+import { useQueryParam } from '../../common/hooks';
 import { SkeletonLoader } from './components/SkeletonLoader';
 
 const QuestionPage: FC = () => {

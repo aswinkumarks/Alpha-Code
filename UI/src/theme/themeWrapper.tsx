@@ -5,7 +5,7 @@ import { PaletteMode } from '@mui/material';
 import { ThemeWrapperProps } from './types';
 import ThemeContext from './themeContext';
 import getTheme from './theme';
-import { useLocalStorage } from './../common/hooks';
+import { useLocalStorage } from '../common/hooks';
 
 export const ThemeWrapper: FC<ThemeWrapperProps> = ({ children }) => {
 	const [mode, setMode] = useLocalStorage<PaletteMode>('theme', 'light');
