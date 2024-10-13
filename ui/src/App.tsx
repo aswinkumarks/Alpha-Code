@@ -9,8 +9,7 @@ import DashboardPage from './pages/dashboard/Dashboard';
 import UserDashboardPage from './pages/dashboard/UserDashboard';
 import CreateContestPage from './pages/contest/CreateContestPage';
 import NavBar from './components/navBar/NavBar';
-import EditContestPage from './pages/contest/EditContest';
-import CodeWindowPage from './pages/codingWindow/CodeWindow';
+import QuestionPage from './pages/question/QuestionPage';
 
 const App: FC = () => {
 	const { authDetails } = useAuthContext();
@@ -47,10 +46,9 @@ const App: FC = () => {
 					width="100%"
 					flexDirection="column"
 				>
-					<NavBar />
 					<Routes>
 						<Route path="/" element={<UserDashboardPage />} />
-						<Route path="/contest/*" element={<CodeWindowPage />} />
+						<Route path="/contest/*" element={<QuestionPage />} />
 						<Route path="*" element={<Navigate to="/" />} />
 					</Routes>
 				</Box>

@@ -32,10 +32,13 @@ const SignUpPage: FC = () => {
 			data.password2
 		);
 		if (status) {
-			setAuthDetails({
-				isLoggedIn: true,
-				username: data.username,
-				token: token,
+			setAuthDetails((prev) => {
+				return {
+					...prev,
+					isLoggedIn: true,
+					username: data.username,
+					token: token,
+				};
 			});
 		} else {
 			Object.keys(errors).forEach((fieldName: any) => {
