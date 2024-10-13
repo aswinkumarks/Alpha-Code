@@ -1,7 +1,6 @@
 from django.conf.urls import url
 from django.urls import path, include
-from . import views, admin_views, reactviews
-from . import ajax_handler
+from . import reactviews
 from rest_framework import routers
 
 router = routers.DefaultRouter()

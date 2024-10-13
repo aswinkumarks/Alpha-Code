@@ -17,7 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
-from AlphaCodeTasks.backgroundTask import start_background_tasks
 from django.views.generic import RedirectView
 
 urlpatterns = [
@@ -27,8 +26,6 @@ urlpatterns = [
     path("", RedirectView.as_view(url="/contests/")),
     url("api/", include("user.urls")),
     url(r"^", include("contest.urls")),
-    path("task/", include("AlphaCodeTasks.urls")),
     url(r"^rest-auth/", include("rest_auth.urls")),
     url(r"^rest-auth/registration/", include("rest_auth.registration.urls")),
 ]
-start_background_tasks()

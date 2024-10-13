@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'accounts.apps.AccountsConfig',
     'contest',
-    'AlphaCodeTasks',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',

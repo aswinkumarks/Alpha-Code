@@ -1,5 +1,4 @@
 from .models import *
-from AlphaCodeTasks.views import runTask
 
 def evaluateSubmission(uname, cname, qno):
 	cq  = ContestQuestion.objects.get(contest__cname=cname,qno=qno)
