@@ -19,11 +19,12 @@ import { NavBarProps } from './types';
 const NavBar: FC<NavBarProps> = ({
 	onNext,
 	onPrev,
+	onRunBtnClick,
 	disableNextBtn,
 	disablePrevBtn,
 }) => {
 	const theme = useTheme();
-	
+
 	return (
 		<Box
 			sx={{
@@ -46,11 +47,23 @@ const NavBar: FC<NavBarProps> = ({
 							onClick={onPrev}
 							disabled={disablePrevBtn}
 						>
-							<ChevronLeftIcon sx={{ color: theme.palette.secondary.contrastText }}/>
+							<ChevronLeftIcon
+								sx={{
+									color: theme.palette.secondary.contrastText,
+								}}
+							/>
 						</IconButton>
 						<Button
 							variant="outlined"
-							startIcon={<PlayArrowIcon sx={{ color: theme.palette.secondary.contrastText }}/>}
+							startIcon={
+								<PlayArrowIcon
+									sx={{
+										color: theme.palette.secondary
+											.contrastText,
+									}}
+								/>
+							}
+							onClick={onRunBtnClick}
 						>
 							Run
 						</Button>
@@ -59,7 +72,11 @@ const NavBar: FC<NavBarProps> = ({
 							onClick={onNext}
 							disabled={disableNextBtn}
 						>
-							<ChevronRightIcon sx={{ color: theme.palette.secondary.contrastText }}/>
+							<ChevronRightIcon
+								sx={{
+									color: theme.palette.secondary.contrastText,
+								}}
+							/>
 						</IconButton>
 					</Box>
 					<Profile />

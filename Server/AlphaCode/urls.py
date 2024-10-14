@@ -15,8 +15,7 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
-from django.conf.urls import url
+from django.urls import path, include, re_path
 from django.views.generic import RedirectView
 
 urlpatterns = [
@@ -24,8 +23,8 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/", include("accounts.urls")),
     path("", RedirectView.as_view(url="/contests/")),
-    url("api/", include("user.urls")),
-    url(r"^", include("contest.urls")),
-    url(r"^rest-auth/", include("rest_auth.urls")),
-    url(r"^rest-auth/registration/", include("rest_auth.registration.urls")),
+    re_path("api/", include("user.urls")),
+    re_path(r"^", include("contest.urls")),
+    re_path(r"^rest-auth/", include("dj_rest_auth.urls")),
+    re_path(r"^rest-auth/registration/", include("dj_rest_auth.registration.urls")),
 ]

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material';
@@ -30,6 +30,11 @@ const QuestionPage: FC = () => {
 		setQuestionIndex((index) => index - 1);
 	};
 
+	const handleRunBtnClick = () => {
+		const event = new CustomEvent('runCode');
+		window.dispatchEvent(event);
+	};
+
 	if (isPending) {
 		return <SkeletonLoader />;
 	}
@@ -39,6 +44,7 @@ const QuestionPage: FC = () => {
 			<NavBar
 				onNext={nextQuestion}
 				onPrev={prevQuestion}
+				onRunBtnClick={handleRunBtnClick}
 				disableNextBtn={questionIndex === questions.length - 1}
 				disablePrevBtn={questionIndex === 0}
 			/>

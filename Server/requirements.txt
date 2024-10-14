@@ -1,5 +1,9 @@
 django
+djangorestframework
 apscheduler
 django-allauth
-django-rest-auth
+dj-rest-auth
 django-cors-headers
+redis
+channels
+channels-redis

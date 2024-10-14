@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useRef, useState, forwardRef } from 'react';
 import { Box, IconButton, Typography } from '@mui/material';
 import { Panel, ImperativePanelHandle } from 'react-resizable-panels';
 import { useTheme } from '@mui/material';
@@ -9,7 +9,7 @@ import {
 	FullscreenExitOutlined,
 	CodeOutlined,
 } from '@mui/icons-material';
-import CodeEditor from '../codeEditor/CodeEditor';
+import CodeEditor from '../codeEditor';
 
 export const CodingPanel: FC = () => {
 	const theme = useTheme();
